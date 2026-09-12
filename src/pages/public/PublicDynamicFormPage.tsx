@@ -89,9 +89,39 @@ export const PublicDynamicFormPage: React.FC = () => {
       alert("File size exceeds 15MB limit.");
       return;
     }
+
+    if (!file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = () => setter(reader.result as string);
+      reader.readAsDataURL(file);
+      return;
+    }
+
+    // Compress image client-side to avoid payload limit
+    const img = new Image();
     const reader = new FileReader();
-    reader.onload = () => {
-      setter(reader.result as string);
+    reader.onload = (e) => {
+      img.src = e.target?.result as string;
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        const maxWidth = 1200;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+          setter(compressedDataUrl);
+        } else {
+          setter(reader.result as string);
+        }
+      };
     };
     reader.readAsDataURL(file);
   };

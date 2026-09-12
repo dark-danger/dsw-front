@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Upload, X, FileText, Image as ImageIcon, CheckCircle, ExternalLink, Loader2 } from 'lucide-react';
+import { apiRequest } from '../../lib/api';
 
 interface FileUploadFieldProps {
   label: string;
@@ -10,6 +11,61 @@ interface FileUploadFieldProps {
   isImage?: boolean;
   required?: boolean;
 }
+
+// Client-side image compression helper to avoid large payload errors
+const compressImage = (file: File, maxWidth: number = 1200, quality: number = 0.75): Promise<{ blob: Blob; dataUrl: string }> => {
+  return new Promise((resolve) => {
+    // If not an image, return original
+    if (!file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = () => resolve({ blob: file, dataUrl: reader.result as string });
+      reader.onerror = () => resolve({ blob: file, dataUrl: '' });
+      reader.readAsDataURL(file);
+      return;
+    }
+
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      img.src = e.target?.result as string;
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                resolve({ blob, dataUrl: compressedDataUrl });
+              } else {
+                resolve({ blob: file, dataUrl: compressedDataUrl });
+              }
+            },
+            'image/jpeg',
+            quality
+          );
+        } else {
+          resolve({ blob: file, dataUrl: reader.result as string });
+        }
+      };
+      img.onerror = () => resolve({ blob: file, dataUrl: reader.result as string });
+    };
+    reader.onerror = () => resolve({ blob: file, dataUrl: '' });
+    reader.readAsDataURL(file);
+  });
+};
 
 export const FileUploadField: React.FC<FileUploadFieldProps> = ({
   label,
@@ -35,18 +91,32 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
 
     setUploading(true);
 
-    // Read as Base64 Data URL for instant rendering & offline-safe report printing
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
-      onChange(dataUrl);
+    try {
+      // 1. Compress image to avoid large payload
+      const { blob, dataUrl } = await compressImage(file);
+
+      // 2. Upload via FormData to backend uploads API
+      const formData = new FormData();
+      formData.append('file', blob, file.name.replace(/\.[^/.]+$/, "") + ".jpg");
+
+      try {
+        const uploadRes = await apiRequest<{ file_url: string }>('/uploads', 'POST', formData, true);
+        if (uploadRes && uploadRes.file_url) {
+          onChange(uploadRes.file_url);
+        } else {
+          // Fallback to compressed data URL (well below limit)
+          onChange(dataUrl);
+        }
+      } catch (uploadErr) {
+        console.warn('Backend upload fallback to compressed data URL:', uploadErr);
+        // Fallback to client-side compressed data URL
+        onChange(dataUrl);
+      }
+    } catch (err) {
+      console.error('File processing error:', err);
+    } finally {
       setUploading(false);
-    };
-    reader.onerror = () => {
-      console.error("FileReader error");
-      setUploading(false);
-    };
-    reader.readAsDataURL(file);
+    }
   };
 
   const onDrop = (e: React.DragEvent) => {
@@ -137,7 +207,7 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
           {uploading ? (
             <div className="flex items-center gap-2 text-xs font-medium text-blue-500 py-2">
               <Loader2 className="w-5 h-5 animate-spin" />
-              <span>Processing and attaching file...</span>
+              <span>Optimizing and uploading document...</span>
             </div>
           ) : (
             <>
@@ -149,7 +219,7 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
                   Click to browse or drag & drop {isImage ? 'picture' : 'scanned copy/PDF'}
                 </p>
                 <p className="text-[10px] text-[var(--text-secondary)] mt-0.5">
-                  Supports JPG, PNG, WEBP, PDF (Max 15MB)
+                  Auto-optimized JPG, PNG, WEBP, PDF (Max 15MB)
                 </p>
               </div>
             </>
@@ -159,3 +229,4 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
     </div>
   );
 };
+export default FileUploadField;
