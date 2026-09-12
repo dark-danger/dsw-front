@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Bell, LogOut, Shield, GraduationCap, Briefcase, Sparkles } from 'lucide-react';
 import { NotificationModal } from '../notifications/NotificationModal';
+import { ThemeToggle } from '../common/ThemeToggle';
 
 export const Navbar: React.FC<{ title: string }> = ({ title }) => {
   const { user, logout } = useAuth();
@@ -39,7 +40,9 @@ export const Navbar: React.FC<{ title: string }> = ({ title }) => {
           </h1>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+
           <button
             onClick={() => setIsNotifOpen(true)}
             className="p-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-emerald-950/40 border border-white/10 transition-all relative"

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { apiRequest } from '../lib/api';
 import { ArrowRight, Lock, Mail, Sparkles, ArrowLeft, LogIn } from 'lucide-react';
+import { ThemeToggle } from '../components/common/ThemeToggle';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -49,6 +50,11 @@ export const LoginPage: React.FC = () => {
       >
         <ArrowLeft className="w-4 h-4" /> Back to Home
       </button>
+
+      {/* Theme Toggle Button */}
+      <div className="absolute top-6 right-6 z-20">
+        <ThemeToggle />
+      </div>
 
       <div className="w-full max-w-md glass-panel p-8 relative z-10 shadow-2xl border border-white/10 space-y-6">
         

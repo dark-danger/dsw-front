@@ -5,6 +5,7 @@ import {
   Trophy, Flame, Sparkles, Calendar, ArrowRight, Shield, 
   Briefcase, GraduationCap, Star, Award, CheckCircle2, Music, Activity
 } from 'lucide-react';
+import { ThemeToggle } from '../../components/common/ThemeToggle';
 
 interface EventItem {
   id: number;
@@ -61,7 +62,8 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
           <button
             onClick={() => navigate('/login')}
             className="btn-primary"
