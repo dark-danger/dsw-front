@@ -37,6 +37,7 @@ const ClubsPage = React.lazy(() => import('./pages/shared/ClubsPage').then(m => 
 const ClubLeaderboardPage = React.lazy(() => import('./pages/shared/ClubLeaderboardPage').then(m => ({ default: m.ClubLeaderboardPage })));
 const EventReportsListPage = React.lazy(() => import('./pages/shared/EventReportsListPage').then(m => ({ default: m.EventReportsListPage })));
 const EventReportFormPage = React.lazy(() => import('./pages/shared/EventReportFormPage').then(m => ({ default: m.EventReportFormPage })));
+const MailPage = React.lazy(() => import('./pages/shared/MailPage').then(m => ({ default: m.MailPage })));
 
 const PageLoader: React.FC = () => (
   <div className="flex-1 flex flex-col items-center justify-center min-h-[50vh] p-8 text-center animate-fade-in">
@@ -69,6 +70,7 @@ export const App: React.FC = () => {
               {/* DSW Admin Portal */}
               <Route path="/admin" element={<AppLayout allowedRoles={['super_admin']} pageTitle="DSW Administration Portal" />}>
                 <Route path="dashboard" element={<AdminDashboardPage />} />
+                <Route path="mail" element={<MailPage />} />
                 <Route path="faculty" element={<FacultyPage />} />
                 <Route path="clubs" element={<ClubsPage />} />
                 <Route path="club-leaderboard" element={<ClubLeaderboardPage />} />
@@ -91,6 +93,7 @@ export const App: React.FC = () => {
               {/* Faculty Portal */}
               <Route path="/faculty" element={<AppLayout allowedRoles={['faculty']} pageTitle="Faculty Workstation Portal" />}>
                 <Route path="dashboard" element={<FacultyDashboardPage />} />
+                <Route path="mail" element={<MailPage />} />
                 <Route path="clubs" element={<ClubsPage />} />
                 <Route path="club-leaderboard" element={<ClubLeaderboardPage />} />
                 <Route path="events/reports" element={<EventReportsListPage />} />
@@ -108,6 +111,7 @@ export const App: React.FC = () => {
               {/* Student Portal */}
               <Route path="/student" element={<AppLayout allowedRoles={['student']} pageTitle="Student Welfare Portal" />}>
                 <Route path="dashboard" element={<StudentDashboardPage />} />
+                <Route path="mail" element={<MailPage />} />
                 <Route path="clubs" element={<ClubsPage />} />
                 <Route path="club-leaderboard" element={<ClubLeaderboardPage />} />
                 <Route path="committees" element={<CoreCommitteesPage />} />

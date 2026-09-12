@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard, Users, Calendar, CheckSquare, Megaphone,
   HelpCircle, FileText, MessageSquareHeart, Trophy, Medal,
-  GraduationCap, Sparkles, Shield, FileCheck, Award
+  GraduationCap, Sparkles, Shield, FileCheck, Award, Mail
 } from 'lucide-react';
 
 interface SidebarItem {
@@ -18,6 +18,7 @@ export const Sidebar: React.FC = () => {
 
   const adminNav: SidebarItem[] = [
     { label: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { label: 'University Mail', path: '/admin/mail', icon: <Mail className="w-4 h-4 text-emerald-400" /> },
     { label: 'Faculty Management', path: '/admin/faculty', icon: <Users className="w-4 h-4" /> },
     { label: 'Student Clubs', path: '/admin/clubs', icon: <Users className="w-4 h-4 text-blue-400" /> },
     { label: 'Club Leaderboard', path: '/admin/club-leaderboard', icon: <Trophy className="w-4 h-4 text-purple-400" /> },
@@ -36,6 +37,7 @@ export const Sidebar: React.FC = () => {
 
   const facultyNav: SidebarItem[] = [
     { label: 'My Dashboard', path: '/faculty/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { label: 'University Mail', path: '/faculty/mail', icon: <Mail className="w-4 h-4 text-emerald-400" /> },
     { label: 'Student Clubs', path: '/faculty/clubs', icon: <Users className="w-4 h-4 text-blue-400" /> },
     { label: 'Club Leaderboard', path: '/faculty/club-leaderboard', icon: <Trophy className="w-4 h-4 text-purple-400" /> },
     { label: 'Official Event Reports', path: '/faculty/events/reports', icon: <FileText className="w-4 h-4 text-amber-400" /> },
@@ -49,6 +51,7 @@ export const Sidebar: React.FC = () => {
 
   const studentNav: SidebarItem[] = [
     { label: 'Student Portal', path: '/student/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { label: 'University Mail', path: '/student/mail', icon: <Mail className="w-4 h-4 text-emerald-400" /> },
     { label: 'Student Clubs', path: '/student/clubs', icon: <Users className="w-4 h-4 text-blue-400" /> },
     { label: 'Club Leaderboard', path: '/student/club-leaderboard', icon: <Trophy className="w-4 h-4 text-purple-400" /> },
     { label: 'Core Committees', path: '/student/committees', icon: <Award className="w-4 h-4 text-teal-400" /> },
