@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { User } from '../../context/AuthContext';
-import { Calendar, Plus, FileText, CheckCircle2, Clock, MapPin, User as UserIcon, X, Eye } from 'lucide-react';
+import { Calendar, Plus, FileText, CheckCircle2, Clock, MapPin, User as UserIcon, X, Eye, Trash2, AlertTriangle } from 'lucide-react';
 
 interface EventItem {
   id: number;
@@ -26,6 +26,8 @@ export const EventsPage: React.FC = () => {
   // Modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [reportHtmlModal, setReportHtmlModal] = useState<string | null>(null);
+  const [deleteConfirmEvent, setDeleteConfirmEvent] = useState<EventItem | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   // Form
   const [title, setTitle] = useState('');
@@ -74,6 +76,20 @@ export const EventsPage: React.FC = () => {
     }
   };
 
+  const handleDeleteEvent = async () => {
+    if (!deleteConfirmEvent) return;
+    try {
+      setDeleting(true);
+      await apiRequest(`/events/${deleteConfirmEvent.id}`, 'DELETE');
+      setEvents(prev => prev.filter(e => e.id !== deleteConfirmEvent.id));
+      setDeleteConfirmEvent(null);
+    } catch (err: any) {
+      alert(err?.message || 'Failed to delete event');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const handlePreviewMergedReport = async (eventId: number) => {
     try {
       const html = await apiRequest<string>(`/events/${eventId}/reports/merged`);
@@ -107,18 +123,28 @@ export const EventsPage: React.FC = () => {
           <div className="col-span-2 p-8 text-center text-[var(--text-muted)]">No events found. Click 'Create New Campus Event' to get started.</div>
         ) : (
           events.map((ev) => (
-            <div key={ev.id} className="glass-panel p-6 space-y-4 relative overflow-hidden flex flex-col justify-between">
+            <div key={ev.id} className="glass-panel p-6 space-y-4 relative overflow-hidden flex flex-col justify-between group hover:border-emerald-500/40 transition-all">
               <div>
                 <div className="flex items-start justify-between gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30">
-                    {ev.event_type}
-                  </span>
-                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                    ev.status === 'completed' ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30' :
-                    ev.status === 'ongoing' ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30' : 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30'
-                  }`}>
-                    {ev.status.toUpperCase()}
-                  </span>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30">
+                      {ev.event_type}
+                    </span>
+                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                      ev.status === 'completed' ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30' :
+                      ev.status === 'ongoing' ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30' : 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30'
+                    }`}>
+                      {ev.status.toUpperCase()}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => setDeleteConfirmEvent(ev)}
+                    title="Delete Event"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
 
                 <h3 className="text-lg font-bold text-[var(--text-primary)] mt-3">{ev.title}</h3>
@@ -148,12 +174,19 @@ export const EventsPage: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-4 flex items-center justify-between border-t border-[var(--panel-border)]">
+              <div className="pt-4 flex items-center gap-2 border-t border-[var(--panel-border)]">
                 <button
                   onClick={() => handlePreviewMergedReport(ev.id)}
-                  className="btn-secondary text-xs py-2 px-3 w-full justify-center"
+                  className="btn-secondary text-xs py-2 px-3 flex-1 justify-center"
                 >
                   <Eye className="w-4 h-4 text-blue-500" /> 1-Click Preview & Generate Merged PDF Report
+                </button>
+                <button
+                  onClick={() => setDeleteConfirmEvent(ev)}
+                  className="px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-900/40 transition-colors flex items-center gap-1.5"
+                  title="Delete Event"
+                >
+                  <Trash2 className="w-4 h-4" /> Delete
                 </button>
               </div>
             </div>
@@ -239,6 +272,47 @@ export const EventsPage: React.FC = () => {
               title="Report Preview"
               className="w-full flex-1 border-none bg-white"
             />
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmEvent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
+          <div className="w-full max-w-md glass-panel p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center gap-3 text-rose-500 mb-4">
+              <div className="p-3 bg-rose-500/10 rounded-2xl">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-[var(--text-primary)]">Delete Campus Event</h3>
+                <p className="text-xs text-[var(--text-secondary)]">This action cannot be undone.</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-[var(--text-secondary)] bg-[var(--card-bg-to)] p-3 rounded-xl border border-[var(--panel-border)] mb-5">
+              Are you sure you want to permanently delete event <strong className="text-[var(--text-primary)] font-bold">"{deleteConfirmEvent.title}"</strong>?
+            </p>
+
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={() => setDeleteConfirmEvent(null)}
+                className="btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={handleDeleteEvent}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 shadow-md shadow-rose-600/20 transition-all flex items-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                {deleting ? 'Deleting...' : 'Yes, Delete Event'}
+              </button>
+            </div>
           </div>
         </div>
       )}
