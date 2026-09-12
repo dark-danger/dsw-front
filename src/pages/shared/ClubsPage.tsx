@@ -108,6 +108,7 @@ export const ClubsPage: React.FC = () => {
   const [memberSemester, setMemberSemester] = useState("5th Sem");
   const [memberPhone, setMemberPhone] = useState("");
   const [memberRole, setMemberRole] = useState("President");
+  const [memberPassword, setMemberPassword] = useState("President@123");
 
   // Create Task Form State
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
@@ -220,7 +221,8 @@ export const ClubsPage: React.FC = () => {
         semester: memberSemester,
         phone: memberPhone,
         role: memberRole,
-        is_core: memberRole !== "General Member"
+        is_core: memberRole !== "General Member",
+        password: memberPassword || "President@123"
       });
 
       setSelectedClubForMembers(updated);
@@ -229,6 +231,8 @@ export const ClubsPage: React.FC = () => {
       setMemberEmail("");
       setMemberRoll("");
       setMemberPhone("");
+      setMemberPassword("President@123");
+      alert(`Student "${memberName}" added to club! Login credentials created: Email: ${memberEmail} / Password: ${memberPassword || "President@123"}`);
     } catch (err: any) {
       alert(err.message || "Failed to add student member");
     }
@@ -722,8 +726,8 @@ export const ClubsPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pt-1">
-                  <div className="flex-1 max-w-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                  <div>
                     <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Assigned Role *</label>
                     <select
                       value={memberRole}
@@ -737,8 +741,27 @@ export const ClubsPage: React.FC = () => {
                     </select>
                   </div>
 
-                  <button type="submit" className="btn-primary text-xs py-2 px-4 shrink-0">
-                    <UserPlus className="w-3.5 h-3.5" /> Save Student
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                      Portal Login Password (Auto-Provisioned)
+                    </label>
+                    <input
+                      type="text"
+                      value={memberPassword}
+                      onChange={e => setMemberPassword(e.target.value)}
+                      placeholder="President@123"
+                      className="glass-input text-xs font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between gap-3 text-[11px] text-emerald-700 dark:text-emerald-300">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span>A Student Portal account will be automatically created with this email and password.</span>
+                  </div>
+                  <button type="submit" className="btn-primary text-xs py-1.5 px-4 shrink-0 font-bold">
+                    <UserPlus className="w-3.5 h-3.5" /> Save Student & Provision Login
                   </button>
                 </div>
               </form>
@@ -948,7 +971,7 @@ export const ClubsPage: React.FC = () => {
               </button>
             </div>
 
-            {isAdmin && (
+            {(isAdmin || (isFaculty && selectedClubForTasks.faculty_id === user?.id)) && (
               <div className="flex justify-end">
                 <button
                   onClick={() => setIsTaskModalOpen(true)}
@@ -968,97 +991,101 @@ export const ClubsPage: React.FC = () => {
                   No tasks assigned to this club yet.
                 </div>
               ) : (
-                clubTasks.map(t => (
-                  <div key={t.id} className="p-4 bg-[var(--card-bg-to)] rounded-xl border border-[var(--panel-border)] space-y-2.5">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <h4 className="font-bold text-sm text-[var(--text-primary)]">{t.title}</h4>
-                        <p className="text-xs text-[var(--text-secondary)] mt-0.5">{t.description || 'No description'}</p>
+                clubTasks.map(t => {
+                  const canReview = isAdmin || (isFaculty && selectedClubForTasks.faculty_id === user?.id);
+
+                  return (
+                    <div key={t.id} className="p-4 bg-[var(--card-bg-to)] rounded-xl border border-[var(--panel-border)] space-y-2.5">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <h4 className="font-bold text-sm text-[var(--text-primary)]">{t.title}</h4>
+                          <p className="text-xs text-[var(--text-secondary)] mt-0.5">{t.description || 'No description'}</p>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                            +{t.points_reward} pts
+                          </span>
+                          <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
+                            t.status === 'approved' ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30' :
+                            t.status === 'submitted' ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30' :
+                            t.status === 'declined' ? 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30' : 'bg-slate-200 dark:bg-slate-800 text-[var(--text-secondary)]'
+                          }`}>
+                            {t.status}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
-                          +{t.points_reward} pts
-                        </span>
-                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
-                          t.status === 'approved' ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30' :
-                          t.status === 'submitted' ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30' :
-                          t.status === 'declined' ? 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30' : 'bg-slate-200 dark:bg-slate-800 text-[var(--text-secondary)]'
-                        }`}>
-                          {t.status}
-                        </span>
-                      </div>
-                    </div>
 
-                    {(t.start_date || t.due_date) && (
-                      <div className="flex items-center gap-1.5 text-xs text-blue-700 dark:text-blue-300 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded-lg w-fit">
-                        <Clock className="w-3.5 h-3.5 shrink-0" />
-                        <span className="font-medium">
-                          Time Limit: {t.start_date ? new Date(t.start_date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Immediate'}
-                          {' → '}
-                          {t.due_date ? new Date(t.due_date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'No Deadline'}
-                        </span>
-                      </div>
-                    )}
+                      {(t.start_date || t.due_date) && (
+                        <div className="flex items-center gap-1.5 text-xs text-blue-700 dark:text-blue-300 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded-lg w-fit">
+                          <Clock className="w-3.5 h-3.5 shrink-0" />
+                          <span className="font-medium">
+                            Time Limit: {t.start_date ? new Date(t.start_date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Immediate'}
+                            {' → '}
+                            {t.due_date ? new Date(t.due_date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'No Deadline'}
+                          </span>
+                        </div>
+                      )}
 
-                    {t.submission_text && (
-                      <div className="p-3 bg-emerald-500/5 rounded-lg border border-emerald-500/15 space-y-2 text-xs">
-                        <span className="font-semibold text-emerald-700 dark:text-emerald-400">Submission Details:</span>
-                        <p className="text-[var(--text-secondary)]">{t.submission_text}</p>
-                        
-                        {/* Proof Viewer */}
-                        {t.file_url && (
-                          <div className="pt-1">
-                            <ProofViewer url={t.file_url} />
-                          </div>
-                        )}
+                      {t.submission_text && (
+                        <div className="p-3 bg-emerald-500/5 rounded-lg border border-emerald-500/15 space-y-2 text-xs">
+                          <span className="font-semibold text-emerald-700 dark:text-emerald-400">Submission Details:</span>
+                          <p className="text-[var(--text-secondary)]">{t.submission_text}</p>
+                          
+                          {/* Proof Viewer */}
+                          {t.file_url && (
+                            <div className="pt-1">
+                              <ProofViewer url={t.file_url} />
+                            </div>
+                          )}
 
-                        {t.review_remarks && (
-                          <div className="text-rose-600 dark:text-rose-400 pt-1 text-[11px]">
-                            Remarks: {t.review_remarks}
-                          </div>
-                        )}
-                      </div>
-                    )}
+                          {t.review_remarks && (
+                            <div className="text-rose-600 dark:text-rose-400 pt-1 text-[11px]">
+                              Remarks: {t.review_remarks}
+                            </div>
+                          )}
+                        </div>
+                      )}
 
-                    <div className="flex items-center justify-between pt-2 border-t border-[var(--panel-border)] text-xs">
-                      <span className="text-[var(--text-muted)]">Assigned: {new Date(t.created_at).toLocaleDateString()}</span>
-                      <div className="flex items-center gap-2">
-                        {t.status !== 'approved' && (
-                          <button
-                            onClick={() => {
-                              setSubmittingTask(t);
-                              setProofText(t.submission_text || "");
-                              setProofUrl(t.file_url || "");
-                            }}
-                            className="btn-secondary text-xs py-1 px-3"
-                          >
-                            {t.status === 'submitted' ? 'Update Proof' : 'Submit Proof'}
-                          </button>
-                        )}
-
-                        {isAdmin && t.status === 'submitted' && (
-                          <>
+                      <div className="flex items-center justify-between pt-2 border-t border-[var(--panel-border)] text-xs">
+                        <span className="text-[var(--text-muted)]">Assigned: {new Date(t.created_at).toLocaleDateString()}</span>
+                        <div className="flex items-center gap-2">
+                          {t.status !== 'approved' && (
                             <button
                               onClick={() => {
-                                setReviewingTask(t);
-                                setDeclineRemarks("");
+                                setSubmittingTask(t);
+                                setProofText(t.submission_text || "");
+                                setProofUrl(t.file_url || "");
                               }}
-                              className="btn-crimson text-xs py-1 px-2.5"
+                              className="btn-secondary text-xs py-1 px-3"
                             >
-                              Decline
+                              {t.status === 'submitted' ? 'Update Proof' : 'Submit Proof'}
                             </button>
-                            <button
-                              onClick={() => handleApproveTask(t.id)}
-                              className="btn-primary text-xs py-1 px-3 bg-emerald-600 hover:bg-emerald-500"
-                            >
-                              Approve (+{t.points_reward} pts)
-                            </button>
-                          </>
-                        )}
+                          )}
+
+                          {canReview && t.status === 'submitted' && (
+                            <>
+                              <button
+                                onClick={() => {
+                                  setReviewingTask(t);
+                                  setDeclineRemarks("");
+                                }}
+                                className="btn-crimson text-xs py-1 px-2.5"
+                              >
+                                Decline
+                              </button>
+                              <button
+                                onClick={() => handleApproveTask(t.id)}
+                                className="btn-primary text-xs py-1 px-3 bg-emerald-600 hover:bg-emerald-500"
+                              >
+                                Approve (+{t.points_reward} pts)
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>
