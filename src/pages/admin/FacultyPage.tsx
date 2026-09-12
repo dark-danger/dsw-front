@@ -66,7 +66,7 @@ export const FacultyPage: React.FC = () => {
   const handleCreateFaculty = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await apiRequest('/users/faculty', 'POST', {
+      const newFac = await apiRequest<User>('/users/faculty', 'POST', {
         name,
         email,
         phone,
@@ -79,7 +79,7 @@ export const FacultyPage: React.FC = () => {
       setName('');
       setEmail('');
       setPhone('');
-      fetchFaculty();
+      setFacultyList(prev => [...prev, newFac].sort((a, b) => a.name.localeCompare(b.name)));
     } catch (err: any) {
       alert(err.message || 'Failed to add faculty member');
     }

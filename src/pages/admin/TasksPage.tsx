@@ -101,7 +101,7 @@ export const TasksPage: React.FC = () => {
     if (!assignedTo) return alert('Select a faculty assignee');
 
     try {
-      await apiRequest('/tasks', 'POST', {
+      const created = await apiRequest<TaskItem>('/tasks', 'POST', {
         title,
         description,
         task_type: eventId ? 'event_linked' : 'general',
@@ -119,7 +119,7 @@ export const TasksPage: React.FC = () => {
       setStartDate('');
       setDueDate('');
       setParentTaskIdForSubtask(null);
-      fetchTasksData();
+      setTasks(prev => [created, ...prev]);
     } catch (err: any) {
       alert(err.message || 'Failed to assign task');
     }
@@ -141,7 +141,7 @@ export const TasksPage: React.FC = () => {
     if (!editingTask || !editAssignedTo) return alert('Select a faculty assignee');
 
     try {
-      await apiRequest(`/tasks/${editingTask.id}`, 'PATCH', {
+      const updated = await apiRequest<TaskItem>(`/tasks/${editingTask.id}`, 'PATCH', {
         title: editTitle,
         description: editDescription,
         assigned_to: Number(editAssignedTo),
@@ -152,7 +152,7 @@ export const TasksPage: React.FC = () => {
       });
 
       setEditingTask(null);
-      fetchTasksData();
+      setTasks(prev => prev.map(t => t.id === updated.id ? updated : t));
     } catch (err: any) {
       alert(err.message || 'Failed to update task');
     }
@@ -162,7 +162,7 @@ export const TasksPage: React.FC = () => {
     if (!window.confirm(`Are you sure you want to delete task "${taskTitle}"?`)) return;
     try {
       await apiRequest(`/tasks/${taskId}`, 'DELETE');
-      fetchTasksData();
+      setTasks(prev => prev.filter(t => t.id !== taskId));
     } catch (err: any) {
       alert(err.message || 'Failed to delete task');
     }
@@ -170,9 +170,9 @@ export const TasksPage: React.FC = () => {
 
   const handleApprove = async (taskId: number) => {
     try {
-      await apiRequest(`/tasks/${taskId}/approve`, 'POST');
+      const approved = await apiRequest<TaskItem>(`/tasks/${taskId}/approve`, 'POST');
       setSelectedTaskForReview(null);
-      fetchTasksData();
+      setTasks(prev => prev.map(t => t.id === taskId ? approved : t));
     } catch (err: any) {
       alert(err.message || 'Approve failed');
     }
@@ -184,12 +184,12 @@ export const TasksPage: React.FC = () => {
     if (!declineRemarks.trim()) return alert('Mandatory decline remarks must be provided!');
 
     try {
-      await apiRequest(`/tasks/${selectedTaskForReview.id}/decline`, 'POST', {
+      const declined = await apiRequest<TaskItem>(`/tasks/${selectedTaskForReview.id}/decline`, 'POST', {
         review_remarks: declineRemarks
       });
       setSelectedTaskForReview(null);
       setDeclineRemarks('');
-      fetchTasksData();
+      setTasks(prev => prev.map(t => t.id === selectedTaskForReview.id ? declined : t));
     } catch (err: any) {
       alert(err.message || 'Decline failed');
     }
