@@ -29,6 +29,7 @@ interface TaskItem {
   parent_task_id?: number;
   assigned_to: number;
   assignee?: User;
+  start_date?: string;
   due_date?: string;
   priority: 'low' | 'medium' | 'high';
   status: 'pending' | 'in_progress' | 'submitted' | 'approved' | 'declined';
@@ -61,6 +62,8 @@ export const TasksPage: React.FC = () => {
   const [editAssignedTo, setEditAssignedTo] = useState<number | ''>('');
   const [editEventId, setEditEventId] = useState<number | ''>('');
   const [editPriority, setEditPriority] = useState<'low' | 'medium' | 'high'>('medium');
+  const [editStartDate, setEditStartDate] = useState('');
+  const [editDueDate, setEditDueDate] = useState('');
 
   // Form State
   const [title, setTitle] = useState('');
@@ -68,6 +71,8 @@ export const TasksPage: React.FC = () => {
   const [assignedTo, setAssignedTo] = useState<number | ''>('');
   const [eventId, setEventId] = useState<number | ''>('');
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
+  const [startDate, setStartDate] = useState('');
+  const [dueDate, setDueDate] = useState('');
 
   const fetchTasksData = async () => {
     setLoading(true);
@@ -104,11 +109,15 @@ export const TasksPage: React.FC = () => {
         parent_task_id: parentTaskIdForSubtask,
         assigned_to: Number(assignedTo),
         priority,
+        start_date: startDate ? new Date(startDate).toISOString() : null,
+        due_date: dueDate ? new Date(dueDate).toISOString() : null,
       });
 
       setIsCreateModalOpen(false);
       setTitle('');
       setDescription('');
+      setStartDate('');
+      setDueDate('');
       setParentTaskIdForSubtask(null);
       fetchTasksData();
     } catch (err: any) {
@@ -123,6 +132,8 @@ export const TasksPage: React.FC = () => {
     setEditAssignedTo(t.assigned_to);
     setEditEventId(t.event_id || '');
     setEditPriority(t.priority);
+    setEditStartDate(t.start_date ? t.start_date.slice(0, 16) : '');
+    setEditDueDate(t.due_date ? t.due_date.slice(0, 16) : '');
   };
 
   const handleUpdateTask = async (e: React.FormEvent) => {
@@ -136,6 +147,8 @@ export const TasksPage: React.FC = () => {
         assigned_to: Number(editAssignedTo),
         event_id: editEventId ? Number(editEventId) : null,
         priority: editPriority,
+        start_date: editStartDate ? new Date(editStartDate).toISOString() : null,
+        due_date: editDueDate ? new Date(editDueDate).toISOString() : null,
       });
 
       setEditingTask(null);
@@ -233,6 +246,16 @@ export const TasksPage: React.FC = () => {
         </div>
 
         <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{t.description || 'No description provided.'}</p>
+
+        {/* Task Time Limit Badge */}
+        {(t.start_date || t.due_date) && (
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-blue-500/10 border border-blue-400/20 text-xs font-medium text-blue-700 dark:text-blue-300">
+            <Clock className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+            <span>
+              <strong>Time Limit:</strong> {t.start_date ? new Date(t.start_date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Immediate'} → <strong className="text-amber-600 dark:text-amber-400">{t.due_date ? new Date(t.due_date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Open Deadline'}</strong>
+            </span>
+          </div>
+        )}
 
         <div className="flex flex-wrap items-center justify-between text-xs text-[var(--text-muted)] pt-2 border-t border-[var(--panel-border)] gap-2">
           <div className="flex items-center gap-4">
@@ -372,6 +395,38 @@ export const TasksPage: React.FC = () => {
                 </select>
               </div>
 
+              {/* Task Time Limit / Window */}
+              <div className="p-3.5 bg-blue-50/60 dark:bg-blue-950/30 rounded-2xl border border-blue-200 dark:border-blue-900/50 space-y-2.5">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-blue-900 dark:text-blue-200">
+                  <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  Task Time Limit Range (Kab Se Kab Tak)
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                      Start Time (Kab Se)
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={startDate}
+                      onChange={e => setStartDate(e.target.value)}
+                      className="glass-input text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                      Deadline / Due Time (Kab Tak)
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={dueDate}
+                      onChange={e => setDueDate(e.target.value)}
+                      className="glass-input text-xs"
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">
                 <button type="button" onClick={() => setIsCreateModalOpen(false)} className="btn-secondary">Cancel</button>
                 <button type="submit" className="btn-primary">Assign Task</button>
@@ -434,6 +489,38 @@ export const TasksPage: React.FC = () => {
                     <option key={e.id} value={e.id}>{e.title}</option>
                   ))}
                 </select>
+              </div>
+
+              {/* Edit Task Time Limit Range */}
+              <div className="p-3.5 bg-blue-50/60 dark:bg-blue-950/30 rounded-2xl border border-blue-200 dark:border-blue-900/50 space-y-2.5">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-blue-900 dark:text-blue-200">
+                  <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  Task Time Limit Range (Kab Se Kab Tak)
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                      Start Time (Kab Se)
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={editStartDate}
+                      onChange={e => setEditStartDate(e.target.value)}
+                      className="glass-input text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                      Deadline / Due Time (Kab Tak)
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={editDueDate}
+                      onChange={e => setEditDueDate(e.target.value)}
+                      className="glass-input text-xs"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">

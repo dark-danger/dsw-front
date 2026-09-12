@@ -47,6 +47,7 @@ interface ClubTaskItem {
   title: string;
   description?: string;
   points_reward: number;
+  start_date?: string;
   due_date?: string;
   status: 'pending' | 'submitted' | 'approved' | 'declined';
   submission_text?: string;
@@ -113,6 +114,8 @@ export const ClubsPage: React.FC = () => {
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDesc, setTaskDesc] = useState("");
   const [taskPoints, setTaskPoints] = useState(30);
+  const [taskStartDate, setTaskStartDate] = useState("");
+  const [taskDueDate, setTaskDueDate] = useState("");
 
   // Submit Proof Modal State
   const [submittingTask, setSubmittingTask] = useState<ClubTaskItem | null>(null);
@@ -266,11 +269,15 @@ export const ClubsPage: React.FC = () => {
         club_id: selectedClubForTasks.id,
         title: taskTitle,
         description: taskDesc,
-        points_reward: Number(taskPoints)
+        points_reward: Number(taskPoints),
+        start_date: taskStartDate ? new Date(taskStartDate).toISOString() : null,
+        due_date: taskDueDate ? new Date(taskDueDate).toISOString() : null
       });
       setIsTaskModalOpen(false);
       setTaskTitle("");
       setTaskDesc("");
+      setTaskStartDate("");
+      setTaskDueDate("");
       loadClubTasks(selectedClubForTasks);
       fetchClubs();
     } catch (err: any) {
@@ -982,6 +989,17 @@ export const ClubsPage: React.FC = () => {
                       </div>
                     </div>
 
+                    {(t.start_date || t.due_date) && (
+                      <div className="flex items-center gap-1.5 text-xs text-blue-700 dark:text-blue-300 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded-lg w-fit">
+                        <Clock className="w-3.5 h-3.5 shrink-0" />
+                        <span className="font-medium">
+                          Time Limit: {t.start_date ? new Date(t.start_date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Immediate'}
+                          {' → '}
+                          {t.due_date ? new Date(t.due_date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'No Deadline'}
+                        </span>
+                      </div>
+                    )}
+
                     {t.submission_text && (
                       <div className="p-3 bg-emerald-500/5 rounded-lg border border-emerald-500/15 space-y-2 text-xs">
                         <span className="font-semibold text-emerald-700 dark:text-emerald-400">Submission Details:</span>
@@ -1093,6 +1111,27 @@ export const ClubsPage: React.FC = () => {
                   onChange={e => setTaskPoints(Number(e.target.value))}
                   className="glass-input"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Start Date & Time</label>
+                  <input
+                    type="datetime-local"
+                    value={taskStartDate}
+                    onChange={e => setTaskStartDate(e.target.value)}
+                    className="glass-input text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Deadline / Due Date</label>
+                  <input
+                    type="datetime-local"
+                    value={taskDueDate}
+                    onChange={e => setTaskDueDate(e.target.value)}
+                    className="glass-input text-xs"
+                  />
+                </div>
               </div>
 
               <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">

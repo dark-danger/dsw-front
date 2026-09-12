@@ -20,6 +20,7 @@ interface TaskItem {
   description: string;
   task_type: string;
   event_title?: string;
+  start_date?: string;
   due_date?: string;
   priority: 'low' | 'medium' | 'high';
   status: 'pending' | 'in_progress' | 'submitted' | 'approved' | 'declined';
@@ -122,6 +123,16 @@ export const MyTasksPage: React.FC = () => {
 
                 <h3 className="text-lg font-bold text-slate-100">{t.title}</h3>
                 <p className="text-sm text-slate-300 leading-relaxed">{t.description || 'No description'}</p>
+
+                {/* Time Limit Badge */}
+                {(t.start_date || t.due_date) && (
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-blue-500/10 border border-blue-400/20 text-xs font-medium text-blue-300">
+                    <Clock className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                    <span>
+                      <strong>Duty Window:</strong> {t.start_date ? new Date(t.start_date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Immediate'} → <strong className="text-amber-400">{t.due_date ? new Date(t.due_date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Open Deadline'}</strong>
+                    </span>
+                  </div>
+                )}
 
                 {/* Previous Submission Proof Display */}
                 {latestSub?.file_url && (

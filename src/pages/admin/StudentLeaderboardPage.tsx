@@ -5,7 +5,7 @@ import confetti from 'canvas-confetti';
 import { ProofViewer } from '../../components/tasks/ProofViewer';
 import {
   Trophy, Plus, Award, CheckCircle2, XCircle, FileText,
-  User as UserIcon, Medal, Sparkles, X, PlusCircle, MinusCircle
+  User as UserIcon, Medal, Sparkles, X, PlusCircle, MinusCircle, Clock
 } from 'lucide-react';
 
 interface LeaderboardTask {
@@ -14,6 +14,8 @@ interface LeaderboardTask {
   description: string;
   points_value: number;
   submission_mode: 'single' | 'multiple';
+  start_date?: string;
+  due_date?: string;
   is_active: boolean;
   created_at: string;
 }
@@ -60,6 +62,8 @@ export const StudentLeaderboardPage: React.FC = () => {
   const [description, setDescription] = useState('');
   const [pointsValue, setPointsValue] = useState(20);
   const [submissionMode, setSubmissionMode] = useState<'single' | 'multiple'>('single');
+  const [startDate, setStartDate] = useState('');
+  const [dueDate, setDueDate] = useState('');
 
   // Manual Points Form
   const [selectedStudentId, setSelectedStudentId] = useState<number | ''>('');
@@ -110,14 +114,18 @@ export const StudentLeaderboardPage: React.FC = () => {
         title,
         description,
         points_value: Number(pointsValue),
-        submission_mode: submissionMode
+        submission_mode: submissionMode,
+        start_date: startDate ? new Date(startDate).toISOString() : null,
+        due_date: dueDate ? new Date(dueDate).toISOString() : null,
       });
       setIsTaskModalOpen(false);
       setTitle('');
       setDescription('');
+      setStartDate('');
+      setDueDate('');
       fetchLeaderboardData();
     } catch (err: any) {
-      alert(err.message || 'Failed to create challenge task');
+      alert(err.message || 'Failed to create task');
     }
   };
 
@@ -311,6 +319,38 @@ export const StudentLeaderboardPage: React.FC = () => {
                     <option value="single">Single Submission Only</option>
                     <option value="multiple">Multiple / Recurring Allowed</option>
                   </select>
+                </div>
+              </div>
+
+              {/* Challenge Time Limit / Window */}
+              <div className="p-3.5 bg-amber-500/10 rounded-2xl border border-amber-500/20 space-y-2.5">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400">
+                  <Clock className="w-4 h-4 text-amber-500" />
+                  Challenge Time Window (Kab Se Kab Tak)
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                      Start Time (Kab Se)
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={startDate}
+                      onChange={e => setStartDate(e.target.value)}
+                      className="glass-input text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                      Deadline / Due Time (Kab Tak)
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={dueDate}
+                      onChange={e => setDueDate(e.target.value)}
+                      className="glass-input text-xs"
+                    />
+                  </div>
                 </div>
               </div>
 

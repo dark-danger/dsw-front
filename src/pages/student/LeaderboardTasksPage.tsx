@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
-import { Trophy, Sparkles, Send, CheckCircle2, FileText, X } from 'lucide-react';
+import { Trophy, Sparkles, Send, CheckCircle2, FileText, X, Clock } from 'lucide-react';
 import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
 
 interface LeaderboardTask {
@@ -9,6 +9,8 @@ interface LeaderboardTask {
   description: string;
   points_value: number;
   submission_mode: 'single' | 'multiple';
+  start_date?: string;
+  due_date?: string;
   my_submission_count: number;
   my_has_submitted: boolean;
 }
@@ -98,6 +100,16 @@ export const LeaderboardTasksPage: React.FC = () => {
 
                   <h3 className="text-lg font-bold text-slate-100 mt-3">{t.title}</h3>
                   <p className="text-xs text-slate-300 leading-relaxed mt-1">{t.description}</p>
+
+                  {/* Challenge Time Limit */}
+                  {(t.start_date || t.due_date) && (
+                    <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-medium text-amber-300">
+                      <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                      <span>
+                        <strong>Window:</strong> {t.start_date ? new Date(t.start_date).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Open'} → <strong className="text-amber-400">{t.due_date ? new Date(t.due_date).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'No Expiry'}</strong>
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
