@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://dsw-07gj.onrender.com/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://dsw-backend-psi.vercel.app/api';
 
 // In-flight request deduplication map
 const pendingRequests = new Map<string, Promise<any>>();
