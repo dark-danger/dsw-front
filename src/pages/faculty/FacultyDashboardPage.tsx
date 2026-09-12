@@ -41,9 +41,9 @@ export const FacultyDashboardPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Banner */}
-      <div className="glass-panel p-6 bg-gradient-to-r from-black via-[#06140d] to-black border-l-4 border-l-emerald-500">
-        <h2 className="text-2xl font-bold text-white">Welcome back, {user?.name}!</h2>
-        <p className="text-xs text-slate-300 mt-1">Department: {user?.department || 'DSW'} • Designation: {user?.designation || 'Faculty'}</p>
+      <div className="glass-panel p-6 border-l-4 border-l-emerald-500">
+        <h2 className="text-2xl font-bold text-[var(--text-primary)]">Welcome back, {user?.name}!</h2>
+        <p className="text-xs text-[var(--text-secondary)] mt-1">Department: {user?.department || 'DSW'} • Designation: {user?.designation || 'Faculty'}</p>
       </div>
 
       {/* KPI Cards */}
@@ -51,10 +51,10 @@ export const FacultyDashboardPage: React.FC = () => {
         <div className="glass-card p-5 border-l-4 border-l-[#0e8a6e]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-slate-400">Total Duties Assigned</p>
-              <h3 className="text-2xl font-bold text-white mt-1">{stats.total_assigned}</h3>
+              <p className="text-xs font-medium text-[var(--text-muted)]">Total Duties Assigned</p>
+              <h3 className="text-2xl font-bold text-[var(--text-primary)] mt-1">{stats.total_assigned}</h3>
             </div>
-            <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-400">
+            <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-600 dark:text-emerald-400">
               <CheckSquare className="w-6 h-6" />
             </div>
           </div>
@@ -63,10 +63,10 @@ export const FacultyDashboardPage: React.FC = () => {
         <div className="glass-card p-5 border-l-4 border-l-emerald-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-slate-400">Approved Duties</p>
-              <h3 className="text-2xl font-bold text-emerald-400 mt-1">{stats.completed_approved}</h3>
+              <p className="text-xs font-medium text-[var(--text-muted)]">Approved Duties</p>
+              <h3 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{stats.completed_approved}</h3>
             </div>
-            <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-400">
+            <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-600 dark:text-emerald-400">
               <CheckCircle2 className="w-6 h-6" />
             </div>
           </div>
@@ -75,10 +75,10 @@ export const FacultyDashboardPage: React.FC = () => {
         <div className="glass-card p-5 border-l-4 border-l-amber-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-slate-400">Pending Duties</p>
-              <h3 className="text-2xl font-bold text-amber-400 mt-1">{stats.pending_count}</h3>
+              <p className="text-xs font-medium text-[var(--text-muted)]">Pending Duties</p>
+              <h3 className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">{stats.pending_count}</h3>
             </div>
-            <div className="p-3 bg-amber-500/10 rounded-xl text-amber-400">
+            <div className="p-3 bg-amber-500/10 rounded-xl text-amber-600 dark:text-amber-400">
               <Clock className="w-6 h-6" />
             </div>
           </div>
@@ -87,10 +87,10 @@ export const FacultyDashboardPage: React.FC = () => {
         <div className="glass-card p-5 border-l-4 border-l-teal-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-slate-400">My Performance Score</p>
-              <h3 className="text-2xl font-bold text-teal-300 mt-1">{stats.performance_score} pts</h3>
+              <p className="text-xs font-medium text-[var(--text-muted)]">My Performance Score</p>
+              <h3 className="text-2xl font-bold text-teal-600 dark:text-teal-300 mt-1">{stats.performance_score} pts</h3>
             </div>
-            <div className="p-3 bg-teal-500/10 rounded-xl text-teal-400">
+            <div className="p-3 bg-teal-500/10 rounded-xl text-teal-600 dark:text-teal-400">
               <Medal className="w-6 h-6" />
             </div>
           </div>
@@ -99,11 +99,11 @@ export const FacultyDashboardPage: React.FC = () => {
 
       {/* Completion Progress Bar */}
       <div className="glass-panel p-6 space-y-2">
-        <div className="flex justify-between text-xs text-slate-400">
+        <div className="flex justify-between text-xs text-[var(--text-secondary)]">
           <span>Overall Duty Completion Percentage</span>
-          <span className="font-semibold text-white">{stats.completion_rate_percentage}%</span>
+          <span className="font-semibold text-[var(--text-primary)]">{stats.completion_rate_percentage}%</span>
         </div>
-        <div className="w-full h-3 bg-black/60 border border-white/10 rounded-full overflow-hidden">
+        <div className="w-full h-3 bg-slate-200 dark:bg-slate-800 border border-[var(--panel-border)] rounded-full overflow-hidden">
           <div className="h-full bg-gradient-to-r from-[#0e8a6e] to-emerald-400 rounded-full" style={{ width: `${stats.completion_rate_percentage}%` }} />
         </div>
       </div>
@@ -112,32 +112,32 @@ export const FacultyDashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <a href="/faculty/tasks" className="glass-card p-5 space-y-2 group hover:border-emerald-500/50">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-bold text-white flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-emerald-400" /> Manage Assigned Tasks
+            <span className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
+              <CheckSquare className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Manage Assigned Tasks
             </span>
-            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+            <ArrowRight className="w-4 h-4 text-[var(--text-muted)] group-hover:text-emerald-500 transition-colors" />
           </div>
-          <p className="text-xs text-slate-300">Submit completion reports and upload proof documents for DSW review.</p>
+          <p className="text-xs text-[var(--text-secondary)]">Submit completion reports and upload proof documents for DSW review.</p>
         </a>
 
         <a href="/faculty/duty-charts" className="glass-card p-5 space-y-2 group hover:border-teal-500/50">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-bold text-white flex items-center gap-2">
-              <FileCheck className="w-4 h-4 text-teal-400" /> Event Duty Charts
+            <span className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
+              <FileCheck className="w-4 h-4 text-teal-600 dark:text-teal-400" /> Event Duty Charts
             </span>
-            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-teal-400 transition-colors" />
+            <ArrowRight className="w-4 h-4 text-[var(--text-muted)] group-hover:text-teal-500 transition-colors" />
           </div>
-          <p className="text-xs text-slate-300">View official campus event duty rosters and download printable PDF charts.</p>
+          <p className="text-xs text-[var(--text-secondary)]">View official campus event duty rosters and download printable PDF charts.</p>
         </a>
 
         <a href="/faculty/committees" className="glass-card p-5 space-y-2 group hover:border-emerald-500/50">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-bold text-white flex items-center gap-2">
-              <Award className="w-4 h-4 text-emerald-400" /> Core Committees
+            <span className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
+              <Award className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Core Committees
             </span>
-            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+            <ArrowRight className="w-4 h-4 text-[var(--text-muted)] group-hover:text-emerald-500 transition-colors" />
           </div>
-          <p className="text-xs text-slate-300">Oversee student convenors and event core organizing teams.</p>
+          <p className="text-xs text-[var(--text-secondary)]">Oversee student convenors and event core organizing teams.</p>
         </a>
       </div>
     </div>

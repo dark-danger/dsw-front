@@ -188,34 +188,34 @@ export const TasksPage: React.FC = () => {
       <div
         key={t.id}
         className={`glass-card p-5 space-y-3 ${
-          isSubtask ? 'ml-6 border-l-2 border-l-emerald-500 bg-black/40' : ''
+          isSubtask ? 'ml-6 border-l-2 border-l-emerald-500 bg-[var(--card-bg-to)]' : ''
         }`}
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
-            {isSubtask && <CornerDownRight className="w-4 h-4 text-emerald-400 shrink-0" />}
-            <h4 className="font-bold text-white text-base">{t.title}</h4>
+            {isSubtask && <CornerDownRight className="w-4 h-4 text-emerald-500 shrink-0" />}
+            <h4 className="font-bold text-[var(--text-primary)] text-base">{t.title}</h4>
           </div>
 
           <div className="flex items-center gap-2">
             <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
-              t.priority === 'high' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' :
-              t.priority === 'medium' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+              t.priority === 'high' ? 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30' :
+              t.priority === 'medium' ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30' : 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30'
             }`}>
               {t.priority}
             </span>
 
             <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-              t.status === 'approved' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
-              t.status === 'submitted' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
-              t.status === 'declined' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'bg-slate-800 text-slate-400'
+              t.status === 'approved' ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30' :
+              t.status === 'submitted' ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30' :
+              t.status === 'declined' ? 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30' : 'bg-[var(--card-bg-to)] text-[var(--text-secondary)] border border-[var(--panel-border)]'
             }`}>
               {t.status.toUpperCase()}
             </span>
 
             <button
               onClick={() => handleOpenEditModal(t)}
-              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors"
+              className="p-1.5 rounded-lg bg-[var(--card-bg-to)] hover:bg-emerald-500/10 text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--panel-border)] transition-colors"
               title="Edit Task / Reassign Faculty"
             >
               <Pencil className="w-3.5 h-3.5" />
@@ -223,7 +223,7 @@ export const TasksPage: React.FC = () => {
 
             <button
               onClick={() => handleDeleteTask(t.id, t.title)}
-              className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors"
+              className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 transition-colors"
               title="Delete Task"
             >
               <Trash2 className="w-3.5 h-3.5" />
@@ -231,15 +231,15 @@ export const TasksPage: React.FC = () => {
           </div>
         </div>
 
-        <p className="text-xs text-slate-400 leading-relaxed">{t.description || 'No description provided.'}</p>
+        <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{t.description || 'No description provided.'}</p>
 
-        <div className="flex flex-wrap items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800/80 gap-2">
+        <div className="flex flex-wrap items-center justify-between text-xs text-[var(--text-muted)] pt-2 border-t border-[var(--panel-border)] gap-2">
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1 text-slate-300">
-              <UserIcon className="w-3.5 h-3.5 text-blue-400" /> Assignee: <strong>{t.assignee?.name || 'Unassigned'}</strong>
+            <span className="flex items-center gap-1 text-[var(--text-secondary)]">
+              <UserIcon className="w-3.5 h-3.5 text-blue-500" /> Assignee: <strong className="text-[var(--text-primary)]">{t.assignee?.name || 'Unassigned'}</strong>
             </span>
             {t.event_title && (
-              <span className="flex items-center gap-1 text-purple-400">
+              <span className="flex items-center gap-1 text-purple-600 dark:text-purple-400 font-medium">
                 <Calendar className="w-3.5 h-3.5" /> {t.event_title}
               </span>
             )}
@@ -252,7 +252,7 @@ export const TasksPage: React.FC = () => {
                   setParentTaskIdForSubtask(t.id);
                   setIsCreateModalOpen(true);
                 }}
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-medium"
+                className="text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 font-semibold"
               >
                 + Add Subtask
               </button>
@@ -268,7 +268,7 @@ export const TasksPage: React.FC = () => {
             ) : t.status !== 'approved' ? (
               <button
                 onClick={() => handleApprove(t.id)}
-                className="btn-primary bg-emerald-600 hover:bg-emerald-500 text-xs py-1 px-3 flex items-center gap-1.5"
+                className="btn-primary text-xs py-1 px-3 flex items-center gap-1.5"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" /> Approve Task (+10 pts)
               </button>
@@ -291,8 +291,8 @@ export const TasksPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-panel p-6">
         <div>
-          <h2 className="text-xl font-bold text-slate-100">Task Assignment & Review Queue</h2>
-          <p className="text-xs text-slate-400 mt-1">Assign micro-tasks, reassign duties, edit or delete tasks, and approve/decline submissions with automatic score adjustments.</p>
+          <h2 className="text-xl font-bold text-[var(--text-primary)]">Task Assignment & Review Queue</h2>
+          <p className="text-xs text-[var(--text-secondary)] mt-1">Assign micro-tasks, reassign duties, edit or delete tasks, and approve/decline submissions with automatic score adjustments.</p>
         </div>
         <button
           onClick={() => {
@@ -308,9 +308,9 @@ export const TasksPage: React.FC = () => {
       {/* Tasks List */}
       <div className="space-y-4">
         {loading ? (
-          <div className="p-8 text-center text-slate-500 glass-panel">Loading task engine...</div>
+          <div className="p-8 text-center text-[var(--text-muted)] glass-panel">Loading task engine...</div>
         ) : tasks.length === 0 ? (
-          <div className="p-8 text-center text-slate-500 glass-panel">No tasks found. Click 'Assign New Task' to begin.</div>
+          <div className="p-8 text-center text-[var(--text-muted)] glass-panel">No tasks found. Click 'Assign New Task' to begin.</div>
         ) : (
           tasks.map(t => renderTaskCard(t))
         )}
@@ -319,31 +319,31 @@ export const TasksPage: React.FC = () => {
       {/* Create Task Modal */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-              <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <CheckSquare className="w-5 h-5 text-blue-400" />
+          <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)] mb-4">
+              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+                <CheckSquare className="w-5 h-5 text-blue-500" />
                 {parentTaskIdForSubtask ? 'Create Nested Subtask' : 'Assign New Task'}
               </h3>
-              <button onClick={() => setIsCreateModalOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsCreateModalOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateTask} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Task Title</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Task Title</label>
                 <input required type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Finalize Guest Accommodations" className="glass-input" />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Task Instructions</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Task Instructions</label>
                 <textarea rows={3} value={description} onChange={e => setDescription(e.target.value)} placeholder="Provide detailed steps..." className="glass-input" />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Assignee (Faculty)</label>
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Assignee (Faculty)</label>
                   <select required value={assignedTo} onChange={e => setAssignedTo(e.target.value ? Number(e.target.value) : '')} className="glass-input">
                     <option value="">-- Select Faculty --</option>
                     {facultyList.map(f => (
@@ -352,7 +352,7 @@ export const TasksPage: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Priority</label>
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Priority</label>
                   <select value={priority} onChange={e => setPriority(e.target.value as any)} className="glass-input">
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -362,7 +362,7 @@ export const TasksPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Link to Event (Optional)</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Link to Event (Optional)</label>
                 <select value={eventId} onChange={e => setEventId(e.target.value ? Number(e.target.value) : '')} className="glass-input">
                   <option value="">-- Standalone Task --</option>
                   {eventsList.map(e => (
@@ -371,7 +371,7 @@ export const TasksPage: React.FC = () => {
                 </select>
               </div>
 
-              <div className="pt-4 border-t border-slate-800 flex justify-end gap-2">
+              <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">
                 <button type="button" onClick={() => setIsCreateModalOpen(false)} className="btn-secondary">Cancel</button>
                 <button type="submit" className="btn-primary">Assign Task</button>
               </div>
@@ -383,31 +383,31 @@ export const TasksPage: React.FC = () => {
       {/* Edit Task / Reassign Modal */}
       {editingTask && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <Pencil className="w-5 h-5 text-emerald-400" />
+          <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)] mb-4">
+              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+                <Pencil className="w-5 h-5 text-emerald-500" />
                 Edit Task / Reassign Faculty
               </h3>
-              <button onClick={() => setEditingTask(null)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setEditingTask(null)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleUpdateTask} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Task Title</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Task Title</label>
                 <input required type="text" value={editTitle} onChange={e => setEditTitle(e.target.value)} className="glass-input" />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Task Instructions</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Task Instructions</label>
                 <textarea rows={3} value={editDescription} onChange={e => setEditDescription(e.target.value)} className="glass-input" />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Assignee (Reassign Duty)</label>
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Assignee (Reassign Duty)</label>
                   <select required value={editAssignedTo} onChange={e => setEditAssignedTo(e.target.value ? Number(e.target.value) : '')} className="glass-input">
                     <option value="">-- Select Faculty --</option>
                     {facultyList.map(f => (
@@ -416,7 +416,7 @@ export const TasksPage: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Priority</label>
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Priority</label>
                   <select value={editPriority} onChange={e => setEditPriority(e.target.value as any)} className="glass-input">
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -426,7 +426,7 @@ export const TasksPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Link to Event (Optional)</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Link to Event (Optional)</label>
                 <select value={editEventId} onChange={e => setEditEventId(e.target.value ? Number(e.target.value) : '')} className="glass-input">
                   <option value="">-- Standalone Task --</option>
                   {eventsList.map(e => (
@@ -435,7 +435,7 @@ export const TasksPage: React.FC = () => {
                 </select>
               </div>
 
-              <div className="pt-4 border-t border-slate-800 flex justify-end gap-2">
+              <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">
                 <button type="button" onClick={() => setEditingTask(null)} className="btn-secondary">Cancel</button>
                 <button type="submit" className="btn-primary">Save Changes</button>
               </div>
@@ -447,47 +447,50 @@ export const TasksPage: React.FC = () => {
       {/* Review Submission Modal */}
       {selectedTaskForReview && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-xl glass-panel p-6 shadow-2xl relative space-y-4">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-              <h3 className="text-lg font-bold text-slate-100">Review Submission: {selectedTaskForReview.title}</h3>
-              <button onClick={() => setSelectedTaskForReview(null)} className="text-slate-400 hover:text-slate-200">
+          <div className="w-full max-w-xl glass-panel p-6 shadow-2xl relative space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)]">
+              <div>
+                <h3 className="text-lg font-bold text-[var(--text-primary)]">Review Submission</h3>
+                <p className="text-xs text-[var(--text-muted)]">{selectedTaskForReview.title}</p>
+              </div>
+              <button onClick={() => setSelectedTaskForReview(null)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="space-y-3">
-              <div className="text-xs text-slate-400">
-                Assigned to: <strong className="text-slate-200">{selectedTaskForReview.assignee?.name}</strong>
+              <div className="text-xs text-[var(--text-muted)]">
+                Assigned to: <strong className="text-[var(--text-primary)]">{selectedTaskForReview.assignee?.name}</strong>
               </div>
 
               {selectedTaskForReview.submissions.map((sub, idx) => (
-                <div key={sub.id} className="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
-                  <div className="flex items-center justify-between text-xs text-slate-400">
-                    <span className="font-semibold text-emerald-400">Submission #{idx + 1}</span>
+                <div key={sub.id} className="p-4 bg-[var(--card-bg-to)] rounded-xl border border-[var(--panel-border)] space-y-2">
+                  <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">Submission #{idx + 1}</span>
                     <span>{new Date(sub.submitted_at).toLocaleString()}</span>
                   </div>
-                  <p className="text-xs text-slate-200 leading-relaxed">{sub.description}</p>
+                  <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{sub.description}</p>
                   {sub.file_url && (
                     <a
                       href={sub.file_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:underline font-mono"
+                      className="inline-flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-mono font-medium"
                     >
                       <FileText className="w-4 h-4" /> View Proof File: {sub.file_name || 'Attachment'}
                     </a>
                   )}
                   {sub.review_remarks && (
-                    <div className="p-2 bg-rose-500/10 border border-rose-500/20 rounded text-xs text-rose-300">
+                    <div className="p-2 bg-rose-500/10 border border-rose-500/20 rounded text-xs text-rose-600 dark:text-rose-300">
                       Previous Remark: {sub.review_remarks}
                     </div>
                   )}
                 </div>
               ))}
 
-              <form onSubmit={handleDecline} className="pt-2 space-y-3 border-t border-slate-800">
-                <label className="block text-xs font-medium text-slate-300">
-                  Decline Remarks <span className="text-rose-400">(Mandatory if declining)</span>
+              <form onSubmit={handleDecline} className="pt-2 space-y-3 border-t border-[var(--panel-border)]">
+                <label className="block text-xs font-semibold text-[var(--text-secondary)]">
+                  Decline Remarks <span className="text-rose-500">(Mandatory if declining)</span>
                 </label>
                 <textarea
                   rows={2}
@@ -507,7 +510,7 @@ export const TasksPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleApprove(selectedTaskForReview.id)}
-                    className="btn-primary bg-emerald-600 hover:bg-emerald-500 text-xs py-2 px-4"
+                    className="btn-primary text-xs py-2 px-4"
                   >
                     <CheckCircle2 className="w-4 h-4" /> Approve Task (+10 pts)
                   </button>

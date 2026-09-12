@@ -32,10 +32,10 @@ export const Navbar: React.FC<{ title: string }> = ({ title }) => {
 
   return (
     <>
-      <header className="h-16 border-b border-white/10 bg-[#040806]/90 backdrop-blur-2xl sticky top-0 z-40 px-6 flex items-center justify-between shadow-md">
+      <header className="h-16 border-b border-[var(--panel-border)] bg-[var(--panel-bg)] backdrop-blur-2xl sticky top-0 z-40 px-6 flex items-center justify-between shadow-xs transition-colors">
         <div className="flex items-center gap-3">
           <div className="w-2 h-6 bg-gradient-to-b from-[#0e8a6e] to-emerald-400 rounded-full" />
-          <h1 className="text-lg font-extrabold tracking-tight text-white font-display">
+          <h1 className="text-lg font-extrabold tracking-tight text-[var(--text-primary)] font-display">
             {title}
           </h1>
         </div>
@@ -45,14 +45,14 @@ export const Navbar: React.FC<{ title: string }> = ({ title }) => {
 
           <button
             onClick={() => setIsNotifOpen(true)}
-            className="p-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-emerald-950/40 border border-white/10 transition-all relative"
+            className="p-2.5 rounded-xl text-[var(--text-secondary)] hover:text-emerald-500 hover:bg-emerald-500/10 border border-[var(--panel-border)] transition-all relative"
             title="Broadcast Notifications"
           >
-            <Bell className="w-4 h-4 text-emerald-400" />
-            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-emerald-400 badge-pulse" />
+            <Bell className="w-4 h-4 text-emerald-500" />
+            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-emerald-500 badge-pulse" />
           </button>
 
-          <div className="h-6 w-px bg-white/10" />
+          <div className="h-6 w-px bg-[var(--panel-border)]" />
 
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#0e8a6e] to-emerald-500 border border-white/20 flex items-center justify-center text-white font-bold text-sm shadow-md">
@@ -60,13 +60,13 @@ export const Navbar: React.FC<{ title: string }> = ({ title }) => {
             </div>
 
             <div className="hidden sm:block text-left">
-              <div className="text-xs font-bold text-white">{user?.name}</div>
+              <div className="text-xs font-bold text-[var(--text-primary)]">{user?.name}</div>
               <div className="mt-0.5">{roleBadge()}</div>
             </div>
 
             <button
               onClick={logout}
-              className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all ml-1"
+              className="p-2 rounded-xl text-[var(--text-muted)] hover:text-rose-500 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all ml-1"
               title="Sign Out"
             >
               <LogOut className="w-4 h-4" />

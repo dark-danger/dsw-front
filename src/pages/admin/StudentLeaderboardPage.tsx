@@ -162,10 +162,10 @@ export const StudentLeaderboardPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-panel p-6">
         <div>
-          <h2 className="text-xl font-bold text-slate-100 flex items-center gap-2">
-            <Trophy className="w-6 h-6 text-amber-400" /> Student Leaderboard & Rankings
+          <h2 className="text-xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <Trophy className="w-6 h-6 text-amber-500" /> Student Leaderboard & Rankings
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[var(--text-secondary)] mt-1">
             {isAdmin ? 'Create single/multiple submission challenges, review proof queues, and issue manual bonus/penalty points.' : 'Live student rankings calculated strictly from challenge task points and welfare achievements.'}
           </p>
         </div>
@@ -173,7 +173,7 @@ export const StudentLeaderboardPage: React.FC = () => {
         {isAdmin && (
           <div className="flex items-center gap-2 shrink-0">
             <button onClick={() => setIsManualModalOpen(true)} className="btn-secondary text-xs">
-              <Sparkles className="w-4 h-4 text-amber-400" /> Manual Point Adjuster Tool
+              <Sparkles className="w-4 h-4 text-amber-500" /> Manual Point Adjuster Tool
             </button>
             <button onClick={() => setIsTaskModalOpen(true)} className="btn-primary text-xs">
               <Plus className="w-4 h-4" /> Create Challenge Task
@@ -184,33 +184,32 @@ export const StudentLeaderboardPage: React.FC = () => {
 
       {/* Pending Proof Submissions Queue (Admin Only) */}
       {isAdmin && pendingSubs.length > 0 && (
-
-        <div className="glass-panel p-6 border-l-4 border-l-amber-400 space-y-4">
-          <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-amber-400" /> Pending Student Proof Submissions ({pendingSubs.length})
+        <div className="glass-panel p-6 border-l-4 border-l-amber-500 space-y-4">
+          <h3 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-amber-500" /> Pending Student Proof Submissions ({pendingSubs.length})
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {pendingSubs.map(sub => (
-              <div key={sub.id} className="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+              <div key={sub.id} className="p-4 bg-[var(--card-bg-to)] rounded-xl border border-[var(--panel-border)] space-y-2">
                 <div className="flex justify-between items-start text-xs">
-                  <span className="font-bold text-slate-200">{sub.task_title || 'Leaderboard Task'}</span>
-                  <span className="text-slate-400">{new Date(sub.submitted_at).toLocaleDateString()}</span>
+                  <span className="font-bold text-[var(--text-primary)]">{sub.task_title || 'Leaderboard Task'}</span>
+                  <span className="text-[var(--text-muted)]">{new Date(sub.submitted_at).toLocaleDateString()}</span>
                 </div>
-                <div className="text-xs text-slate-300 font-medium">
+                <div className="text-xs text-[var(--text-secondary)] font-medium">
                   Student: {sub.student?.name} ({sub.student?.roll_number})
                 </div>
-                <p className="text-xs text-slate-400 italic">"{sub.submission_text}"</p>
+                <p className="text-xs text-[var(--text-muted)] italic">"{sub.submission_text}"</p>
                 {sub.file_url && (
-                  <a href={sub.file_url} target="_blank" rel="noreferrer" className="text-xs text-emerald-400 hover:underline block font-mono">
+                  <a href={sub.file_url} target="_blank" rel="noreferrer" className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline block font-mono">
                     View Proof Attachment
                   </a>
                 )}
-                <div className="pt-2 flex justify-end gap-2 border-t border-slate-800">
+                <div className="pt-2 flex justify-end gap-2 border-t border-[var(--panel-border)]">
                   <button onClick={() => handleRejectSub(sub.id)} className="btn-crimson text-xs py-1 px-3">
                     <XCircle className="w-3.5 h-3.5" /> Reject
                   </button>
-                  <button onClick={() => handleApproveSub(sub.id)} className="btn-primary text-xs py-1 px-3 bg-emerald-600 hover:bg-emerald-500">
+                  <button onClick={() => handleApproveSub(sub.id)} className="btn-primary text-xs py-1 px-3">
                     <CheckCircle2 className="w-3.5 h-3.5" /> Approve & Award Points
                   </button>
                 </div>
@@ -222,13 +221,13 @@ export const StudentLeaderboardPage: React.FC = () => {
 
       {/* Main Leaderboard Table */}
       <div className="glass-panel overflow-hidden">
-        <div className="p-4 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between">
-          <h3 className="font-bold text-slate-100 text-sm">Official Student Rankings Ledger</h3>
-          <span className="text-xs text-slate-400">Calculated strictly as SUM of points</span>
+        <div className="p-4 bg-[var(--card-bg-to)] border-b border-[var(--panel-border)] flex items-center justify-between">
+          <h3 className="font-bold text-[var(--text-primary)] text-sm">Official Student Rankings Ledger</h3>
+          <span className="text-xs text-[var(--text-muted)]">Calculated strictly as SUM of points</span>
         </div>
 
-        <table className="w-full text-left text-sm text-slate-300">
-          <thead className="bg-slate-900/90 text-xs uppercase font-semibold text-slate-400 border-b border-slate-800">
+        <table className="w-full text-left text-sm text-[var(--text-secondary)]">
+          <thead className="bg-[var(--card-bg-to)] text-xs uppercase font-bold text-[var(--text-primary)] border-b border-[var(--panel-border)]">
             <tr>
               <th className="p-4">Rank</th>
               <th className="p-4">Student Name</th>
@@ -239,33 +238,33 @@ export const StudentLeaderboardPage: React.FC = () => {
               <th className="p-4 text-right">Total Score</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60">
+          <tbody className="divide-y divide-[var(--panel-border)]">
             {loading ? (
-              <tr><td colSpan={7} className="p-8 text-center text-slate-500">Loading student rankings...</td></tr>
+              <tr><td colSpan={7} className="p-8 text-center text-[var(--text-muted)]">Loading student rankings...</td></tr>
             ) : rankings.length === 0 ? (
-              <tr><td colSpan={7} className="p-8 text-center text-slate-500">No points recorded on leaderboard.</td></tr>
+              <tr><td colSpan={7} className="p-8 text-center text-[var(--text-muted)]">No points recorded on leaderboard.</td></tr>
             ) : (
               rankings.map(r => (
-                <tr key={r.student_id} className="hover:bg-slate-800/40 transition-colors">
+                <tr key={r.student_id} className="hover:bg-emerald-500/5 transition-colors">
                   <td className="p-4">
                     <div className="flex items-center gap-2">
                       {r.rank === 1 ? (
                         <span className="w-7 h-7 rounded-full bg-amber-400 text-slate-950 font-black flex items-center justify-center text-xs shadow-lg shadow-amber-400/30">1</span>
                       ) : r.rank === 2 ? (
-                        <span className="w-7 h-7 rounded-full bg-slate-300 text-slate-950 font-black flex items-center justify-center text-xs">2</span>
+                        <span className="w-7 h-7 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-950 dark:text-white font-black flex items-center justify-center text-xs">2</span>
                       ) : r.rank === 3 ? (
                         <span className="w-7 h-7 rounded-full bg-amber-700 text-white font-black flex items-center justify-center text-xs">3</span>
                       ) : (
-                        <span className="w-7 h-7 rounded-full bg-slate-800 text-slate-400 font-bold flex items-center justify-center text-xs">#{r.rank}</span>
+                        <span className="w-7 h-7 rounded-full bg-[var(--card-bg-to)] border border-[var(--panel-border)] text-[var(--text-secondary)] font-bold flex items-center justify-center text-xs">#{r.rank}</span>
                       )}
                     </div>
                   </td>
-                  <td className="p-4 font-semibold text-slate-100">{r.name}</td>
-                  <td className="p-4 font-mono text-xs text-amber-400">{r.roll_number || 'N/A'}</td>
-                  <td className="p-4 text-slate-300">{r.course_branch || 'N/A'}</td>
-                  <td className="p-4 text-center font-mono text-xs text-blue-400">{r.task_points}</td>
-                  <td className="p-4 text-center font-mono text-xs text-purple-400">{r.manual_points}</td>
-                  <td className="p-4 text-right font-black text-amber-400 text-base">{r.total_points} pts</td>
+                  <td className="p-4 font-semibold text-[var(--text-primary)]">{r.name}</td>
+                  <td className="p-4 font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">{r.roll_number || 'N/A'}</td>
+                  <td className="p-4 text-[var(--text-secondary)]">{r.course_branch || 'N/A'}</td>
+                  <td className="p-4 text-center font-mono text-xs text-blue-600 dark:text-blue-400 font-semibold">{r.task_points}</td>
+                  <td className="p-4 text-center font-mono text-xs text-purple-600 dark:text-purple-400 font-semibold">{r.manual_points}</td>
+                  <td className="p-4 text-right font-black text-amber-600 dark:text-amber-400 text-base">{r.total_points} pts</td>
                 </tr>
               ))
             )}
@@ -276,34 +275,34 @@ export const StudentLeaderboardPage: React.FC = () => {
       {/* Task Creation Modal */}
       {isTaskModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-md glass-panel p-6 shadow-2xl relative">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-              <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-amber-400" /> Create Student Leaderboard Task
+          <div className="w-full max-w-md glass-panel p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)] mb-4">
+              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-amber-500" /> Create Student Leaderboard Task
               </h3>
-              <button onClick={() => setIsTaskModalOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsTaskModalOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateTask} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Challenge Title</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Challenge Title</label>
                 <input required type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Blood Drive Volunteer" className="glass-input" />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Challenge Instructions</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Challenge Instructions</label>
                 <textarea rows={3} value={description} onChange={e => setDescription(e.target.value)} placeholder="Participation requirements..." className="glass-input" />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Points Reward</label>
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Points Reward</label>
                   <input required type="number" value={pointsValue} onChange={e => setPointsValue(Number(e.target.value))} className="glass-input" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Submission Mode</label>
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Submission Mode</label>
                   <select value={submissionMode} onChange={e => setSubmissionMode(e.target.value as any)} className="glass-input">
                     <option value="single">Single Submission Only</option>
                     <option value="multiple">Multiple / Recurring Allowed</option>
@@ -311,7 +310,7 @@ export const StudentLeaderboardPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-800 flex justify-end gap-2">
+              <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">
                 <button type="button" onClick={() => setIsTaskModalOpen(false)} className="btn-secondary">Cancel</button>
                 <button type="submit" className="btn-primary">Publish Challenge</button>
               </div>
@@ -323,19 +322,19 @@ export const StudentLeaderboardPage: React.FC = () => {
       {/* Manual Point Adjuster Modal */}
       {isManualModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-md glass-panel p-6 shadow-2xl relative">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-              <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-amber-400" /> Manual Student Point Adjuster
+          <div className="w-full max-w-md glass-panel p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)] mb-4">
+              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-500" /> Manual Student Point Adjuster
               </h3>
-              <button onClick={() => setIsManualModalOpen(false)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setIsManualModalOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleManualPoints} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Select Student</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Select Student</label>
                 <select required value={selectedStudentId} onChange={e => setSelectedStudentId(e.target.value ? Number(e.target.value) : '')} className="glass-input">
                   <option value="">-- Select Student --</option>
                   {studentsList.map(s => (
@@ -345,16 +344,16 @@ export const StudentLeaderboardPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Points Delta (+ or -)</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Points Delta (+ or -)</label>
                 <input required type="number" value={manualPoints} onChange={e => setManualPoints(Number(e.target.value))} className="glass-input" />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Reason Note</label>
+                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Reason Note</label>
                 <input required type="text" value={reasonNote} onChange={e => setReasonNote(e.target.value)} placeholder="e.g. Winner of Campus Hackathon" className="glass-input" />
               </div>
 
-              <div className="pt-4 border-t border-slate-800 flex justify-end gap-2">
+              <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">
                 <button type="button" onClick={() => setIsManualModalOpen(false)} className="btn-secondary">Cancel</button>
                 <button type="submit" className="btn-primary">Update Points</button>
               </div>

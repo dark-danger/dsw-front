@@ -12,9 +12,9 @@ export const AppLayout: React.FC<{ allowedRoles: string[]; pageTitle: string }> 
 
   if (loading) {
     return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center bg-black text-white">
+      <div className="h-screen w-screen flex flex-col items-center justify-center bg-[var(--bg-primary)] text-[var(--text-primary)]">
         <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4" />
-        <div className="text-sm font-medium text-slate-400">Loading DSW Portal...</div>
+        <div className="text-sm font-medium text-[var(--text-secondary)]">Loading DSW Portal...</div>
       </div>
     );
   }
@@ -30,11 +30,11 @@ export const AppLayout: React.FC<{ allowedRoles: string[]; pageTitle: string }> 
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-black">
+    <div className="flex h-screen w-screen overflow-hidden bg-[var(--bg-primary)]">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <Navbar title={pageTitle} />
-        <main className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-[#060e0a] to-[#020503]">
+        <main className="flex-1 overflow-y-auto p-6 bg-transparent">
           <Outlet />
         </main>
       </div>

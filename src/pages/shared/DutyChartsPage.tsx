@@ -186,23 +186,23 @@ export const DutyChartsPage: React.FC = () => {
       {/* Duty Charts List */}
       <div className="space-y-4">
         {loading ? (
-          <div className="p-8 text-center text-slate-400 glass-panel">Loading duty charts...</div>
+          <div className="p-8 text-center text-[var(--text-muted)] glass-panel">Loading duty charts...</div>
         ) : charts.length === 0 ? (
-          <div className="p-8 text-center text-slate-400 glass-panel">
+          <div className="p-8 text-center text-[var(--text-muted)] glass-panel">
             No duty charts published yet. {isAdmin && "Click 'Create New Duty Chart' to assign event duties."}
           </div>
         ) : (
           charts.map(chart => (
             <div key={chart.id} className="glass-panel p-6 space-y-4 hover:border-emerald-500/50 transition-all">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--panel-border)] pb-4">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30">
                       {chart.event_title}
                     </span>
-                    <span className="text-xs text-slate-400">Issued: {new Date(chart.created_at).toLocaleDateString()}</span>
+                    <span className="text-xs text-[var(--text-muted)]">Issued: {new Date(chart.created_at).toLocaleDateString()}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-white mt-1">{chart.title}</h3>
+                  <h3 className="text-lg font-bold text-[var(--text-primary)] mt-1">{chart.title}</h3>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
@@ -215,7 +215,7 @@ export const DutyChartsPage: React.FC = () => {
                   {isAdmin && (
                     <button
                       onClick={() => handleDeleteChart(chart.id, chart.title)}
-                      className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors"
+                      className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 transition-colors"
                       title="Delete Chart"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -226,24 +226,24 @@ export const DutyChartsPage: React.FC = () => {
 
               {/* Summary Stats & Quick Preview */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div className="bg-black/60 p-3 rounded-xl border border-white/10">
-                  <div className="text-xs text-slate-400 font-medium">Assigned Staff Count</div>
-                  <div className="text-lg font-bold text-emerald-400 mt-0.5">{chart.duty_items.length} Faculty Members</div>
+                <div className="bg-[var(--card-bg-to)] p-3 rounded-xl border border-[var(--panel-border)]">
+                  <div className="text-xs text-[var(--text-muted)] font-medium">Assigned Staff Count</div>
+                  <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">{chart.duty_items.length} Faculty Members</div>
                 </div>
-                <div className="bg-black/60 p-3 rounded-xl border border-white/10">
-                  <div className="text-xs text-slate-400 font-medium">Issuing Authority</div>
-                  <div className="text-sm font-semibold text-white mt-1">{chart.creator_name || 'DSW Admin Office'}</div>
+                <div className="bg-[var(--card-bg-to)] p-3 rounded-xl border border-[var(--panel-border)]">
+                  <div className="text-xs text-[var(--text-muted)] font-medium">Issuing Authority</div>
+                  <div className="text-sm font-semibold text-[var(--text-primary)] mt-1">{chart.creator_name || 'DSW Admin Office'}</div>
                 </div>
-                <div className="bg-black/60 p-3 rounded-xl border border-white/10">
-                  <div className="text-xs text-slate-400 font-medium">Directives / Guidelines</div>
-                  <div className="text-xs text-slate-300 truncate mt-1">{chart.notes || 'Standard DSW event protocol applies.'}</div>
+                <div className="bg-[var(--card-bg-to)] p-3 rounded-xl border border-[var(--panel-border)]">
+                  <div className="text-xs text-[var(--text-muted)] font-medium">Directives / Guidelines</div>
+                  <div className="text-xs text-[var(--text-secondary)] truncate mt-1">{chart.notes || 'Standard DSW event protocol applies.'}</div>
                 </div>
               </div>
 
               {/* Duty Table Preview */}
-              <div className="overflow-x-auto rounded-xl border border-white/10">
-                <table className="w-full text-left text-xs text-slate-300">
-                  <thead className="bg-black/90 font-semibold text-slate-400 uppercase">
+              <div className="overflow-x-auto rounded-xl border border-[var(--panel-border)]">
+                <table className="w-full text-left text-xs text-[var(--text-secondary)]">
+                  <thead className="bg-[var(--card-bg-to)] font-bold text-[var(--text-primary)] uppercase border-b border-[var(--panel-border)]">
                     <tr>
                       <th className="p-3">Duty Role</th>
                       <th className="p-3">Assigned Faculty</th>
@@ -251,15 +251,15 @@ export const DutyChartsPage: React.FC = () => {
                       <th className="p-3">Venue & Timing</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5 bg-black/40">
+                  <tbody className="divide-y divide-[var(--panel-border)]">
                     {chart.duty_items.map((item, idx) => (
-                      <tr key={idx} className="hover:bg-white/5">
-                        <td className="p-3 font-semibold text-white flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> {item.duty_name}
+                      <tr key={idx} className="hover:bg-emerald-500/5">
+                        <td className="p-3 font-semibold text-[var(--text-primary)] flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> {item.duty_name}
                         </td>
-                        <td className="p-3 font-medium text-emerald-300">{item.assigned_to_name}</td>
-                        <td className="p-3 text-slate-400">{item.department || 'DSW'}</td>
-                        <td className="p-3 text-slate-300 font-mono">
+                        <td className="p-3 font-medium text-emerald-600 dark:text-emerald-300">{item.assigned_to_name}</td>
+                        <td className="p-3 text-[var(--text-muted)]">{item.department || 'DSW'}</td>
+                        <td className="p-3 text-[var(--text-secondary)] font-mono">
                           {item.venue || 'Campus'} • {item.time_slot || 'Event Hours'}
                         </td>
                       </tr>
