@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { Trophy, Sparkles, Send, CheckCircle2, FileText, X, Clock } from 'lucide-react';
 import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
+import { useAuth } from '../../context/AuthContext';
 
 interface LeaderboardTask {
   id: number;
@@ -16,6 +17,7 @@ interface LeaderboardTask {
 }
 
 export const LeaderboardTasksPage: React.FC = () => {
+  const { user } = useAuth();
   const [tasks, setTasks] = useState<LeaderboardTask[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -167,6 +169,8 @@ export const LeaderboardTasksPage: React.FC = () => {
                   setProofUrl(url);
                   setProofName(name || '');
                 }}
+                facultyName={user?.name || 'Student Submission'}
+                taskName={selectedTask?.title || 'Challenge Task'}
                 disabled={submitting}
               />
 

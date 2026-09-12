@@ -1172,6 +1172,8 @@ export const ClubsPage: React.FC = () => {
               <TaskProofSubmitter
                 valueUrl={proofUrl}
                 onChange={(url) => setProofUrl(url)}
+                facultyName={selectedClubForTasks?.name || user?.name || 'Club Society'}
+                taskName={submittingTask?.title || 'Club Task'}
               />
 
               <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">

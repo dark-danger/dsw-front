@@ -3,6 +3,7 @@ import { apiRequest } from '../../lib/api';
 import { CheckSquare, Upload, FileText, CheckCircle2, AlertCircle, Clock, Send, X } from 'lucide-react';
 import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
 import { ProofViewer } from '../../components/tasks/ProofViewer';
+import { useAuth } from '../../context/AuthContext';
 
 interface TaskSubmission {
   id: number;
@@ -28,6 +29,7 @@ interface TaskItem {
 }
 
 export const MyTasksPage: React.FC = () => {
+  const { user } = useAuth();
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -211,6 +213,8 @@ export const MyTasksPage: React.FC = () => {
                   setProofUrl(url);
                   setProofName(name || '');
                 }}
+                facultyName={user?.name || 'Faculty Member'}
+                taskName={selectedTask?.title || 'Assigned Duty'}
                 disabled={submitting}
               />
 
