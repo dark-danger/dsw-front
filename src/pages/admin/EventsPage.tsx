@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
 import { User } from '../../context/AuthContext';
-import { Calendar, Plus, FileText, CheckCircle2, Clock, MapPin, User as UserIcon, X, Eye, Trash2 } from 'lucide-react';
+import { Calendar, Plus, FileText, CheckCircle2, Clock, MapPin, User as UserIcon, X, Eye, Trash2, FileCheck } from 'lucide-react';
 
 interface EventItem {
   id: number;
@@ -19,6 +20,7 @@ interface EventItem {
 }
 
 export const EventsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [events, setEvents] = useState<EventItem[]>([]);
   const [facultyList, setFacultyList] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,8 +70,8 @@ export const EventsPage: React.FC = () => {
       setTitle('');
       setDescription('');
       fetchEventsData();
-    } catch (err: any) {
-      alert(err.message || 'Failed to create event');
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -77,16 +79,18 @@ export const EventsPage: React.FC = () => {
     try {
       const html = await apiRequest<string>(`/events/${eventId}/reports/merged`);
       setReportHtmlModal(html);
-    } catch (e: any) {
-      alert('Failed to generate merged report preview');
+    } catch (err: any) {
+      alert(err.message || 'Failed to generate merged report preview');
     }
   };
 
   const handleDeleteEvent = async (eventId: number, eventTitle: string) => {
-    if (!window.confirm(`Are you sure you want to permanently delete the event "${eventTitle}" and its associated tasks?`)) return;
+    if (!window.confirm(`Are you sure you want to permanently delete the event "${eventTitle}"? This will also remove all linked sub-tasks.`)) {
+      return;
+    }
     try {
       await apiRequest(`/events/${eventId}`, 'DELETE');
-      setEvents(prev => prev.filter(e => e.id !== eventId));
+      setEvents(events.filter(e => e.id !== eventId));
     } catch (err: any) {
       alert(err.message || 'Failed to delete event');
     }
@@ -98,14 +102,28 @@ export const EventsPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-panel p-6">
         <div>
           <h2 className="text-xl font-bold text-[var(--text-primary)]">Events & Automated Reporting</h2>
-          <p className="text-xs text-[var(--text-secondary)] mt-1">Create campus events, attach task work, and generate 1-click Micro & Merged PDF reports.</p>
+          <p className="text-xs text-[var(--text-secondary)] mt-1">Create campus events, attach task work, and generate official 7-page Geeta University event reports.</p>
         </div>
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="btn-primary shrink-0"
-        >
-          <Plus className="w-4 h-4" /> Create New Campus Event
-        </button>
+        <div className="flex items-center flex-wrap gap-2.5">
+          <button
+            onClick={() => navigate('/admin/events/reports')}
+            className="btn-secondary text-xs py-2.5 px-4 flex items-center gap-2"
+          >
+            <FileText className="w-4 h-4 text-amber-500" /> Official Reports Archive
+          </button>
+          <button
+            onClick={() => navigate('/admin/events/reports/new')}
+            className="btn-secondary text-xs py-2.5 px-4 flex items-center gap-2 border-blue-500/30 text-blue-600 dark:text-blue-400"
+          >
+            <FileCheck className="w-4 h-4 text-blue-500" /> New 7-Page Report
+          </button>
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="btn-primary text-xs py-2.5 px-4 shrink-0"
+          >
+            <Plus className="w-4 h-4" /> Create Campus Event
+          </button>
+        </div>
       </div>
 
       {/* Events Grid */}
@@ -113,7 +131,7 @@ export const EventsPage: React.FC = () => {
         {loading ? (
           <div className="col-span-2 p-8 text-center text-[var(--text-muted)]">Loading campus events...</div>
         ) : events.length === 0 ? (
-          <div className="col-span-2 p-8 text-center text-[var(--text-muted)]">No events found. Click 'Create New Campus Event' to get started.</div>
+          <div className="col-span-2 p-8 text-center text-[var(--text-muted)]">No events found. Click 'Create Campus Event' to get started.</div>
         ) : (
           events.map((ev) => (
             <div key={ev.id} className="glass-panel p-6 space-y-4 relative overflow-hidden flex flex-col justify-between">
@@ -124,7 +142,8 @@ export const EventsPage: React.FC = () => {
                   </span>
                   <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                     ev.status === 'completed' ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30' :
-                    ev.status === 'ongoing' ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30' : 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30'
+                    ev.status === 'ongoing' ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30' :
+                    'bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30'
                   }`}>
                     {ev.status.toUpperCase()}
                   </span>
@@ -159,14 +178,21 @@ export const EventsPage: React.FC = () => {
               {/* Action Buttons */}
               <div className="pt-4 flex items-center justify-between gap-2 border-t border-[var(--panel-border)]">
                 <button
+                  onClick={() => navigate(`/admin/events/reports/new?eventId=${ev.id}`)}
+                  className="px-3 py-2 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/60 rounded-xl text-xs font-bold border border-blue-200 dark:border-blue-800/60 flex items-center gap-1.5 transition-all shadow-xs"
+                  title="Generate official 7-page Geeta University Event Report"
+                >
+                  <FileText className="w-3.5 h-3.5 text-blue-500" /> Fill 7-Page Report
+                </button>
+                <button
                   onClick={() => handlePreviewMergedReport(ev.id)}
                   className="btn-secondary text-xs py-2 px-3 flex-1 justify-center flex items-center gap-1.5"
                 >
-                  <Eye className="w-4 h-4 text-blue-500" /> 1-Click Preview & PDF Report
+                  <Eye className="w-4 h-4 text-purple-500" /> Task Summary PDF
                 </button>
                 <button
                   onClick={() => handleDeleteEvent(ev.id, ev.title)}
-                  className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 transition-colors shrink-0"
+                  className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 transition-colors shrink-0"
                   title="Delete Event"
                 >
                   <Trash2 className="w-4 h-4" />

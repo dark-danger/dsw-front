@@ -35,6 +35,8 @@ const DutyChartsPage = React.lazy(() => import('./pages/shared/DutyChartsPage').
 const CoreCommitteesPage = React.lazy(() => import('./pages/shared/CoreCommitteesPage').then(m => ({ default: m.CoreCommitteesPage })));
 const ClubsPage = React.lazy(() => import('./pages/shared/ClubsPage').then(m => ({ default: m.ClubsPage })));
 const ClubLeaderboardPage = React.lazy(() => import('./pages/shared/ClubLeaderboardPage').then(m => ({ default: m.ClubLeaderboardPage })));
+const EventReportsListPage = React.lazy(() => import('./pages/shared/EventReportsListPage').then(m => ({ default: m.EventReportsListPage })));
+const EventReportFormPage = React.lazy(() => import('./pages/shared/EventReportFormPage').then(m => ({ default: m.EventReportFormPage })));
 
 const PageLoader: React.FC = () => (
   <div className="flex-1 flex flex-col items-center justify-center min-h-[50vh] p-8 text-center animate-fade-in">
@@ -71,6 +73,9 @@ export const App: React.FC = () => {
                 <Route path="clubs" element={<ClubsPage />} />
                 <Route path="club-leaderboard" element={<ClubLeaderboardPage />} />
                 <Route path="events" element={<EventsPage />} />
+                <Route path="events/reports" element={<EventReportsListPage />} />
+                <Route path="events/reports/new" element={<EventReportFormPage />} />
+                <Route path="events/reports/:id" element={<EventReportFormPage />} />
                 <Route path="tasks" element={<TasksPage />} />
                 <Route path="duty-charts" element={<DutyChartsPage />} />
                 <Route path="committees" element={<CoreCommitteesPage />} />
@@ -88,6 +93,9 @@ export const App: React.FC = () => {
                 <Route path="dashboard" element={<FacultyDashboardPage />} />
                 <Route path="clubs" element={<ClubsPage />} />
                 <Route path="club-leaderboard" element={<ClubLeaderboardPage />} />
+                <Route path="events/reports" element={<EventReportsListPage />} />
+                <Route path="events/reports/new" element={<EventReportFormPage />} />
+                <Route path="events/reports/:id" element={<EventReportFormPage />} />
                 <Route path="tasks" element={<MyTasksPage />} />
                 <Route path="duty-charts" element={<DutyChartsPage />} />
                 <Route path="committees" element={<CoreCommitteesPage />} />
