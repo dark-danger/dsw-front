@@ -23,14 +23,12 @@ export const Sidebar: React.FC = () => {
     { label: 'Task Assignment', path: '/admin/tasks', icon: <CheckSquare className="w-4 h-4" /> },
     { label: 'Event Duty Charts', path: '/admin/duty-charts', icon: <FileCheck className="w-4 h-4 text-emerald-400" /> },
     { label: 'Core Committees', path: '/admin/committees', icon: <Award className="w-4 h-4 text-teal-400" /> },
-    { label: 'Clubs & Societies', path: '/admin/clubs', icon: <Sparkles className="w-4 h-4 text-indigo-400" /> },
     { label: 'Announcements', path: '/admin/announcements', icon: <Megaphone className="w-4 h-4" /> },
     { label: 'Query Inbox', path: '/admin/queries', icon: <HelpCircle className="w-4 h-4" /> },
     { label: 'Dynamic Forms', path: '/admin/forms', icon: <FileText className="w-4 h-4" /> },
     { label: 'Feedback Forms', path: '/admin/feedback', icon: <MessageSquareHeart className="w-4 h-4" /> },
     { label: 'Student Leaderboard', path: '/admin/leaderboard/students', icon: <Trophy className="w-4 h-4 text-amber-400" /> },
     { label: 'Staff Leaderboard', path: '/admin/leaderboard/staff', icon: <Medal className="w-4 h-4 text-emerald-400" /> },
-    { label: 'Club Leaderboard', path: '/admin/leaderboard/clubs', icon: <Trophy className="w-4 h-4 text-rose-400" /> },
   ];
 
   const facultyNav: SidebarItem[] = [
@@ -38,22 +36,18 @@ export const Sidebar: React.FC = () => {
     { label: 'My Assigned Tasks', path: '/faculty/tasks', icon: <CheckSquare className="w-4 h-4" /> },
     { label: 'Event Duty Charts', path: '/faculty/duty-charts', icon: <FileCheck className="w-4 h-4 text-emerald-400" /> },
     { label: 'Core Committees', path: '/faculty/committees', icon: <Award className="w-4 h-4 text-teal-400" /> },
-    { label: 'Clubs & Societies', path: '/faculty/clubs', icon: <Sparkles className="w-4 h-4 text-indigo-400" /> },
     { label: 'Announcements', path: '/faculty/announcements', icon: <Megaphone className="w-4 h-4" /> },
     { label: 'Raise Query', path: '/faculty/queries', icon: <HelpCircle className="w-4 h-4" /> },
     { label: 'Staff Leaderboard', path: '/faculty/leaderboard', icon: <Medal className="w-4 h-4 text-emerald-400" /> },
-    { label: 'Club Leaderboard', path: '/faculty/leaderboard/clubs', icon: <Trophy className="w-4 h-4 text-rose-400" /> },
   ];
 
   const studentNav: SidebarItem[] = [
     { label: 'Student Portal', path: '/student/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
     { label: 'Core Committees', path: '/student/committees', icon: <Award className="w-4 h-4 text-teal-400" /> },
-    { label: 'Clubs & Societies', path: '/student/clubs', icon: <Sparkles className="w-4 h-4 text-indigo-400" /> },
     { label: 'Announcements', path: '/student/announcements', icon: <Megaphone className="w-4 h-4" /> },
     { label: 'Raise Query', path: '/student/queries', icon: <HelpCircle className="w-4 h-4" /> },
     { label: 'Leaderboard Tasks', path: '/student/leaderboard-tasks', icon: <Sparkles className="w-4 h-4 text-amber-400" /> },
     { label: 'Student Leaderboard', path: '/student/leaderboard', icon: <Trophy className="w-4 h-4 text-amber-400" /> },
-    { label: 'Club Leaderboard', path: '/student/leaderboard/clubs', icon: <Trophy className="w-4 h-4 text-rose-400" /> },
   ];
 
   const navItems = user?.role === 'super_admin' ? adminNav : user?.role === 'faculty' ? facultyNav : studentNav;

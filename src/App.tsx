@@ -33,8 +33,6 @@ const LeaderboardTasksPage = React.lazy(() => import('./pages/student/Leaderboar
 // Shared Pages (Lazy Loaded)
 const DutyChartsPage = React.lazy(() => import('./pages/shared/DutyChartsPage').then(m => ({ default: m.DutyChartsPage })));
 const CoreCommitteesPage = React.lazy(() => import('./pages/shared/CoreCommitteesPage').then(m => ({ default: m.CoreCommitteesPage })));
-const ClubsPage = React.lazy(() => import('./pages/shared/ClubsPage').then(m => ({ default: m.ClubsPage })));
-const ClubLeaderboardPage = React.lazy(() => import('./pages/shared/ClubLeaderboardPage').then(m => ({ default: m.ClubLeaderboardPage })));
 
 const PageLoader: React.FC = () => (
   <div className="flex-1 flex flex-col items-center justify-center min-h-[50vh] p-8 text-center animate-fade-in">
@@ -72,14 +70,12 @@ export const App: React.FC = () => {
                 <Route path="tasks" element={<TasksPage />} />
                 <Route path="duty-charts" element={<DutyChartsPage />} />
                 <Route path="committees" element={<CoreCommitteesPage />} />
-                <Route path="clubs" element={<ClubsPage />} />
                 <Route path="announcements" element={<AnnouncementsPage />} />
                 <Route path="queries" element={<QueriesPage />} />
                 <Route path="forms" element={<FormsPage />} />
                 <Route path="feedback" element={<FeedbackPage />} />
                 <Route path="leaderboard/students" element={<StudentLeaderboardPage />} />
                 <Route path="leaderboard/staff" element={<StaffLeaderboardPage />} />
-                <Route path="leaderboard/clubs" element={<ClubLeaderboardPage />} />
                 <Route path="*" element={<Navigate to="dashboard" replace />} />
               </Route>
 
@@ -89,11 +85,9 @@ export const App: React.FC = () => {
                 <Route path="tasks" element={<MyTasksPage />} />
                 <Route path="duty-charts" element={<DutyChartsPage />} />
                 <Route path="committees" element={<CoreCommitteesPage />} />
-                <Route path="clubs" element={<ClubsPage />} />
                 <Route path="announcements" element={<AnnouncementsPage />} />
                 <Route path="queries" element={<QueriesPage />} />
                 <Route path="leaderboard" element={<StaffLeaderboardPage />} />
-                <Route path="leaderboard/clubs" element={<ClubLeaderboardPage />} />
                 <Route path="*" element={<Navigate to="dashboard" replace />} />
               </Route>
 
@@ -101,12 +95,10 @@ export const App: React.FC = () => {
               <Route path="/student" element={<AppLayout allowedRoles={['student']} pageTitle="Student Welfare Portal" />}>
                 <Route path="dashboard" element={<StudentDashboardPage />} />
                 <Route path="committees" element={<CoreCommitteesPage />} />
-                <Route path="clubs" element={<ClubsPage />} />
                 <Route path="announcements" element={<AnnouncementsPage />} />
                 <Route path="queries" element={<QueriesPage />} />
                 <Route path="leaderboard-tasks" element={<LeaderboardTasksPage />} />
                 <Route path="leaderboard" element={<StudentLeaderboardPage />} />
-                <Route path="leaderboard/clubs" element={<ClubLeaderboardPage />} />
                 <Route path="*" element={<Navigate to="dashboard" replace />} />
               </Route>
 
