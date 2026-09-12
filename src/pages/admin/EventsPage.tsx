@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { User } from '../../context/AuthContext';
-import { Calendar, Plus, FileText, CheckCircle2, Clock, MapPin, User as UserIcon, X, Eye } from 'lucide-react';
+import { Calendar, Plus, FileText, CheckCircle2, Clock, MapPin, User as UserIcon, X, Eye, Trash2 } from 'lucide-react';
 
 interface EventItem {
   id: number;
@@ -30,8 +30,8 @@ export const EventsPage: React.FC = () => {
   // Form
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [eventType, setEventType] = useState('Seminar / Symposium');
-  const [venue, setVenue] = useState('Main University Auditorium');
+  const [eventType, setEventType] = useState('Seminar');
+  const [venue, setVenue] = useState('Auditorium A');
   const [coordinatorId, setCoordinatorId] = useState<number | ''>('');
 
   const fetchEventsData = async () => {
@@ -62,8 +62,7 @@ export const EventsPage: React.FC = () => {
         description,
         event_type: eventType,
         venue,
-        coordinator_id: coordinatorId ? Number(coordinatorId) : null,
-        status: 'planned'
+        coordinator_id: coordinatorId ? Number(coordinatorId) : null
       });
       setIsAddModalOpen(false);
       setTitle('');
@@ -80,6 +79,16 @@ export const EventsPage: React.FC = () => {
       setReportHtmlModal(html);
     } catch (e: any) {
       alert('Failed to generate merged report preview');
+    }
+  };
+
+  const handleDeleteEvent = async (eventId: number, eventTitle: string) => {
+    if (!window.confirm(`Are you sure you want to permanently delete the event "${eventTitle}" and its associated tasks?`)) return;
+    try {
+      await apiRequest(`/events/${eventId}`, 'DELETE');
+      setEvents(prev => prev.filter(e => e.id !== eventId));
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete event');
     }
   };
 
@@ -148,12 +157,19 @@ export const EventsPage: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-4 flex items-center justify-between border-t border-[var(--panel-border)]">
+              <div className="pt-4 flex items-center justify-between gap-2 border-t border-[var(--panel-border)]">
                 <button
                   onClick={() => handlePreviewMergedReport(ev.id)}
-                  className="btn-secondary text-xs py-2 px-3 w-full justify-center"
+                  className="btn-secondary text-xs py-2 px-3 flex-1 justify-center flex items-center gap-1.5"
                 >
-                  <Eye className="w-4 h-4 text-blue-500" /> 1-Click Preview & Generate Merged PDF Report
+                  <Eye className="w-4 h-4 text-blue-500" /> 1-Click Preview & PDF Report
+                </button>
+                <button
+                  onClick={() => handleDeleteEvent(ev.id, ev.title)}
+                  className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 transition-colors shrink-0"
+                  title="Delete Event"
+                >
+                  <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>

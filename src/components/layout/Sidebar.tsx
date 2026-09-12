@@ -19,6 +19,8 @@ export const Sidebar: React.FC = () => {
   const adminNav: SidebarItem[] = [
     { label: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
     { label: 'Faculty Management', path: '/admin/faculty', icon: <Users className="w-4 h-4" /> },
+    { label: 'Student Clubs', path: '/admin/clubs', icon: <Users className="w-4 h-4 text-blue-400" /> },
+    { label: 'Club Leaderboard', path: '/admin/club-leaderboard', icon: <Trophy className="w-4 h-4 text-purple-400" /> },
     { label: 'Events & Reports', path: '/admin/events', icon: <Calendar className="w-4 h-4" /> },
     { label: 'Task Assignment', path: '/admin/tasks', icon: <CheckSquare className="w-4 h-4" /> },
     { label: 'Event Duty Charts', path: '/admin/duty-charts', icon: <FileCheck className="w-4 h-4 text-emerald-400" /> },
@@ -33,6 +35,8 @@ export const Sidebar: React.FC = () => {
 
   const facultyNav: SidebarItem[] = [
     { label: 'My Dashboard', path: '/faculty/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { label: 'Student Clubs', path: '/faculty/clubs', icon: <Users className="w-4 h-4 text-blue-400" /> },
+    { label: 'Club Leaderboard', path: '/faculty/club-leaderboard', icon: <Trophy className="w-4 h-4 text-purple-400" /> },
     { label: 'My Assigned Tasks', path: '/faculty/tasks', icon: <CheckSquare className="w-4 h-4" /> },
     { label: 'Event Duty Charts', path: '/faculty/duty-charts', icon: <FileCheck className="w-4 h-4 text-emerald-400" /> },
     { label: 'Core Committees', path: '/faculty/committees', icon: <Award className="w-4 h-4 text-teal-400" /> },
@@ -43,6 +47,8 @@ export const Sidebar: React.FC = () => {
 
   const studentNav: SidebarItem[] = [
     { label: 'Student Portal', path: '/student/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { label: 'Student Clubs', path: '/student/clubs', icon: <Users className="w-4 h-4 text-blue-400" /> },
+    { label: 'Club Leaderboard', path: '/student/club-leaderboard', icon: <Trophy className="w-4 h-4 text-purple-400" /> },
     { label: 'Core Committees', path: '/student/committees', icon: <Award className="w-4 h-4 text-teal-400" /> },
     { label: 'Announcements', path: '/student/announcements', icon: <Megaphone className="w-4 h-4" /> },
     { label: 'Raise Query', path: '/student/queries', icon: <HelpCircle className="w-4 h-4" /> },

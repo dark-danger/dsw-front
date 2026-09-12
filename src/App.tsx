@@ -33,6 +33,8 @@ const LeaderboardTasksPage = React.lazy(() => import('./pages/student/Leaderboar
 // Shared Pages (Lazy Loaded)
 const DutyChartsPage = React.lazy(() => import('./pages/shared/DutyChartsPage').then(m => ({ default: m.DutyChartsPage })));
 const CoreCommitteesPage = React.lazy(() => import('./pages/shared/CoreCommitteesPage').then(m => ({ default: m.CoreCommitteesPage })));
+const ClubsPage = React.lazy(() => import('./pages/shared/ClubsPage').then(m => ({ default: m.ClubsPage })));
+const ClubLeaderboardPage = React.lazy(() => import('./pages/shared/ClubLeaderboardPage').then(m => ({ default: m.ClubLeaderboardPage })));
 
 const PageLoader: React.FC = () => (
   <div className="flex-1 flex flex-col items-center justify-center min-h-[50vh] p-8 text-center animate-fade-in">
@@ -66,6 +68,8 @@ export const App: React.FC = () => {
               <Route path="/admin" element={<AppLayout allowedRoles={['super_admin']} pageTitle="DSW Administration Portal" />}>
                 <Route path="dashboard" element={<AdminDashboardPage />} />
                 <Route path="faculty" element={<FacultyPage />} />
+                <Route path="clubs" element={<ClubsPage />} />
+                <Route path="club-leaderboard" element={<ClubLeaderboardPage />} />
                 <Route path="events" element={<EventsPage />} />
                 <Route path="tasks" element={<TasksPage />} />
                 <Route path="duty-charts" element={<DutyChartsPage />} />
@@ -82,6 +86,8 @@ export const App: React.FC = () => {
               {/* Faculty Portal */}
               <Route path="/faculty" element={<AppLayout allowedRoles={['faculty']} pageTitle="Faculty Workstation Portal" />}>
                 <Route path="dashboard" element={<FacultyDashboardPage />} />
+                <Route path="clubs" element={<ClubsPage />} />
+                <Route path="club-leaderboard" element={<ClubLeaderboardPage />} />
                 <Route path="tasks" element={<MyTasksPage />} />
                 <Route path="duty-charts" element={<DutyChartsPage />} />
                 <Route path="committees" element={<CoreCommitteesPage />} />
@@ -94,6 +100,8 @@ export const App: React.FC = () => {
               {/* Student Portal */}
               <Route path="/student" element={<AppLayout allowedRoles={['student']} pageTitle="Student Welfare Portal" />}>
                 <Route path="dashboard" element={<StudentDashboardPage />} />
+                <Route path="clubs" element={<ClubsPage />} />
+                <Route path="club-leaderboard" element={<ClubLeaderboardPage />} />
                 <Route path="committees" element={<CoreCommitteesPage />} />
                 <Route path="announcements" element={<AnnouncementsPage />} />
                 <Route path="queries" element={<QueriesPage />} />
