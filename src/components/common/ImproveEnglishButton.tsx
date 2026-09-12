@@ -28,7 +28,7 @@ export const ImproveEnglishButton: React.FC<ImproveEnglishButtonProps> = ({
 
     const trimmed = (text || '').trim();
     if (!trimmed) {
-      alert('Please enter some text first before clicking Improve English.');
+      alert('Please enter some text first before clicking Improve.');
       return;
     }
 
@@ -51,8 +51,8 @@ export const ImproveEnglishButton: React.FC<ImproveEnglishButtonProps> = ({
         setTimeout(() => setSuccess(false), 2000);
       }
     } catch (err: any) {
-      console.error('Failed to improve English:', err);
-      alert(err.message || 'Could not improve English text. Please check your connection.');
+      console.error('Failed to improve text:', err);
+      alert(err.message || 'Could not improve text. Please check your connection.');
     } finally {
       setLoading(false);
     }
@@ -67,8 +67,8 @@ export const ImproveEnglishButton: React.FC<ImproveEnglishButtonProps> = ({
       disabled={disabled || loading || isTextEmpty}
       title={
         isTextEmpty
-          ? 'Enter text to enable AI English improvement'
-          : 'Refine grammar, spelling, and polish English phrasing using Gemini AI'
+          ? 'Enter text to enable AI improvement'
+          : 'Refine grammar, spelling, and polish phrasing using Gemini AI'
       }
       className={`inline-flex items-center gap-1.5 font-semibold transition-all rounded-lg shadow-2xs select-none ${
         size === 'xs' ? 'px-2 py-1 text-[11px]' : 'px-2.5 py-1.5 text-xs'
@@ -90,12 +90,12 @@ export const ImproveEnglishButton: React.FC<ImproveEnglishButtonProps> = ({
       ) : success ? (
         <>
           <Check className="w-3 h-3 text-emerald-500" />
-          <span>✨ Polished!</span>
+          <span>Polished!</span>
         </>
       ) : (
         <>
           <Sparkles className="w-3 h-3 text-purple-500 dark:text-purple-400" />
-          <span>✨ Improve English</span>
+          <span>Improve</span>
         </>
       )}
     </button>
