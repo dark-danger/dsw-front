@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { useAuth, User } from '../../context/AuthContext';
+import { ProofViewer } from '../../components/tasks/ProofViewer';
+import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
 import {
   Users, Plus, Trash2, CheckCircle2, Clock, XCircle, Search,
   Award, Eye, FileText, Download, Printer, Shield, ChevronRight,
@@ -981,14 +983,17 @@ export const ClubsPage: React.FC = () => {
                     </div>
 
                     {t.submission_text && (
-                      <div className="p-3 bg-emerald-500/5 rounded-lg border border-emerald-500/15 space-y-1 text-xs">
+                      <div className="p-3 bg-emerald-500/5 rounded-lg border border-emerald-500/15 space-y-2 text-xs">
                         <span className="font-semibold text-emerald-700 dark:text-emerald-400">Submission Details:</span>
                         <p className="text-[var(--text-secondary)]">{t.submission_text}</p>
+                        
+                        {/* Proof Viewer */}
                         {t.file_url && (
-                          <a href={t.file_url} target="_blank" rel="noreferrer" className="text-emerald-600 dark:text-emerald-400 hover:underline block font-mono text-[11px] pt-1">
-                            View Proof Attachment &rarr;
-                          </a>
+                          <div className="pt-1">
+                            <ProofViewer url={t.file_url} />
+                          </div>
                         )}
+
                         {t.review_remarks && (
                           <div className="text-rose-600 dark:text-rose-400 pt-1 text-[11px]">
                             Remarks: {t.review_remarks}
@@ -1117,7 +1122,7 @@ export const ClubsPage: React.FC = () => {
                 <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Work Description / Report Summary *</label>
                 <textarea
                   required
-                  rows={4}
+                  rows={3}
                   value={proofText}
                   onChange={e => setProofText(e.target.value)}
                   placeholder="Summarize activities conducted, outcomes achieved..."
@@ -1125,16 +1130,10 @@ export const ClubsPage: React.FC = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Proof Attachment Link (Google Drive / GCS URL)</label>
-                <input
-                  type="url"
-                  value={proofUrl}
-                  onChange={e => setProofUrl(e.target.value)}
-                  placeholder="https://drive.google.com/..."
-                  className="glass-input"
-                />
-              </div>
+              <TaskProofSubmitter
+                valueUrl={proofUrl}
+                onChange={(url) => setProofUrl(url)}
+              />
 
               <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">
                 <button type="button" onClick={() => setSubmittingTask(null)} className="btn-secondary">Cancel</button>

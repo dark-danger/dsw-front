@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { useAuth, User } from '../../context/AuthContext';
 import confetti from 'canvas-confetti';
+import { ProofViewer } from '../../components/tasks/ProofViewer';
 import {
   Trophy, Plus, Award, CheckCircle2, XCircle, FileText,
   User as UserIcon, Medal, Sparkles, X, PlusCircle, MinusCircle
@@ -191,20 +192,23 @@ export const StudentLeaderboardPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {pendingSubs.map(sub => (
-              <div key={sub.id} className="p-4 bg-[var(--card-bg-to)] rounded-xl border border-[var(--panel-border)] space-y-2">
+              <div key={sub.id} className="p-4 bg-[var(--card-bg-to)] rounded-xl border border-[var(--panel-border)] space-y-2.5">
                 <div className="flex justify-between items-start text-xs">
                   <span className="font-bold text-[var(--text-primary)]">{sub.task_title || 'Leaderboard Task'}</span>
                   <span className="text-[var(--text-muted)]">{new Date(sub.submitted_at).toLocaleDateString()}</span>
                 </div>
                 <div className="text-xs text-[var(--text-secondary)] font-medium">
-                  Student: {sub.student?.name} ({sub.student?.roll_number})
+                  Student: <strong className="text-[var(--text-primary)]">{sub.student?.name}</strong> ({sub.student?.roll_number || 'N/A'})
                 </div>
                 <p className="text-xs text-[var(--text-muted)] italic">"{sub.submission_text}"</p>
+                
+                {/* Proof Viewer Component */}
                 {sub.file_url && (
-                  <a href={sub.file_url} target="_blank" rel="noreferrer" className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline block font-mono">
-                    View Proof Attachment
-                  </a>
+                  <div className="pt-1">
+                    <ProofViewer url={sub.file_url} />
+                  </div>
                 )}
+
                 <div className="pt-2 flex justify-end gap-2 border-t border-[var(--panel-border)]">
                   <button onClick={() => handleRejectSub(sub.id)} className="btn-crimson text-xs py-1 px-3">
                     <XCircle className="w-3.5 h-3.5" /> Reject

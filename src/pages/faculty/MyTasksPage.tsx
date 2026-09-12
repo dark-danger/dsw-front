@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { CheckSquare, Upload, FileText, CheckCircle2, AlertCircle, Clock, Send, X } from 'lucide-react';
+import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
+import { ProofViewer } from '../../components/tasks/ProofViewer';
 
 interface TaskSubmission {
   id: number;
@@ -31,7 +33,8 @@ export const MyTasksPage: React.FC = () => {
   // Submit Modal
   const [selectedTask, setSelectedTask] = useState<TaskItem | null>(null);
   const [submitDescription, setSubmitDescription] = useState('');
-  const [file, setFile] = useState<File | null>(null);
+  const [proofUrl, setProofUrl] = useState('');
+  const [proofName, setProofName] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const fetchMyTasks = async () => {
@@ -56,33 +59,16 @@ export const MyTasksPage: React.FC = () => {
     setSubmitting(true);
 
     try {
-      let fileUrl = '';
-      let fileName = '';
-      let fileType = '';
-      let fileSize = 0;
-
-      // File Upload handling if present
-      if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
-        const uploadRes = await apiRequest('/uploads', 'POST', formData, true);
-        fileUrl = uploadRes.file_url;
-        fileName = uploadRes.file_name;
-        fileType = uploadRes.file_type;
-        fileSize = uploadRes.file_size;
-      }
-
       await apiRequest(`/tasks/${selectedTask.id}/submit`, 'POST', {
         description: submitDescription,
-        file_url: fileUrl || undefined,
-        file_name: fileName || undefined,
-        file_type: fileType || undefined,
-        file_size: fileSize || undefined,
+        file_url: proofUrl || undefined,
+        file_name: proofName || undefined,
       });
 
       setSelectedTask(null);
       setSubmitDescription('');
-      setFile(null);
+      setProofUrl('');
+      setProofName('');
       fetchMyTasks();
     } catch (err: any) {
       alert(err.message || 'Task submission failed');
@@ -137,6 +123,13 @@ export const MyTasksPage: React.FC = () => {
                 <h3 className="text-lg font-bold text-slate-100">{t.title}</h3>
                 <p className="text-sm text-slate-300 leading-relaxed">{t.description || 'No description'}</p>
 
+                {/* Previous Submission Proof Display */}
+                {latestSub?.file_url && (
+                  <div className="pt-1">
+                    <ProofViewer url={latestSub.file_url} fileName={latestSub.file_name} />
+                  </div>
+                )}
+
                 {/* Decline Remark Warning if present */}
                 {t.status === 'declined' && latestSub?.review_remarks && (
                   <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-xs space-y-1">
@@ -158,6 +151,8 @@ export const MyTasksPage: React.FC = () => {
                       onClick={() => {
                         setSelectedTask(t);
                         setSubmitDescription(latestSub?.description || '');
+                        setProofUrl(latestSub?.file_url || '');
+                        setProofName(latestSub?.file_name || '');
                       }}
                       className="btn-primary text-xs py-1.5 px-3"
                     >
@@ -190,7 +185,7 @@ export const MyTasksPage: React.FC = () => {
                 <label className="block text-xs font-medium text-slate-300 mb-1">Completion Summary / Notes</label>
                 <textarea
                   required
-                  rows={4}
+                  rows={3}
                   value={submitDescription}
                   onChange={e => setSubmitDescription(e.target.value)}
                   placeholder="Describe duty actions taken, venue status, logistics..."
@@ -198,19 +193,20 @@ export const MyTasksPage: React.FC = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Upload Report / Proof (PDF, DOCX, JPG)</label>
-                <input
-                  type="file"
-                  onChange={e => setFile(e.target.files ? e.target.files[0] : null)}
-                  className="glass-input text-xs"
-                />
-              </div>
+              <TaskProofSubmitter
+                valueUrl={proofUrl}
+                valueName={proofName}
+                onChange={(url, name) => {
+                  setProofUrl(url);
+                  setProofName(name || '');
+                }}
+                disabled={submitting}
+              />
 
               <div className="pt-4 border-t border-slate-800 flex justify-end gap-2">
                 <button type="button" onClick={() => setSelectedTask(null)} className="btn-secondary">Cancel</button>
                 <button type="submit" disabled={submitting} className="btn-primary">
-                  {submitting ? 'Uploading & Submitting...' : 'Submit to DSW Admin'}
+                  {submitting ? 'Submitting Duty...' : 'Submit to DSW Admin'}
                 </button>
               </div>
             </form>

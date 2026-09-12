@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { User } from '../../context/AuthContext';
+import { ProofViewer } from '../../components/tasks/ProofViewer';
 import {
   CheckSquare, Plus, CornerDownRight, CheckCircle2, XCircle, Clock,
   AlertCircle, FileText, User as UserIcon, Calendar, X, Eye, Pencil, Trash2
@@ -464,22 +465,20 @@ export const TasksPage: React.FC = () => {
               </div>
 
               {selectedTaskForReview.submissions.map((sub, idx) => (
-                <div key={sub.id} className="p-4 bg-[var(--card-bg-to)] rounded-xl border border-[var(--panel-border)] space-y-2">
+                <div key={sub.id} className="p-4 bg-[var(--card-bg-to)] rounded-xl border border-[var(--panel-border)] space-y-2.5">
                   <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
                     <span className="font-semibold text-emerald-600 dark:text-emerald-400">Submission #{idx + 1}</span>
                     <span>{new Date(sub.submitted_at).toLocaleString()}</span>
                   </div>
                   <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{sub.description}</p>
+                  
+                  {/* Dedicated Rich Proof Viewer */}
                   {sub.file_url && (
-                    <a
-                      href={sub.file_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-mono font-medium"
-                    >
-                      <FileText className="w-4 h-4" /> View Proof File: {sub.file_name || 'Attachment'}
-                    </a>
+                    <div className="pt-1">
+                      <ProofViewer url={sub.file_url} fileName={sub.file_name} />
+                    </div>
                   )}
+
                   {sub.review_remarks && (
                     <div className="p-2 bg-rose-500/10 border border-rose-500/20 rounded text-xs text-rose-600 dark:text-rose-300">
                       Previous Remark: {sub.review_remarks}

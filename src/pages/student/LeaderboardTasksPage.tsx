@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { Trophy, Sparkles, Send, CheckCircle2, FileText, X } from 'lucide-react';
+import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
 
 interface LeaderboardTask {
   id: number;
@@ -19,7 +20,8 @@ export const LeaderboardTasksPage: React.FC = () => {
   // Submit Modal
   const [selectedTask, setSelectedTask] = useState<LeaderboardTask | null>(null);
   const [submissionText, setSubmissionText] = useState('');
-  const [file, setFile] = useState<File | null>(null);
+  const [proofUrl, setProofUrl] = useState('');
+  const [proofName, setProofName] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const fetchTasks = async () => {
@@ -44,23 +46,16 @@ export const LeaderboardTasksPage: React.FC = () => {
     setSubmitting(true);
 
     try {
-      let fileUrl = '';
-      if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
-        const uploadRes = await apiRequest('/uploads', 'POST', formData, true);
-        fileUrl = uploadRes.file_url;
-      }
-
       await apiRequest(`/leaderboard/students/tasks/${selectedTask.id}/submit`, 'POST', {
         submission_text: submissionText,
-        file_url: fileUrl || undefined
+        file_url: proofUrl || undefined
       });
 
       alert('Proof submitted successfully! Sent to DSW Admin for point verification.');
       setSelectedTask(null);
       setSubmissionText('');
-      setFile(null);
+      setProofUrl('');
+      setProofName('');
       fetchTasks();
     } catch (err: any) {
       alert(err.message || 'Proof submission failed');
@@ -145,7 +140,7 @@ export const LeaderboardTasksPage: React.FC = () => {
                 <label className="block text-xs font-medium text-slate-300 mb-1">Proof Details / Contribution Note</label>
                 <textarea
                   required
-                  rows={4}
+                  rows={3}
                   value={submissionText}
                   onChange={e => setSubmissionText(e.target.value)}
                   placeholder="Explain how you completed this challenge..."
@@ -153,14 +148,15 @@ export const LeaderboardTasksPage: React.FC = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Upload Certificate / Image Proof</label>
-                <input
-                  type="file"
-                  onChange={e => setFile(e.target.files ? e.target.files[0] : null)}
-                  className="glass-input text-xs"
-                />
-              </div>
+              <TaskProofSubmitter
+                valueUrl={proofUrl}
+                valueName={proofName}
+                onChange={(url, name) => {
+                  setProofUrl(url);
+                  setProofName(name || '');
+                }}
+                disabled={submitting}
+              />
 
               <div className="pt-4 border-t border-slate-800 flex justify-end gap-2">
                 <button type="button" onClick={() => setSelectedTask(null)} className="btn-secondary">Cancel</button>
