@@ -168,10 +168,10 @@ export const DutyChartsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-panel p-6">
         <div>
-          <h2 className="text-xl font-bold text-slate-100 flex items-center gap-2">
-            <FileCheck className="w-6 h-6 text-indigo-400" /> Event Duty Charts & Staff Deployments
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <FileCheck className="w-6 h-6 text-emerald-400" /> Event Duty Charts & Staff Deployments
           </h2>
-          <p className="text-xs text-slate-400 mt-1">Generate official event duty rosters, assign faculty responsibilities, and export printable PDF duty charts.</p>
+          <p className="text-xs text-slate-300 mt-1">Generate official event duty rosters, assign faculty responsibilities, and export printable PDF duty charts.</p>
         </div>
         {isAdmin && (
           <button
@@ -186,23 +186,23 @@ export const DutyChartsPage: React.FC = () => {
       {/* Duty Charts List */}
       <div className="space-y-4">
         {loading ? (
-          <div className="p-8 text-center text-slate-500 glass-panel">Loading duty charts...</div>
+          <div className="p-8 text-center text-slate-400 glass-panel">Loading duty charts...</div>
         ) : charts.length === 0 ? (
-          <div className="p-8 text-center text-slate-500 glass-panel">
+          <div className="p-8 text-center text-slate-400 glass-panel">
             No duty charts published yet. {isAdmin && "Click 'Create New Duty Chart' to assign event duties."}
           </div>
         ) : (
           charts.map(chart => (
-            <div key={chart.id} className="glass-panel p-6 space-y-4 hover:border-indigo-500/40 transition-all">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <div key={chart.id} className="glass-panel p-6 space-y-4 hover:border-emerald-500/50 transition-all">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                       {chart.event_title}
                     </span>
-                    <span className="text-xs text-slate-500">Issued: {new Date(chart.created_at).toLocaleDateString()}</span>
+                    <span className="text-xs text-slate-400">Issued: {new Date(chart.created_at).toLocaleDateString()}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-slate-100 mt-1">{chart.title}</h3>
+                  <h3 className="text-lg font-bold text-white mt-1">{chart.title}</h3>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
@@ -226,24 +226,24 @@ export const DutyChartsPage: React.FC = () => {
 
               {/* Summary Stats & Quick Preview */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                <div className="bg-black/60 p-3 rounded-xl border border-white/10">
                   <div className="text-xs text-slate-400 font-medium">Assigned Staff Count</div>
-                  <div className="text-lg font-bold text-indigo-400 mt-0.5">{chart.duty_items.length} Faculty Members</div>
+                  <div className="text-lg font-bold text-emerald-400 mt-0.5">{chart.duty_items.length} Faculty Members</div>
                 </div>
-                <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                <div className="bg-black/60 p-3 rounded-xl border border-white/10">
                   <div className="text-xs text-slate-400 font-medium">Issuing Authority</div>
-                  <div className="text-sm font-semibold text-slate-200 mt-1">{chart.creator_name || 'DSW Admin Office'}</div>
+                  <div className="text-sm font-semibold text-white mt-1">{chart.creator_name || 'DSW Admin Office'}</div>
                 </div>
-                <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                <div className="bg-black/60 p-3 rounded-xl border border-white/10">
                   <div className="text-xs text-slate-400 font-medium">Directives / Guidelines</div>
                   <div className="text-xs text-slate-300 truncate mt-1">{chart.notes || 'Standard DSW event protocol applies.'}</div>
                 </div>
               </div>
 
               {/* Duty Table Preview */}
-              <div className="overflow-x-auto rounded-xl border border-slate-800/80">
+              <div className="overflow-x-auto rounded-xl border border-white/10">
                 <table className="w-full text-left text-xs text-slate-300">
-                  <thead className="bg-slate-900/90 font-semibold text-slate-400 uppercase">
+                  <thead className="bg-black/90 font-semibold text-slate-400 uppercase">
                     <tr>
                       <th className="p-3">Duty Role</th>
                       <th className="p-3">Assigned Faculty</th>
@@ -251,13 +251,13 @@ export const DutyChartsPage: React.FC = () => {
                       <th className="p-3">Venue & Timing</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60 bg-slate-950/40">
+                  <tbody className="divide-y divide-white/5 bg-black/40">
                     {chart.duty_items.map((item, idx) => (
-                      <tr key={idx} className="hover:bg-slate-800/30">
-                        <td className="p-3 font-semibold text-slate-200 flex items-center gap-1.5">
+                      <tr key={idx} className="hover:bg-white/5">
+                        <td className="p-3 font-semibold text-white flex items-center gap-1.5">
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> {item.duty_name}
                         </td>
-                        <td className="p-3 font-medium text-indigo-300">{item.assigned_to_name}</td>
+                        <td className="p-3 font-medium text-emerald-300">{item.assigned_to_name}</td>
                         <td className="p-3 text-slate-400">{item.department || 'DSW'}</td>
                         <td className="p-3 text-slate-300 font-mono">
                           {item.venue || 'Campus'} • {item.time_slot || 'Event Hours'}
@@ -276,9 +276,9 @@ export const DutyChartsPage: React.FC = () => {
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs overflow-y-auto">
           <div className="w-full max-w-3xl glass-panel p-6 shadow-2xl relative space-y-4 my-8">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-              <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <FileCheck className="w-5 h-5 text-indigo-400" /> Create Official Event Duty Chart
+            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <FileCheck className="w-5 h-5 text-emerald-400" /> Create Official Event Duty Chart
               </h3>
               <button onClick={() => setIsCreateModalOpen(false)} className="text-slate-400 hover:text-slate-200">
                 <X className="w-5 h-5" />
@@ -344,9 +344,9 @@ export const DutyChartsPage: React.FC = () => {
 
                 <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
                   {dutyRows.map((row, idx) => (
-                    <div key={idx} className="p-4 bg-slate-900/80 border border-slate-800 rounded-xl space-y-3 relative">
+                    <div key={idx} className="p-4 bg-black/60 border border-white/10 rounded-xl space-y-3 relative">
                       <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
-                        <span className="text-indigo-400">Duty Row #{idx + 1}</span>
+                        <span className="text-emerald-400">Duty Row #{idx + 1}</span>
                         {dutyRows.length > 1 && (
                           <button
                             type="button"
@@ -438,17 +438,17 @@ export const DutyChartsPage: React.FC = () => {
       {/* Official Duty Chart PDF / Printable View Modal */}
       {selectedChartForPrint && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xs overflow-y-auto">
-          <div className="w-full max-w-4xl bg-slate-950 text-slate-100 p-8 rounded-2xl shadow-2xl relative space-y-6 my-8 border border-slate-800 print:m-0 print:p-0 print:border-none print:bg-white print:text-black">
+          <div className="w-full max-w-4xl bg-black text-white p-8 rounded-2xl shadow-2xl relative space-y-6 my-8 border border-white/10 print:m-0 print:p-0 print:border-none print:bg-white print:text-black">
             
             {/* Modal Control Bar (Hidden when printing) */}
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 print:hidden">
-              <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <Printer className="w-5 h-5 text-indigo-400" /> Printable Duty Chart Preview
+            <div className="flex items-center justify-between pb-4 border-b border-white/10 print:hidden">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Printer className="w-5 h-5 text-emerald-400" /> Printable Duty Chart Preview
               </h3>
               <div className="flex items-center gap-3">
                 <button
                   onClick={handlePrint}
-                  className="btn-primary bg-indigo-600 hover:bg-indigo-500 text-xs py-2 px-4 flex items-center gap-2"
+                  className="btn-primary text-xs py-2 px-4 flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" /> Print / Save as PDF
                 </button>
@@ -465,13 +465,13 @@ export const DutyChartsPage: React.FC = () => {
               <div className="text-center border-b-2 border-slate-900 pb-4 space-y-1">
                 <div className="text-xs font-bold tracking-widest text-slate-600 uppercase">GEETA UNIVERSITY, PANIPAT</div>
                 <h1 className="text-xl font-black text-slate-900 tracking-tight uppercase">OFFICE OF THE DEAN STUDENT WELFARE (DSW)</h1>
-                <div className="text-sm font-extrabold text-indigo-900 uppercase tracking-wide mt-1">{selectedChartForPrint.title}</div>
+                <div className="text-sm font-extrabold text-[#0e8a6e] uppercase tracking-wide mt-1">{selectedChartForPrint.title}</div>
                 <div className="text-xs font-semibold text-slate-500">Event: {selectedChartForPrint.event_title} • Date of Issue: {new Date(selectedChartForPrint.created_at).toLocaleDateString()}</div>
               </div>
 
               {/* Directives Notice */}
               {selectedChartForPrint.notes && (
-                <div className="p-3 bg-slate-100 border-l-4 border-l-indigo-600 text-xs text-slate-800 rounded">
+                <div className="p-3 bg-emerald-50 border-l-4 border-l-[#0e8a6e] text-xs text-slate-800 rounded">
                   <strong>General Directives for Duty Staff:</strong> {selectedChartForPrint.notes}
                 </div>
               )}
@@ -494,7 +494,7 @@ export const DutyChartsPage: React.FC = () => {
                       <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
                         <td className="p-2.5 border-r border-slate-300 text-center font-bold text-slate-700">{idx + 1}</td>
                         <td className="p-2.5 border-r border-slate-300 font-bold text-slate-900">{item.duty_name}</td>
-                        <td className="p-2.5 border-r border-slate-300 font-bold text-indigo-900">{item.assigned_to_name}</td>
+                        <td className="p-2.5 border-r border-slate-300 font-bold text-[#0e8a6e]">{item.assigned_to_name}</td>
                         <td className="p-2.5 border-r border-slate-300 text-slate-600">{item.department || 'DSW'}</td>
                         <td className="p-2.5 border-r border-slate-300 font-mono text-[11px]">
                           <strong>{item.venue || 'Campus'}</strong><br/>

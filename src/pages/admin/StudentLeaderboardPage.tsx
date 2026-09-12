@@ -202,7 +202,7 @@ export const StudentLeaderboardPage: React.FC = () => {
                 </div>
                 <p className="text-xs text-slate-400 italic">"{sub.submission_text}"</p>
                 {sub.file_url && (
-                  <a href={sub.file_url} target="_blank" rel="noreferrer" className="text-xs text-indigo-400 hover:underline block font-mono">
+                  <a href={sub.file_url} target="_blank" rel="noreferrer" className="text-xs text-emerald-400 hover:underline block font-mono">
                     View Proof Attachment
                   </a>
                 )}

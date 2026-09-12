@@ -31,7 +31,7 @@ interface AuditLogItem {
   created_at: string;
 }
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#e11d48'];
+const COLORS = ['#0e8a6e', '#10b981', '#2dd4bf', '#f59e0b'];
 
 export const AdminDashboardPage: React.FC = () => {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
@@ -43,12 +43,12 @@ export const AdminDashboardPage: React.FC = () => {
       try {
         const [sumData, actData] = await Promise.all([
           apiRequest<DashboardSummary>('/dashboard/summary'),
-          apiRequest<AuditLogItem[]>('/dashboard/activity')
+          apiRequest<AuditLogItem[]>('/dashboard/recent-activity')
         ]);
         setSummary(sumData);
         setActivity(actData);
-      } catch (e) {
-        console.error(e);
+      } catch (err) {
+        console.error("Dashboard data load failure:", err);
       } finally {
         setLoading(false);
       }
@@ -56,54 +56,74 @@ export const AdminDashboardPage: React.FC = () => {
     loadData();
   }, []);
 
-  if (loading || !summary) {
-    return <div className="p-8 text-center text-slate-400">Loading live dashboard metrics...</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64 text-slate-400">
+        <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mr-3" />
+        Loading administrative telemetry...
+      </div>
+    );
   }
 
+  if (!summary) return null;
+
   const taskChartData = [
+    { name: 'Pending Review', value: summary.tasks_breakdown.pending || 0 },
+    { name: 'In Progress', value: summary.tasks_breakdown.in_progress || 0 },
     { name: 'Approved', value: summary.tasks_breakdown.approved || 0 },
-    { name: 'Pending/Progress', value: summary.tasks_breakdown.pending || 0 },
-    { name: 'Submitted', value: summary.tasks_breakdown.submitted || 0 },
-    { name: 'Declined', value: summary.tasks_breakdown.declined || 0 },
-  ];
+    { name: 'Rejected', value: summary.tasks_breakdown.rejected || 0 },
+  ].filter(i => i.value > 0);
 
   return (
     <div className="space-y-6">
+      {/* Top Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-panel p-6 bg-gradient-to-r from-black via-[#06140d] to-black border-l-4 border-l-emerald-500">
+        <div>
+          <h2 className="text-2xl font-extrabold text-white tracking-tight">University Oversight Center</h2>
+          <p className="text-xs text-slate-300 mt-1">Live administration status, active tasks, student engagement metrics and grievance feeds.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Live Telemetry
+          </span>
+        </div>
+      </div>
+
       {/* Top KPI Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="glass-card p-5 border-l-4 border-l-blue-500">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="glass-card p-5 border-l-4 border-l-[#0e8a6e]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-slate-400">Registered Faculty</p>
-              <h3 className="text-2xl font-bold text-slate-100 mt-1">{summary.total_faculty}</h3>
+              <p className="text-xs font-medium text-slate-400">Total Staff / Faculty</p>
+              <h3 className="text-2xl font-bold text-white mt-1">{summary.total_faculty}</h3>
             </div>
-            <div className="p-3 bg-blue-500/10 rounded-xl text-blue-400">
+            <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-400">
               <Users className="w-6 h-6" />
             </div>
           </div>
-          <p className="text-[11px] text-slate-500 mt-3">Total registered staff members</p>
+          <p className="text-[11px] text-slate-400 mt-3">Total registered staff members</p>
         </div>
 
         <div className="glass-card p-5 border-l-4 border-l-emerald-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-slate-400">Total Students</p>
-              <h3 className="text-2xl font-bold text-slate-100 mt-1">{summary.total_students}</h3>
+              <h3 className="text-2xl font-bold text-white mt-1">{summary.total_students}</h3>
             </div>
             <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-400">
               <Users className="w-6 h-6" />
             </div>
           </div>
-          <p className="text-[11px] text-slate-500 mt-3">{summary.total_student_points_awarded} pts awarded all-time</p>
+          <p className="text-[11px] text-slate-400 mt-3">{summary.total_student_points_awarded} pts awarded all-time</p>
         </div>
 
-        <div className="glass-card p-5 border-l-4 border-l-indigo-500">
+        <div className="glass-card p-5 border-l-4 border-l-teal-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-slate-400">Active Tasks</p>
-              <h3 className="text-2xl font-bold text-slate-100 mt-1">{summary.total_tasks}</h3>
+              <h3 className="text-2xl font-bold text-white mt-1">{summary.total_tasks}</h3>
             </div>
-            <div className="p-3 bg-indigo-500/10 rounded-xl text-indigo-400">
+            <div className="p-3 bg-teal-500/10 rounded-xl text-teal-400">
               <CheckSquare className="w-6 h-6" />
             </div>
           </div>
@@ -190,7 +210,7 @@ export const AdminDashboardPage: React.FC = () => {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '8px', color: '#f8fafc' }} />
+                <Tooltip contentStyle={{ backgroundColor: '#040806', borderColor: 'rgba(255, 255, 255, 0.15)', borderRadius: '8px', color: '#ffffff' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -206,17 +226,17 @@ export const AdminDashboardPage: React.FC = () => {
 
         {/* Live Recent Activity Feed */}
         <div className="lg:col-span-2 glass-panel p-6 flex flex-col">
-          <h3 className="text-base font-bold text-slate-100 flex items-center gap-2 mb-4">
-            <TrendingUp className="w-4 h-4 text-indigo-400" /> Recent System Activity Feed
+          <h3 className="text-base font-bold text-white flex items-center gap-2 mb-4">
+            <TrendingUp className="w-4 h-4 text-emerald-400" /> Recent System Activity Feed
           </h3>
           <div className="flex-1 overflow-y-auto space-y-3 pr-2 max-h-[300px]">
             {activity.length === 0 ? (
               <p className="text-xs text-slate-500">No activity recorded yet.</p>
             ) : (
               activity.map(act => (
-                <div key={act.id} className="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-between">
+                <div key={act.id} className="p-3 bg-black/60 rounded-xl border border-white/10 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+                    <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
                       <Clock className="w-4 h-4" />
                     </div>
                     <div>

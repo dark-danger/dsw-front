@@ -281,7 +281,7 @@ export const CoreCommitteesPage: React.FC = () => {
                     <div className="text-sm font-bold text-slate-100">{st.student_name}</div>
                     <div className="text-[11px] text-slate-400 flex items-center justify-between">
                       <span>Roll: {st.student_roll_no || 'N/A'}</span>
-                      <span className="text-indigo-400">{st.department || 'Student'}</span>
+                      <span className="text-emerald-400">{st.department || 'Student'}</span>
                     </div>
                   </div>
                 ))}

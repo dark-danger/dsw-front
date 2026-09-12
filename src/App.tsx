@@ -7,7 +7,6 @@ import { LoginPage } from './pages/LoginPage';
 // Admin Pages
 import { AdminDashboardPage } from './pages/admin/DashboardPage';
 import { FacultyPage } from './pages/admin/FacultyPage';
-import { StudentPage } from './pages/admin/StudentPage';
 import { EventsPage } from './pages/admin/EventsPage';
 import { TasksPage } from './pages/admin/TasksPage';
 import { AnnouncementsPage } from './pages/admin/AnnouncementsPage';
@@ -53,7 +52,6 @@ export const App: React.FC = () => {
           <Route path="/admin" element={<AppLayout allowedRoles={['super_admin']} pageTitle="DSW Administration Portal" />}>
             <Route path="dashboard" element={<AdminDashboardPage />} />
             <Route path="faculty" element={<FacultyPage />} />
-            <Route path="students" element={<StudentPage />} />
             <Route path="events" element={<EventsPage />} />
             <Route path="tasks" element={<TasksPage />} />
             <Route path="duty-charts" element={<DutyChartsPage />} />

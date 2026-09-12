@@ -188,13 +188,13 @@ export const TasksPage: React.FC = () => {
       <div
         key={t.id}
         className={`glass-card p-5 space-y-3 ${
-          isSubtask ? 'ml-6 border-l-2 border-l-indigo-500 bg-slate-900/40' : ''
+          isSubtask ? 'ml-6 border-l-2 border-l-emerald-500 bg-black/40' : ''
         }`}
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
-            {isSubtask && <CornerDownRight className="w-4 h-4 text-indigo-400 shrink-0" />}
-            <h4 className="font-bold text-slate-100 text-base">{t.title}</h4>
+            {isSubtask && <CornerDownRight className="w-4 h-4 text-emerald-400 shrink-0" />}
+            <h4 className="font-bold text-white text-base">{t.title}</h4>
           </div>
 
           <div className="flex items-center gap-2">
@@ -252,7 +252,7 @@ export const TasksPage: React.FC = () => {
                   setParentTaskIdForSubtask(t.id);
                   setIsCreateModalOpen(true);
                 }}
-                className="text-xs text-indigo-400 hover:text-indigo-300 font-medium"
+                className="text-xs text-emerald-400 hover:text-emerald-300 font-medium"
               >
                 + Add Subtask
               </button>
@@ -385,8 +385,8 @@ export const TasksPage: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
           <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative">
             <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-              <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <Pencil className="w-5 h-5 text-indigo-400" />
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Pencil className="w-5 h-5 text-emerald-400" />
                 Edit Task / Reassign Faculty
               </h3>
               <button onClick={() => setEditingTask(null)} className="text-slate-400 hover:text-slate-200">
@@ -463,7 +463,7 @@ export const TasksPage: React.FC = () => {
               {selectedTaskForReview.submissions.map((sub, idx) => (
                 <div key={sub.id} className="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
                   <div className="flex items-center justify-between text-xs text-slate-400">
-                    <span className="font-semibold text-blue-400">Submission #{idx + 1}</span>
+                    <span className="font-semibold text-emerald-400">Submission #{idx + 1}</span>
                     <span>{new Date(sub.submitted_at).toLocaleString()}</span>
                   </div>
                   <p className="text-xs text-slate-200 leading-relaxed">{sub.description}</p>
@@ -472,7 +472,7 @@ export const TasksPage: React.FC = () => {
                       href={sub.file_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:underline font-mono"
+                      className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:underline font-mono"
                     >
                       <FileText className="w-4 h-4" /> View Proof File: {sub.file_name || 'Attachment'}
                     </a>

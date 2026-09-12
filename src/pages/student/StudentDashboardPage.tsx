@@ -36,19 +36,19 @@ export const StudentDashboardPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Card */}
-      <div className="glass-panel p-6 bg-gradient-to-r from-slate-900 via-amber-950/30 to-slate-900 border-l-4 border-l-amber-400 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="glass-panel p-6 bg-gradient-to-r from-black via-[#06140d] to-black border-l-4 border-l-emerald-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-100">Welcome, {user?.name}!</h2>
-          <p className="text-xs text-slate-400 mt-1">Roll No: {user?.roll_number} • Course: {user?.course_branch} ({user?.year})</p>
+          <h2 className="text-2xl font-bold text-white">Welcome, {user?.name}!</h2>
+          <p className="text-xs text-slate-300 mt-1">Roll No: {user?.roll_number} • Course: {user?.course_branch} ({user?.year})</p>
         </div>
 
         {myRank && (
-          <div className="flex items-center gap-4 bg-slate-900/80 p-3 rounded-2xl border border-slate-800 shrink-0">
+          <div className="flex items-center gap-4 bg-black/80 p-3 rounded-2xl border border-white/10 shrink-0">
             <div className="text-center px-2">
               <div className="text-[10px] text-slate-400 font-semibold uppercase">Leaderboard Rank</div>
               <div className="text-xl font-black text-amber-400">#{myRank.rank}</div>
             </div>
-            <div className="h-8 w-px bg-slate-800" />
+            <div className="h-8 w-px bg-white/10" />
             <div className="text-center px-2">
               <div className="text-[10px] text-slate-400 font-semibold uppercase">Total Points</div>
               <div className="text-xl font-black text-emerald-400">{myRank.total_points} pts</div>
@@ -59,21 +59,21 @@ export const StudentDashboardPage: React.FC = () => {
 
       {/* Quick Action Tiles */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Link to="/student/leaderboard-tasks" className="glass-card p-6 flex items-center justify-between group hover:border-amber-500/40">
+        <Link to="/student/leaderboard-tasks" className="glass-card p-6 flex items-center justify-between group hover:border-emerald-500/50">
           <div>
-            <div className="flex items-center gap-2 text-amber-400 font-bold text-base">
+            <div className="flex items-center gap-2 text-emerald-400 font-bold text-base">
               <Sparkles className="w-5 h-5" /> Participate in Student Challenges
             </div>
-            <p className="text-xs text-slate-400 mt-1">Complete volunteer duties & event tasks to earn points for the university leaderboard.</p>
+            <p className="text-xs text-slate-300 mt-1">Complete volunteer duties & event tasks to earn points for the university leaderboard.</p>
           </div>
         </Link>
 
-        <Link to="/student/queries" className="glass-card p-6 flex items-center justify-between group hover:border-blue-500/40">
+        <Link to="/student/queries" className="glass-card p-6 flex items-center justify-between group hover:border-teal-500/50">
           <div>
-            <div className="flex items-center gap-2 text-blue-400 font-bold text-base">
+            <div className="flex items-center gap-2 text-teal-400 font-bold text-base">
               <HelpCircle className="w-5 h-5" /> Raise DSW Query or Grievance
             </div>
-            <p className="text-xs text-slate-400 mt-1">Directly contact the Dean of Student Welfare office for assistance or inquiry.</p>
+            <p className="text-xs text-slate-300 mt-1">Directly contact the Dean of Student Welfare office for assistance or inquiry.</p>
           </div>
         </Link>
       </div>

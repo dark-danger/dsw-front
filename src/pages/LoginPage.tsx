@@ -38,9 +38,9 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen flex flex-col justify-center items-center bg-[#070b14] px-4 relative overflow-hidden">
+    <div className="min-h-screen w-screen flex flex-col justify-center items-center bg-[#040806] px-4 relative overflow-hidden">
       {/* Ambient Background Glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[450px] bg-gradient-to-tr from-indigo-600/20 via-cyan-600/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[450px] bg-gradient-to-tr from-[#0e8a6e]/25 via-emerald-600/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
 
       {/* Back to Home Button */}
       <button 
@@ -54,14 +54,14 @@ export const LoginPage: React.FC = () => {
         
         {/* Portal Header */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-2xl bg-slate-900 border border-white/10 mx-auto flex items-center justify-center shadow-lg mb-1">
-            <LogIn className="w-7 h-7 text-indigo-400" />
+          <div className="w-14 h-14 rounded-2xl bg-black/80 border border-emerald-500/30 mx-auto flex items-center justify-center shadow-lg mb-1">
+            <LogIn className="w-7 h-7 text-emerald-400" />
           </div>
-          <span className="inline-block px-3 py-0.5 text-[10px] uppercase font-bold tracking-widest rounded-full border bg-indigo-500/10 text-indigo-400 border-indigo-500/20">
+          <span className="inline-block px-3 py-0.5 text-[10px] uppercase font-bold tracking-widest rounded-full border bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
             Geeta University DSW Portal
           </span>
-          <h2 className="text-2xl font-extrabold text-slate-100 tracking-tight font-display">Login Here</h2>
-          <p className="text-xs text-slate-400 font-medium">Enter your credentials to access your DSW workstation</p>
+          <h2 className="text-2xl font-extrabold text-white tracking-tight font-display">Login Here</h2>
+          <p className="text-xs text-slate-300 font-medium">Enter your credentials to access your DSW workstation</p>
         </div>
 
         {error && (

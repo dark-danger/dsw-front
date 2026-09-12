@@ -108,10 +108,10 @@ export const QueriesPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-panel p-6">
         <div>
-          <h2 className="text-xl font-bold text-slate-100 flex items-center gap-2">
-            <HelpCircle className="w-5 h-5 text-indigo-400" /> Grievance & Query Portal
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <HelpCircle className="w-5 h-5 text-emerald-400" /> Grievance & Query Portal
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-300 mt-1">
             {isSuperAdmin
               ? 'Review student & faculty tickets, issue official resolution responses, and reopen issues when necessary.'
               : 'Submit your queries, requests or grievances directly to the Dean of Student Welfare office.'}
@@ -135,7 +135,7 @@ export const QueriesPage: React.FC = () => {
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="btn-primary text-xs py-2 px-4 flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 shadow-lg shadow-indigo-500/25"
+            className="btn-primary text-xs py-2 px-4 flex items-center gap-2"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Raise New Query</span>
@@ -234,9 +234,9 @@ export const QueriesPage: React.FC = () => {
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs">
           <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-              <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <PlusCircle className="w-5 h-5 text-indigo-400" /> Raise Query / Grievance
+            <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <PlusCircle className="w-5 h-5 text-emerald-400" /> Raise Query / Grievance
               </h3>
               <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-slate-200">
                 <X className="w-5 h-5" />
@@ -296,7 +296,7 @@ export const QueriesPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="btn-primary bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 flex items-center gap-2"
+                  className="btn-primary flex items-center gap-2"
                 >
                   <Send className="w-4 h-4" />
                   {submitting ? 'Submitting...' : 'Submit Query'}

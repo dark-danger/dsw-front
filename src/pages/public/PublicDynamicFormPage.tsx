@@ -87,10 +87,10 @@ export const PublicDynamicFormPage: React.FC = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-slate-950 px-4">
+      <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#040806] px-4">
         <div className="glass-panel p-8 max-w-md text-center space-y-4">
           <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto animate-bounce" />
-          <h2 className="text-2xl font-bold text-slate-100">Submission Received!</h2>
+          <h2 className="text-2xl font-bold text-white">Submission Received!</h2>
           <p className="text-xs text-slate-300 leading-relaxed">
             Your form response has been successfully logged into the Geeta University DSW database and synced to Google Sheets.
           </p>
@@ -100,14 +100,14 @@ export const PublicDynamicFormPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-slate-950 p-4 relative">
+    <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#040806] p-4 relative">
       <div className="w-full max-w-xl glass-panel p-8 relative shadow-2xl space-y-6">
-        <div className="border-b border-slate-800 pb-4">
+        <div className="border-b border-white/10 pb-4">
           <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
             {form.purpose_label}
           </span>
-          <h1 className="text-2xl font-bold text-slate-100 mt-2">{form.title}</h1>
-          <p className="text-xs text-slate-400 mt-1">{form.description || 'Geeta University Dean of Student Welfare Portal'}</p>
+          <h1 className="text-2xl font-bold text-white mt-2">{form.title}</h1>
+          <p className="text-xs text-slate-300 mt-1">{form.description || 'Geeta University Dean of Student Welfare Portal'}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

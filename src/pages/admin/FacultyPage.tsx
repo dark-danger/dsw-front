@@ -140,7 +140,7 @@ export const FacultyPage: React.FC = () => {
                 <tr key={f.id} className="hover:bg-slate-800/40 transition-colors">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 flex items-center justify-center font-bold text-sm">
+                      <div className="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center justify-center font-bold text-sm">
                         {f.name.charAt(0)}
                       </div>
                       <div>
@@ -255,7 +255,7 @@ export const FacultyPage: React.FC = () => {
             <div className="space-y-4">
               <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
                 <span className="text-xs text-slate-400 font-medium">Automatic Staff Score</span>
-                <span className="text-xl font-bold text-indigo-400">{statsModalData.performance_score} pts</span>
+                <span className="text-xl font-bold text-emerald-400">{statsModalData.performance_score} pts</span>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
