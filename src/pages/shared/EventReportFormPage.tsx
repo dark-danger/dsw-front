@@ -359,6 +359,11 @@ export const EventReportFormPage: React.FC = () => {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
+          <img 
+            src="/geeta-logo.png" 
+            alt="Geeta University Logo" 
+            className="h-10 md:h-12 w-auto object-contain bg-white rounded-xl p-1 shadow-sm border border-slate-200" 
+          />
           <div>
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 font-bold text-xs">

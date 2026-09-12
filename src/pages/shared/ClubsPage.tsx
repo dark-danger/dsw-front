@@ -845,7 +845,7 @@ export const ClubsPage: React.FC = () => {
 
             {/* Document Header */}
             <div className="text-center border-b-2 border-slate-900 pb-5 space-y-1">
-              <div className="text-xs font-bold tracking-widest text-slate-600 uppercase">GEETA UNIVERSITY, PANIPAT</div>
+              <img src="/geeta-logo.png" alt="Geeta University" className="h-14 mx-auto object-contain mb-1" />
               <h1 className="text-2xl font-black text-slate-900 tracking-tight uppercase">OFFICE OF THE DEAN OF STUDENT WELFARE (DSW)</h1>
               <div className="text-base font-extrabold text-[#0e8a6e] uppercase tracking-wide mt-1">{selectedClubForPrint.name} ({selectedClubForPrint.category} Club)</div>
               <div className="text-xs font-semibold text-slate-500">

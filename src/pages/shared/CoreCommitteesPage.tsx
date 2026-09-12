@@ -483,7 +483,7 @@ export const CoreCommitteesPage: React.FC = () => {
               
               {/* Document Header */}
               <div className="text-center border-b-2 border-slate-900 pb-4 space-y-1">
-                <div className="text-xs font-bold tracking-widest text-slate-600 uppercase">GEETA UNIVERSITY, PANIPAT</div>
+                <img src="/geeta-logo.png" alt="Geeta University" className="h-14 mx-auto object-contain mb-1" />
                 <h1 className="text-xl font-black text-slate-900 tracking-tight uppercase">OFFICE OF THE DEAN STUDENT WELFARE (DSW)</h1>
                 <div className="text-sm font-extrabold text-emerald-900 uppercase tracking-wide mt-1">OFFICIAL STUDENT CORE COMMITTEE APPOINTMENT ORDER</div>
                 <div className="text-xs font-semibold text-slate-500">Ref: DSW/GU/CC/{selectedCommitteeForPrint.id}/2026 • Date: {new Date(selectedCommitteeForPrint.created_at).toLocaleDateString()}</div>

@@ -96,16 +96,23 @@ export const EventReportsListPage: React.FC = () => {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 md:p-8 space-y-6">
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 border border-[var(--panel-border)] p-6 rounded-3xl shadow-sm">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 font-bold text-xs uppercase tracking-wider">
-            <FileText className="w-3.5 h-3.5" /> Institutional Documentation Archive
+        <div className="flex items-start gap-4">
+          <img 
+            src="/geeta-logo.png" 
+            alt="Geeta University Logo" 
+            className="h-12 md:h-14 w-auto object-contain bg-white rounded-2xl p-1.5 shadow-sm border border-slate-200 hidden sm:block" 
+          />
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 font-bold text-xs uppercase tracking-wider">
+              <FileText className="w-3.5 h-3.5" /> Institutional Documentation Archive
+            </div>
+            <h1 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] mt-2">
+              Official Event Reports
+            </h1>
+            <p className="text-xs md:text-sm text-[var(--text-secondary)] mt-1 max-w-2xl">
+              Complete 7-page institutional event reports mapped with UN SDGs, budgets, item utilization, geo-tagged photographs, and multi-tier verification signatures.
+            </p>
           </div>
-          <h1 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] mt-2">
-            Official Event Reports
-          </h1>
-          <p className="text-xs md:text-sm text-[var(--text-secondary)] mt-1 max-w-2xl">
-            Complete 7-page institutional event reports mapped with UN SDGs, budgets, item utilization, geo-tagged photographs, and multi-tier verification signatures.
-          </p>
         </div>
 
         <button
