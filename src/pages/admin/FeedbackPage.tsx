@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { User } from '../../context/AuthContext';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import { MessageSquareHeart, Plus, ExternalLink, BarChart2, Trash2, X } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
@@ -188,7 +189,10 @@ export const FeedbackPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Instructions / Description</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-slate-300">Instructions / Description</label>
+                  <ImproveEnglishButton text={description} onImproved={setDescription} context="Feedback survey instructions and purpose" />
+                </div>
                 <textarea rows={2} value={description} onChange={e => setDescription(e.target.value)} placeholder="Provide short survey instructions..." className="glass-input" />
               </div>
 

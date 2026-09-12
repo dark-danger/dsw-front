@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { Trophy, Sparkles, Send, CheckCircle2, FileText, X, Clock } from 'lucide-react';
 import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import { useAuth } from '../../context/AuthContext';
 
 interface LeaderboardTask {
@@ -151,7 +152,10 @@ export const LeaderboardTasksPage: React.FC = () => {
 
             <form onSubmit={handleSubmitProof} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Proof Details / Contribution Note</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-slate-300">Proof Details / Contribution Note</label>
+                  <ImproveEnglishButton text={submissionText} onImproved={setSubmissionText} context="Student challenge proof description and contribution details" />
+                </div>
                 <textarea
                   required
                   rows={3}

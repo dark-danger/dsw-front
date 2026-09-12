@@ -3,6 +3,7 @@ import { apiRequest } from '../../lib/api';
 import { useAuth, User } from '../../context/AuthContext';
 import confetti from 'canvas-confetti';
 import { ProofViewer } from '../../components/tasks/ProofViewer';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import {
   Trophy, Plus, Award, CheckCircle2, XCircle, FileText,
   User as UserIcon, Medal, Sparkles, X, PlusCircle, MinusCircle, Clock
@@ -304,7 +305,10 @@ export const StudentLeaderboardPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Challenge Instructions</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Challenge Instructions</label>
+                  <ImproveEnglishButton text={description} onImproved={setDescription} context="Student leaderboard challenge guidelines and instructions" />
+                </div>
                 <textarea rows={3} value={description} onChange={e => setDescription(e.target.value)} placeholder="Participation requirements..." className="glass-input" />
               </div>
 
@@ -393,7 +397,10 @@ export const StudentLeaderboardPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Reason Note</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Reason Note</label>
+                  <ImproveEnglishButton text={reasonNote} onImproved={setReasonNote} context="Reason and citation for manual student points award" />
+                </div>
                 <input required type="text" value={reasonNote} onChange={e => setReasonNote(e.target.value)} placeholder="e.g. Winner of Campus Hackathon" className="glass-input" />
               </div>
 

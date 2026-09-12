@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { User } from '../../context/AuthContext';
 import { ProofViewer } from '../../components/tasks/ProofViewer';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import {
   CheckSquare, Plus, CornerDownRight, CheckCircle2, XCircle, Clock,
   AlertCircle, FileText, User as UserIcon, Calendar, X, Eye, Pencil, Trash2
@@ -361,7 +362,10 @@ export const TasksPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Task Instructions</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Task Instructions</label>
+                  <ImproveEnglishButton text={description} onImproved={setDescription} context="Task instructions and guidelines for faculty" />
+                </div>
                 <textarea rows={3} value={description} onChange={e => setDescription(e.target.value)} placeholder="Provide detailed steps..." className="glass-input" />
               </div>
 
@@ -457,7 +461,10 @@ export const TasksPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Task Instructions</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Task Instructions</label>
+                  <ImproveEnglishButton text={editDescription} onImproved={setEditDescription} context="Task instructions and guidelines for faculty" />
+                </div>
                 <textarea rows={3} value={editDescription} onChange={e => setEditDescription(e.target.value)} className="glass-input" />
               </div>
 
@@ -575,9 +582,12 @@ export const TasksPage: React.FC = () => {
               ))}
 
               <form onSubmit={handleDecline} className="pt-2 space-y-3 border-t border-[var(--panel-border)]">
-                <label className="block text-xs font-semibold text-[var(--text-secondary)]">
-                  Decline Remarks <span className="text-rose-500">(Mandatory if declining)</span>
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">
+                    Decline Remarks <span className="text-rose-500">(Mandatory if declining)</span>
+                  </label>
+                  <ImproveEnglishButton text={declineRemarks} onImproved={setDeclineRemarks} context="Feedback and decline remarks explaining why task needs revision" />
+                </div>
                 <textarea
                   rows={2}
                   value={declineRemarks}

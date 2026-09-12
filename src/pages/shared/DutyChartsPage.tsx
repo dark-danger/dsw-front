@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { useAuth, User } from '../../context/AuthContext';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import {
   FileCheck, Plus, Trash2, Calendar, User as UserIcon, MapPin,
   Clock, Printer, Download, Eye, X, CheckCircle2, Shield, Sparkles, Building2
@@ -317,7 +318,10 @@ export const DutyChartsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">General Notes & Directives for Staff</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-slate-300">General Notes & Directives for Staff</label>
+                  <ImproveEnglishButton text={chartNotes} onImproved={setChartNotes} context="Duty chart general instructions and directives for faculty and staff" />
+                </div>
                 <textarea
                   rows={2}
                   value={chartNotes}

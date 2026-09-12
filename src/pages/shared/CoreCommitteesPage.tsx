@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { useAuth, User } from '../../context/AuthContext';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import {
   Users, Plus, Trash2, Calendar, User as UserIcon, MapPin,
   Clock, Printer, Download, Eye, X, CheckCircle2, Shield, Sparkles, Award, Star
@@ -361,7 +362,10 @@ export const CoreCommitteesPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Scope & Mandate / Directives</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-slate-300">Scope & Mandate / Directives</label>
+                  <ImproveEnglishButton text={committeeDescription} onImproved={setCommitteeDescription} context="Core committee charter, scope, and objectives" />
+                </div>
                 <textarea
                   rows={2}
                   value={committeeDescription}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
 import { User } from '../../context/AuthContext';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import { Calendar, Plus, FileText, CheckCircle2, Clock, MapPin, User as UserIcon, X, Eye, Trash2, FileCheck } from 'lucide-react';
 
 interface EventItem {
@@ -223,7 +224,10 @@ export const EventsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Event Description</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Event Description</label>
+                  <ImproveEnglishButton text={description} onImproved={setDescription} context="Campus event overview and description" />
+                </div>
                 <textarea rows={3} value={description} onChange={e => setDescription(e.target.value)} placeholder="Detailed description..." className="glass-input" />
               </div>
 

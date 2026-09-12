@@ -3,6 +3,7 @@ import { apiRequest } from '../../lib/api';
 import { useAuth, User } from '../../context/AuthContext';
 import { ProofViewer } from '../../components/tasks/ProofViewer';
 import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import {
   Users, Plus, Trash2, CheckCircle2, Clock, XCircle, Search,
   Award, Eye, FileText, Download, Printer, Shield, ChevronRight,
@@ -555,7 +556,10 @@ export const ClubsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Club Description</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Club Description</label>
+                  <ImproveEnglishButton text={clubDescription} onImproved={setClubDescription} context="Student club description, mandate, and objectives" />
+                </div>
                 <textarea
                   rows={3}
                   value={clubDescription}
@@ -566,7 +570,10 @@ export const ClubsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Key Result Areas (KRAs) & Annual Directives</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Key Result Areas (KRAs) & Annual Directives</label>
+                  <ImproveEnglishButton text={clubKras} onImproved={setClubKras} context="Club Key Result Areas, targets, and annual milestones" />
+                </div>
                 <textarea
                   rows={2}
                   value={clubKras}
@@ -1119,7 +1126,10 @@ export const ClubsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Task Instructions</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Task Instructions</label>
+                  <ImproveEnglishButton text={taskDesc} onImproved={setTaskDesc} context="Club task instructions, steps, and expected deliverables" />
+                </div>
                 <textarea
                   rows={3}
                   value={taskDesc}
@@ -1185,7 +1195,10 @@ export const ClubsPage: React.FC = () => {
 
             <form onSubmit={handleSubmitProof} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Work Description / Report Summary *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Work Description / Report Summary *</label>
+                  <ImproveEnglishButton text={proofText} onImproved={setProofText} context="Club task completion report and outcome summary" />
+                </div>
                 <textarea
                   required
                   rows={3}
@@ -1227,7 +1240,10 @@ export const ClubsPage: React.FC = () => {
 
             <form onSubmit={handleDeclineTask} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Reason for Decline / Revision Remarks *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Reason for Decline / Revision Remarks *</label>
+                  <ImproveEnglishButton text={declineRemarks} onImproved={setDeclineRemarks} context="Feedback and reasons for declining club task submission" />
+                </div>
                 <textarea
                   required
                   rows={4}

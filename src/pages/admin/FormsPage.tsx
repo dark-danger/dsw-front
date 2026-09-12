@@ -22,6 +22,7 @@ import {
   Zap,
   Share2
 } from 'lucide-react';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 
 interface FormField {
   field_id: string;
@@ -425,7 +426,10 @@ export const FormsPage: React.FC = () => {
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">Form Description</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-bold text-[var(--text-primary)]">Form Description</label>
+                    <ImproveEnglishButton text={description} onImproved={setDescription} context="Public form guidelines and description" />
+                  </div>
                   <textarea rows={2} value={description} onChange={e => setDescription(e.target.value)} placeholder="Provide instructions to respondents..." className="glass-input text-xs" />
                 </div>
               </div>

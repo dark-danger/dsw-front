@@ -3,6 +3,7 @@ import { apiRequest } from '../../lib/api';
 import { CheckSquare, Upload, FileText, CheckCircle2, AlertCircle, Clock, Send, X } from 'lucide-react';
 import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
 import { ProofViewer } from '../../components/tasks/ProofViewer';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import { useAuth } from '../../context/AuthContext';
 
 interface TaskSubmission {
@@ -195,7 +196,14 @@ export const MyTasksPage: React.FC = () => {
 
             <form onSubmit={handleSubmitDuty} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Completion Summary / Notes</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-slate-300">Completion Summary / Notes *</label>
+                  <ImproveEnglishButton
+                    text={submitDescription}
+                    onImproved={(improved) => setSubmitDescription(improved)}
+                    context="Faculty Task Duty Completion Notes"
+                  />
+                </div>
                 <textarea
                   required
                   rows={3}

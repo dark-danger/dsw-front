@@ -3,6 +3,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { apiRequest } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
 import { FileUploadField } from '../../components/events/FileUploadField';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import { 
   ANNEXURE_1_DATA, 
   STANDARD_BUDGET_PARTICULARS, 
@@ -630,7 +631,10 @@ export const EventReportFormPage: React.FC = () => {
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">Event Description *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-bold text-[var(--text-primary)]">Event Description *</label>
+                  <ImproveEnglishButton text={description} onImproved={setDescription} context="University event comprehensive description, activities, and narrative" />
+                </div>
                 <textarea
                   rows={4}
                   value={description}
@@ -641,7 +645,10 @@ export const EventReportFormPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">Event Objective(s) Mapped with SDGs *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-bold text-[var(--text-primary)]">Event Objective(s) Mapped with SDGs *</label>
+                  <ImproveEnglishButton text={objectivesSdg} onImproved={setObjectivesSdg} context="Event educational objectives aligned with UN Sustainable Development Goals" />
+                </div>
                 <textarea
                   rows={3}
                   value={objectivesSdg}
@@ -652,7 +659,10 @@ export const EventReportFormPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">Expected Outcome *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-bold text-[var(--text-primary)]">Expected Outcome *</label>
+                  <ImproveEnglishButton text={expectedOutcome} onImproved={setExpectedOutcome} context="Event expected outcomes, key performance indicators, and deliverables" />
+                </div>
                 <textarea
                   rows={3}
                   value={expectedOutcome}
@@ -759,9 +769,12 @@ export const EventReportFormPage: React.FC = () => {
               <div className="md:col-span-2 p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-[var(--panel-border)] space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
-                      Details of Resource Person (If any) with Designation & Name of Institution/Organization
-                    </label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-xs font-bold text-[var(--text-primary)]">
+                        Details of Resource Person (If any) with Designation & Name of Institution/Organization
+                      </label>
+                      <ImproveEnglishButton text={resourcePersonDetails} onImproved={setResourcePersonDetails} context="Resource person / speaker profile, designations, and background" />
+                    </div>
                     <textarea
                       rows={4}
                       value={resourcePersonDetails}
@@ -782,9 +795,12 @@ export const EventReportFormPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
-                    Guest Detail (Acceptance along with Details and LinkedIn Profile Link)
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-bold text-[var(--text-primary)]">
+                      Guest Detail (Acceptance along with Details and LinkedIn Profile Link)
+                    </label>
+                    <ImproveEnglishButton text={guestDetails} onImproved={setGuestDetails} context="Distinguished guest profile and acceptance details" />
+                  </div>
                   <textarea
                     rows={2}
                     value={guestDetails}
@@ -1405,7 +1421,10 @@ export const EventReportFormPage: React.FC = () => {
 
             {/* Learning Outcome */}
             <div>
-              <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">Learning Outcome *</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-bold text-[var(--text-primary)]">Learning Outcome *</label>
+                <ImproveEnglishButton text={learningOutcome} onImproved={setLearningOutcome} context="Student and participant technical learning outcomes from event" />
+              </div>
               <textarea
                 rows={3}
                 value={learningOutcome}
@@ -1455,7 +1474,10 @@ export const EventReportFormPage: React.FC = () => {
             {/* Feedbacks */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-[var(--panel-border)] space-y-2">
-                <label className="block text-xs font-bold text-[var(--text-primary)]">Feedback of Guest / Resource Person</label>
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold text-[var(--text-primary)]">Feedback of Guest / Resource Person</label>
+                  <ImproveEnglishButton text={feedbackGuest} onImproved={setFeedbackGuest} context="Guest and speaker feedback regarding the university event" />
+                </div>
                 <textarea
                   rows={4}
                   value={feedbackGuest}
@@ -1466,7 +1488,10 @@ export const EventReportFormPage: React.FC = () => {
               </div>
 
               <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-[var(--panel-border)] space-y-2">
-                <label className="block text-xs font-bold text-[var(--text-primary)]">Feedback of Participants</label>
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold text-[var(--text-primary)]">Feedback of Participants</label>
+                  <ImproveEnglishButton text={feedbackParticipants} onImproved={setFeedbackParticipants} context="Participant feedback and student survey summaries" />
+                </div>
                 <textarea
                   rows={4}
                   value={feedbackParticipants}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { useAuth, User } from '../../context/AuthContext';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import {
   HelpCircle, CheckCircle2, RotateCcw, Clock, User as UserIcon,
   MessageSquare, X, PlusCircle, Send, Building2, GraduationCap, Shield
@@ -390,7 +391,10 @@ export const QueriesPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Detailed Description *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Detailed Description *</label>
+                  <ImproveEnglishButton text={newDescription} onImproved={setNewDescription} context="Official grievance, query, or campus assistance request" />
+                </div>
                 <textarea
                   required
                   rows={4}
@@ -438,7 +442,10 @@ export const QueriesPage: React.FC = () => {
 
             <form onSubmit={handleCloseQuery} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Official Resolution Remarks *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Official Resolution Remarks *</label>
+                  <ImproveEnglishButton text={adminRemarks} onImproved={setAdminRemarks} context="Official administrative resolution remarks and solution to student/faculty query" />
+                </div>
                 <textarea
                   required
                   rows={4}

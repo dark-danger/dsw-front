@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import { Megaphone, Pin, Plus, Trash2, Heart, ThumbsUp, PartyPopper, Flame, X } from 'lucide-react';
 
 interface AnnouncementItem {
@@ -190,7 +191,10 @@ export const AnnouncementsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Announcement Body</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Announcement Body</label>
+                  <ImproveEnglishButton text={body} onImproved={setBody} context="Campus announcement message for faculty and students" />
+                </div>
                 <textarea required rows={5} value={body} onChange={e => setBody(e.target.value)} placeholder="Type announcement details..." className="glass-input" />
               </div>
 

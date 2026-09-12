@@ -4,6 +4,7 @@ import { useAuth, User } from '../../context/AuthContext';
 import { apiRequest } from '../../lib/api';
 import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
 import { ProofViewer } from '../../components/tasks/ProofViewer';
+import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButton';
 import {
   Trophy, Award, Sparkles, GraduationCap, HelpCircle, Users,
   CheckCircle2, Clock, Megaphone, Shield, Mail, Phone, ChevronRight,
@@ -585,7 +586,10 @@ export const StudentDashboardPage: React.FC = () => {
 
             <form onSubmit={handleSubmitProof} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Work Description / Report Summary *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Work Description / Report Summary *</label>
+                  <ImproveEnglishButton text={proofText} onImproved={setProofText} context="Club task completion summary and proof description for faculty coordinator" />
+                </div>
                 <textarea
                   required
                   rows={3}
@@ -708,7 +712,10 @@ export const StudentDashboardPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Detailed Description *</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)]">Detailed Description *</label>
+                  <ImproveEnglishButton text={queryDescription} onImproved={setQueryDescription} context="Student grievance or official inquiry to university administration" />
+                </div>
                 <textarea
                   required
                   rows={4}
