@@ -79,7 +79,8 @@ export const FacultyPage: React.FC = () => {
       setName('');
       setEmail('');
       setPhone('');
-      setFacultyList(prev => [...prev, newFac].sort((a, b) => a.name.localeCompare(b.name)));
+      setEmployeeId('');
+      fetchFaculty();
     } catch (err: any) {
       alert(err.message || 'Failed to add faculty member');
     }

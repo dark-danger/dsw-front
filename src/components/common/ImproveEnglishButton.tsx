@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Sparkles, Loader2, Check } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Sparkles, Loader2, Check, AlertCircle } from 'lucide-react';
 import { apiRequest } from '../../lib/api';
 
 interface ImproveEnglishButtonProps {
@@ -11,6 +11,9 @@ interface ImproveEnglishButtonProps {
   className?: string;
 }
 
+// Client-side cache to instantly return previously improved text variations
+const clientImprovementCache = new Map<string, string>();
+
 export const ImproveEnglishButton: React.FC<ImproveEnglishButtonProps> = ({
   text,
   onImproved,
@@ -21,6 +24,8 @@ export const ImproveEnglishButton: React.FC<ImproveEnglishButtonProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const lastClickRef = useRef<number>(0);
 
   const handleImprove = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -28,12 +33,30 @@ export const ImproveEnglishButton: React.FC<ImproveEnglishButtonProps> = ({
 
     const trimmed = (text || '').trim();
     if (!trimmed) {
-      alert('Please enter some text first before clicking Improve.');
+      return;
+    }
+
+    // Debounce / Cooldown: prevent multiple rapid clicks within 1200ms
+    const now = Date.now();
+    if (now - lastClickRef.current < 1200 || loading) {
+      return;
+    }
+    lastClickRef.current = now;
+
+    const cacheKey = `${context || ''}:::${trimmed}`;
+
+    // Check client-side instant cache
+    if (clientImprovementCache.has(cacheKey)) {
+      const cached = clientImprovementCache.get(cacheKey)!;
+      onImproved(cached);
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 2000);
       return;
     }
 
     setLoading(true);
     setSuccess(false);
+    setErrorMessage(null);
 
     try {
       const res = await apiRequest<{ original_text: string; improved_text: string }>(
@@ -46,13 +69,16 @@ export const ImproveEnglishButton: React.FC<ImproveEnglishButtonProps> = ({
       );
 
       if (res && res.improved_text) {
+        clientImprovementCache.set(cacheKey, res.improved_text);
         onImproved(res.improved_text);
         setSuccess(true);
         setTimeout(() => setSuccess(false), 2000);
       }
     } catch (err: any) {
-      console.error('Failed to improve text:', err);
-      alert(err.message || 'Could not improve text. Please check your connection.');
+      console.warn('AI improvement fallback triggered:', err);
+      // Inline gentle status instead of disruptive alert modal
+      setErrorMessage(err.message || 'Retry');
+      setTimeout(() => setErrorMessage(null), 3000);
     } finally {
       setLoading(false);
     }
@@ -68,6 +94,8 @@ export const ImproveEnglishButton: React.FC<ImproveEnglishButtonProps> = ({
       title={
         isTextEmpty
           ? 'Enter text to enable AI improvement'
+          : errorMessage
+          ? `Status: ${errorMessage}`
           : 'Refine grammar, spelling, and polish phrasing using Gemini AI'
       }
       className={`inline-flex items-center gap-1.5 font-semibold transition-all rounded-lg shadow-2xs select-none ${
@@ -77,6 +105,8 @@ export const ImproveEnglishButton: React.FC<ImproveEnglishButtonProps> = ({
           ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30 cursor-wait'
           : success
           ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/40'
+          : errorMessage
+          ? 'bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/40'
           : isTextEmpty || disabled
           ? 'opacity-40 cursor-not-allowed bg-[var(--card-bg-to)] text-[var(--text-muted)] border border-[var(--panel-border)]'
           : 'bg-gradient-to-r from-purple-500/15 to-indigo-500/15 hover:from-purple-500/25 hover:to-indigo-500/25 text-purple-700 dark:text-purple-300 border border-purple-500/30 hover:border-purple-500/50 hover:scale-[1.02] active:scale-[0.98]'
@@ -91,6 +121,11 @@ export const ImproveEnglishButton: React.FC<ImproveEnglishButtonProps> = ({
         <>
           <Check className="w-3 h-3 text-emerald-500" />
           <span>Polished!</span>
+        </>
+      ) : errorMessage ? (
+        <>
+          <AlertCircle className="w-3 h-3 text-amber-500" />
+          <span>{errorMessage.length > 12 ? 'Retry' : errorMessage}</span>
         </>
       ) : (
         <>

@@ -1,21 +1,11 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://dsw-07gj.onrender.com/api';
 
-// In-flight request deduplication map
+// In-flight request deduplication map (prevents duplicate simultaneous network requests during parallel renders)
 const pendingRequests = new Map<string, Promise<any>>();
 
-// Cache TTL configuration in milliseconds
-const CACHE_TTL: Record<string, number> = {
-  '/events': 30_000,
-  '/leaderboard/students/rankings': 30_000,
-  '/leaderboard/staff/rankings': 30_000,
-  '/announcements': 30_000,
-  '/auth/me': 10_000,
-};
-
-const memoryCache = new Map<string, { data: any; expiry: number }>();
-
 export function clearApiCache() {
-  memoryCache.clear();
+  // Retained for backward compatibility
+  pendingRequests.clear();
 }
 
 export async function apiRequest<T = any>(
@@ -23,7 +13,7 @@ export async function apiRequest<T = any>(
   method: string = 'GET',
   body?: any,
   isMultipart: boolean = false,
-  skipCache: boolean = false
+  _skipCache: boolean = false
 ): Promise<T> {
   const token = localStorage.getItem('dsw_token');
   const headers: Record<string, string> = {};
@@ -36,24 +26,11 @@ export async function apiRequest<T = any>(
     headers['Content-Type'] = 'application/json';
   }
 
-  const cacheKey = `${method}:${endpoint}:${token || 'anon'}`;
+  const inFlightKey = `${method}:${endpoint}:${token || 'anon'}`;
 
-  // Check cache for GET requests
-  if (method === 'GET' && !skipCache) {
-    const cached = memoryCache.get(cacheKey);
-    if (cached && Date.now() < cached.expiry) {
-      return cached.data as T;
-    }
-
-    // Deduplicate concurrent in-flight GET requests
-    if (pendingRequests.has(cacheKey)) {
-      return pendingRequests.get(cacheKey)!;
-    }
-  }
-
-  // Clear cache on write operations (POST, PUT, PATCH, DELETE)
-  if (method !== 'GET') {
-    memoryCache.clear();
+  // Deduplicate concurrent in-flight GET requests
+  if (method === 'GET' && pendingRequests.has(inFlightKey)) {
+    return pendingRequests.get(inFlightKey)!;
   }
 
   const fetchPromise = (async () => {
@@ -99,22 +76,17 @@ export async function apiRequest<T = any>(
         data = await response.json();
       }
 
-      // Store in memory cache if GET
-      if (method === 'GET') {
-        const ttl = CACHE_TTL[endpoint] || 15_000;
-        memoryCache.set(cacheKey, { data, expiry: Date.now() + ttl });
-      }
-
       return data as T;
     } finally {
-      pendingRequests.delete(cacheKey);
+      pendingRequests.delete(inFlightKey);
     }
   })();
 
   if (method === 'GET') {
-    pendingRequests.set(cacheKey, fetchPromise);
+    pendingRequests.set(inFlightKey, fetchPromise);
   }
 
   return fetchPromise;
 }
+
 
