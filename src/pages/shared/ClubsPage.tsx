@@ -384,7 +384,7 @@ export const ClubsPage: React.FC = () => {
       {/* Search & Category Filter Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 max-w-full">
           {CATEGORIES.map(cat => (
             <button
               key={cat}
@@ -776,7 +776,7 @@ export const ClubsPage: React.FC = () => {
 
             {/* Current Members Table */}
             <div className="overflow-x-auto rounded-xl border border-[var(--panel-border)]">
-              <table className="w-full text-left text-xs text-[var(--text-secondary)]">
+              <table className="w-full min-w-[650px] text-left text-xs text-[var(--text-secondary)]">
                 <thead className="bg-[var(--card-bg-to)] font-bold text-[var(--text-primary)] uppercase border-b border-[var(--panel-border)]">
                   <tr>
                     <th className="p-3">Student Name</th>
@@ -909,8 +909,9 @@ export const ClubsPage: React.FC = () => {
               <div className="font-bold text-sm text-slate-900 uppercase tracking-wide border-b border-slate-300 pb-1">
                 Official Student Core Committee & Executive Roles
               </div>
-              <table className="w-full text-left text-xs border border-slate-300">
-                <thead className="bg-slate-100 font-bold text-slate-900 border-b border-slate-300 uppercase">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[650px] text-left text-xs border border-slate-300">
+                  <thead className="bg-slate-100 font-bold text-slate-900 border-b border-slate-300 uppercase">
                   <tr>
                     <th className="p-2.5 border-r border-slate-300 w-12 text-center">S.No</th>
                     <th className="p-2.5 border-r border-slate-300">Designated Role</th>
@@ -939,6 +940,7 @@ export const ClubsPage: React.FC = () => {
                   )}
                 </tbody>
               </table>
+              </div>
             </div>
 
             {/* Document Verification & Signatures */}

@@ -573,20 +573,20 @@ export const StudentDashboardPage: React.FC = () => {
 
       {/* 5. Submit Task Proof Modal */}
       {submittingTask && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-md glass-panel p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
+          <div className="w-full max-w-md glass-panel p-4 sm:p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)] mb-4">
               <h3 className="text-base font-bold text-[var(--text-primary)]">
                 Submit Task Proof: {submittingTask.title}
               </h3>
-              <button onClick={() => setSubmittingTask(null)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+              <button onClick={() => setSubmittingTask(null)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1">
                 <XCircle className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSubmitProof} className="space-y-4">
               <div>
-                <div className="flex items-center justify-between mb-1">
+                <div className="flex flex-wrap items-center justify-between gap-1 mb-1">
                   <label className="block text-xs font-semibold text-[var(--text-secondary)]">Work Description / Report Summary *</label>
                   <ImproveEnglishButton text={proofText} onImproved={setProofText} context="Club task completion summary and proof description for faculty coordinator" />
                 </div>
@@ -607,9 +607,9 @@ export const StudentDashboardPage: React.FC = () => {
                 taskName={submittingTask?.title || 'Club Task'}
               />
 
-              <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">
-                <button type="button" onClick={() => setSubmittingTask(null)} className="btn-secondary text-xs">Cancel</button>
-                <button type="submit" disabled={submittingProof} className="btn-primary text-xs">
+              <div className="pt-4 border-t border-[var(--panel-border)] flex flex-col-reverse sm:flex-row justify-end gap-2">
+                <button type="button" onClick={() => setSubmittingTask(null)} className="btn-secondary text-xs w-full sm:w-auto">Cancel</button>
+                <button type="submit" disabled={submittingProof} className="btn-primary text-xs w-full sm:w-auto">
                   {submittingProof ? 'Submitting...' : 'Submit to Faculty Coordinator'}
                 </button>
               </div>
@@ -620,13 +620,13 @@ export const StudentDashboardPage: React.FC = () => {
 
       {/* 6. Raise Query Modal */}
       {showQueryModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs overflow-y-auto">
-          <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative my-8 animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-xs overflow-y-auto">
+          <div className="w-full max-w-lg glass-panel p-4 sm:p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)] mb-4">
-              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
-                <PlusCircle className="w-5 h-5 text-emerald-500" /> Raise Query / Grievance
+              <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+                <PlusCircle className="w-5 h-5 text-emerald-500 shrink-0" /> Raise Query / Grievance
               </h3>
-              <button onClick={() => setShowQueryModal(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+              <button onClick={() => setShowQueryModal(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>

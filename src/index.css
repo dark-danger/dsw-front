@@ -486,5 +486,17 @@
   animation: pulseGlow 2s ease-in-out infinite;
 }
 
+/* Mobile & Touch Utilities */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
-
+@media (max-width: 640px) {
+  button, a, input, select, textarea {
+    touch-action: manipulation;
+  }
+}

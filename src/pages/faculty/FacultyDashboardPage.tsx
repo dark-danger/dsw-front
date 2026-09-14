@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { apiRequest } from '../../lib/api';
 import { CheckSquare, Medal, Clock, CheckCircle2, Megaphone, HelpCircle, FileText, ArrowRight, FileCheck, Award } from 'lucide-react';
@@ -110,7 +111,7 @@ export const FacultyDashboardPage: React.FC = () => {
 
       {/* Faculty Action Hub */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <a href="/faculty/tasks" className="glass-card p-5 space-y-2 group hover:border-emerald-500/50">
+        <Link to="/faculty/tasks" className="glass-card p-5 space-y-2 group hover:border-emerald-500/50">
           <div className="flex items-center justify-between">
             <span className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
               <CheckSquare className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Manage Assigned Tasks
@@ -118,9 +119,9 @@ export const FacultyDashboardPage: React.FC = () => {
             <ArrowRight className="w-4 h-4 text-[var(--text-muted)] group-hover:text-emerald-500 transition-colors" />
           </div>
           <p className="text-xs text-[var(--text-secondary)]">Submit completion reports and upload proof documents for DSW review.</p>
-        </a>
+        </Link>
 
-        <a href="/faculty/duty-charts" className="glass-card p-5 space-y-2 group hover:border-teal-500/50">
+        <Link to="/faculty/duty-charts" className="glass-card p-5 space-y-2 group hover:border-teal-500/50">
           <div className="flex items-center justify-between">
             <span className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
               <FileCheck className="w-4 h-4 text-teal-600 dark:text-teal-400" /> Event Duty Charts
@@ -128,9 +129,9 @@ export const FacultyDashboardPage: React.FC = () => {
             <ArrowRight className="w-4 h-4 text-[var(--text-muted)] group-hover:text-teal-500 transition-colors" />
           </div>
           <p className="text-xs text-[var(--text-secondary)]">View official campus event duty rosters and download printable PDF charts.</p>
-        </a>
+        </Link>
 
-        <a href="/faculty/committees" className="glass-card p-5 space-y-2 group hover:border-emerald-500/50">
+        <Link to="/faculty/committees" className="glass-card p-5 space-y-2 group hover:border-emerald-500/50">
           <div className="flex items-center justify-between">
             <span className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
               <Award className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Core Committees
@@ -138,7 +139,7 @@ export const FacultyDashboardPage: React.FC = () => {
             <ArrowRight className="w-4 h-4 text-[var(--text-muted)] group-hover:text-emerald-500 transition-colors" />
           </div>
           <p className="text-xs text-[var(--text-secondary)]">Oversee student convenors and event core organizing teams.</p>
-        </a>
+        </Link>
       </div>
     </div>
   );

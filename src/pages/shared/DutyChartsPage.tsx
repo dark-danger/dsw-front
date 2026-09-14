@@ -243,7 +243,7 @@ export const DutyChartsPage: React.FC = () => {
 
               {/* Duty Table Preview */}
               <div className="overflow-x-auto rounded-xl border border-[var(--panel-border)]">
-                <table className="w-full text-left text-xs text-[var(--text-secondary)]">
+                <table className="w-full min-w-[600px] text-left text-xs text-[var(--text-secondary)]">
                   <thead className="bg-[var(--card-bg-to)] font-bold text-[var(--text-primary)] uppercase border-b border-[var(--panel-border)]">
                     <tr>
                       <th className="p-3">Duty Role</th>
@@ -481,8 +481,8 @@ export const DutyChartsPage: React.FC = () => {
               )}
 
               {/* Duty Table */}
-              <div className="overflow-hidden border border-slate-300 rounded-lg">
-                <table className="w-full text-left text-xs">
+              <div className="overflow-x-auto border border-slate-300 rounded-lg">
+                <table className="w-full min-w-[650px] text-left text-xs">
                   <thead className="bg-slate-200 font-bold text-slate-900 border-b border-slate-300 uppercase">
                     <tr>
                       <th className="p-2.5 border-r border-slate-300 text-center w-12">S.No</th>

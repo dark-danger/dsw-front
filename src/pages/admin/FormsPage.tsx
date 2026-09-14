@@ -387,7 +387,7 @@ export const FormsPage: React.FC = () => {
                 <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase mb-2">
                   Quick Starter Templates
                 </label>
-                <div className="grid grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   {['Event Registration with Fee', 'Detailed Student Form', 'Club Audition Form'].map(purpose => (
                     <button
                       key={purpose}
@@ -682,12 +682,12 @@ export const FormsPage: React.FC = () => {
 
       {/* Response Table Viewer Modal */}
       {selectedFormForResponses && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-          <div className="w-full max-w-5xl bg-white dark:bg-slate-900 border border-[var(--panel-border)] rounded-3xl p-6 shadow-2xl relative max-h-[88vh] flex flex-col space-y-4">
-            <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+          <div className="w-full max-w-5xl bg-white dark:bg-slate-900 border border-[var(--panel-border)] rounded-3xl p-4 sm:p-6 shadow-2xl relative my-auto max-h-[90vh] flex flex-col space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[var(--panel-border)] gap-3">
               <div>
-                <h3 className="text-lg font-black text-[var(--text-primary)]">{selectedFormForResponses.title} — Submissions Ledger</h3>
-                <div className="flex items-center gap-3 mt-1 text-xs text-[var(--text-secondary)]">
+                <h3 className="text-base sm:text-lg font-black text-[var(--text-primary)]">{selectedFormForResponses.title} — Submissions Ledger</h3>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 text-xs text-[var(--text-secondary)]">
                   <span>Total: <strong>{responsesList.length} Responses</strong></span>
                   {selectedFormForResponses.google_sheet_url && (
                     <a href={selectedFormForResponses.google_sheet_url} target="_blank" rel="noreferrer" className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline flex items-center gap-1">
@@ -696,7 +696,7 @@ export const FormsPage: React.FC = () => {
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 self-end sm:self-auto">
                 <a
                   href={`/api/forms/${selectedFormForResponses.id}/responses/export`}
                   className="btn-primary text-xs py-2 px-3.5 bg-emerald-600 hover:bg-emerald-500 flex items-center gap-1.5 shadow-md shadow-emerald-600/20"
@@ -710,7 +710,7 @@ export const FormsPage: React.FC = () => {
             </div>
 
             <div className="flex-1 overflow-auto rounded-2xl border border-[var(--panel-border)]">
-              <table className="w-full text-left text-xs">
+              <table className="w-full min-w-[750px] text-left text-xs">
                 <thead className="bg-slate-50 dark:bg-slate-800 text-[var(--text-secondary)] uppercase font-bold border-b border-[var(--panel-border)]">
                   <tr>
                     <th className="p-3 w-12 text-center">#</th>

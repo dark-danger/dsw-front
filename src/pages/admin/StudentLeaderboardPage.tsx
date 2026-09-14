@@ -239,51 +239,54 @@ export const StudentLeaderboardPage: React.FC = () => {
           <span className="text-xs text-[var(--text-muted)]">Calculated strictly as SUM of points</span>
         </div>
 
-        <table className="w-full text-left text-sm text-[var(--text-secondary)]">
-          <thead className="bg-[var(--card-bg-to)] text-xs uppercase font-bold text-[var(--text-primary)] border-b border-[var(--panel-border)]">
-            <tr>
-              <th className="p-4">Rank</th>
-              <th className="p-4">Student Name</th>
-              <th className="p-4">Roll Number</th>
-              <th className="p-4">Course / Branch</th>
-              <th className="p-4 text-center">Task Points</th>
-              <th className="p-4 text-center">Manual Points</th>
-              <th className="p-4 text-right">Total Score</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--panel-border)]">
-            {loading ? (
-              <tr><td colSpan={7} className="p-8 text-center text-[var(--text-muted)]">Loading student rankings...</td></tr>
-            ) : rankings.length === 0 ? (
-              <tr><td colSpan={7} className="p-8 text-center text-[var(--text-muted)]">No points recorded on leaderboard.</td></tr>
-            ) : (
-              rankings.map(r => (
-                <tr key={r.student_id} className="hover:bg-emerald-500/5 transition-colors">
-                  <td className="p-4">
-                    <div className="flex items-center gap-2">
-                      {r.rank === 1 ? (
-                        <span className="w-7 h-7 rounded-full bg-amber-400 text-slate-950 font-black flex items-center justify-center text-xs shadow-lg shadow-amber-400/30">1</span>
-                      ) : r.rank === 2 ? (
-                        <span className="w-7 h-7 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-950 dark:text-white font-black flex items-center justify-center text-xs">2</span>
-                      ) : r.rank === 3 ? (
-                        <span className="w-7 h-7 rounded-full bg-amber-700 text-white font-black flex items-center justify-center text-xs">3</span>
-                      ) : (
-                        <span className="w-7 h-7 rounded-full bg-[var(--card-bg-to)] border border-[var(--panel-border)] text-[var(--text-secondary)] font-bold flex items-center justify-center text-xs">#{r.rank}</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="p-4 font-semibold text-[var(--text-primary)]">{r.name}</td>
-                  <td className="p-4 font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">{r.roll_number || 'N/A'}</td>
-                  <td className="p-4 text-[var(--text-secondary)]">{r.course_branch || 'N/A'}</td>
-                  <td className="p-4 text-center font-mono text-xs text-blue-600 dark:text-blue-400 font-semibold">{r.task_points}</td>
-                  <td className="p-4 text-center font-mono text-xs text-purple-600 dark:text-purple-400 font-semibold">{r.manual_points}</td>
-                  <td className="p-4 text-right font-black text-amber-600 dark:text-amber-400 text-base">{r.total_points} pts</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[700px] text-left text-sm text-[var(--text-secondary)]">
+            <thead className="bg-[var(--card-bg-to)] text-xs uppercase font-bold text-[var(--text-primary)] border-b border-[var(--panel-border)]">
+              <tr>
+                <th className="p-4">Rank</th>
+                <th className="p-4">Student Name</th>
+                <th className="p-4">Roll Number</th>
+                <th className="p-4">Course / Branch</th>
+                <th className="p-4 text-center">Task Points</th>
+                <th className="p-4 text-center">Manual Points</th>
+                <th className="p-4 text-right">Total Score</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--panel-border)]">
+              {loading ? (
+                <tr><td colSpan={7} className="p-8 text-center text-[var(--text-muted)]">Loading student rankings...</td></tr>
+              ) : rankings.length === 0 ? (
+                <tr><td colSpan={7} className="p-8 text-center text-[var(--text-muted)]">No points recorded on leaderboard.</td></tr>
+              ) : (
+                rankings.map(r => (
+                  <tr key={r.student_id} className="hover:bg-emerald-500/5 transition-colors">
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        {r.rank === 1 ? (
+                          <span className="w-7 h-7 rounded-full bg-amber-400 text-slate-950 font-black flex items-center justify-center text-xs shadow-lg shadow-amber-400/30">1</span>
+                        ) : r.rank === 2 ? (
+                          <span className="w-7 h-7 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-950 dark:text-white font-black flex items-center justify-center text-xs">2</span>
+                        ) : r.rank === 3 ? (
+                          <span className="w-7 h-7 rounded-full bg-amber-700 text-white font-black flex items-center justify-center text-xs">3</span>
+                        ) : (
+                          <span className="w-7 h-7 rounded-full bg-[var(--card-bg-to)] border border-[var(--panel-border)] text-[var(--text-secondary)] font-bold flex items-center justify-center text-xs">#{r.rank}</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="p-4 font-semibold text-[var(--text-primary)]">{r.name}</td>
+                    <td className="p-4 font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">{r.roll_number || 'N/A'}</td>
+                    <td className="p-4 text-[var(--text-secondary)]">{r.course_branch || 'N/A'}</td>
+                    <td className="p-4 text-center font-mono text-xs text-blue-600 dark:text-blue-400 font-semibold">{r.task_points}</td>
+                    <td className="p-4 text-center font-mono text-xs text-purple-600 dark:text-purple-400 font-semibold">{r.manual_points}</td>
+                    <td className="p-4 text-right font-black text-amber-600 dark:text-amber-400 text-base">{r.total_points} pts</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
+
 
       {/* Task Creation Modal */}
       {isTaskModalOpen && (

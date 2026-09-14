@@ -115,7 +115,7 @@ export const LeaderboardTasksPage: React.FC = () => {
                   )}
                 </div>
 
-                <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+                <div className="pt-4 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <span className="text-xs text-slate-500">
                     Your Submissions: {t.my_submission_count}
                   </span>
@@ -123,7 +123,7 @@ export const LeaderboardTasksPage: React.FC = () => {
                   <button
                     disabled={isDisabled}
                     onClick={() => setSelectedTask(t)}
-                    className={`btn-primary text-xs py-1.5 px-3 ${
+                    className={`btn-primary text-xs py-1.5 px-3 self-start sm:self-auto ${
                       isDisabled ? 'opacity-50 cursor-not-allowed bg-slate-800 text-slate-500 border-none' : ''
                     }`}
                   >
@@ -139,13 +139,13 @@ export const LeaderboardTasksPage: React.FC = () => {
 
       {/* Submission Modal */}
       {selectedTask && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
+          <div className="w-full max-w-lg glass-panel p-4 sm:p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-              <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-                <Send className="w-5 h-5 text-amber-400" /> Submit Proof: {selectedTask.title}
+              <h3 className="text-base sm:text-lg font-bold text-slate-100 flex items-center gap-2 truncate">
+                <Send className="w-5 h-5 text-amber-400 shrink-0" /> <span className="truncate">Submit: {selectedTask.title}</span>
               </h3>
-              <button onClick={() => setSelectedTask(null)} className="text-slate-400 hover:text-slate-200">
+              <button onClick={() => setSelectedTask(null)} className="text-slate-400 hover:text-slate-200 shrink-0">
                 <X className="w-5 h-5" />
               </button>
             </div>

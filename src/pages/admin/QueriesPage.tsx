@@ -156,14 +156,14 @@ export const QueriesPage: React.FC = () => {
         </div>
 
         {/* Filters & Actions */}
-        <div className="flex flex-wrap items-center gap-3">
-          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value as any)} className="glass-input text-xs w-36">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 w-full sm:w-auto">
+          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value as any)} className="glass-input text-xs w-full sm:w-36">
             <option value="">All Statuses</option>
             <option value="open">Open</option>
             <option value="closed">Closed</option>
           </select>
           {isSuperAdmin && (
-            <select value={roleFilter} onChange={e => setRoleFilter(e.target.value as any)} className="glass-input text-xs w-36">
+            <select value={roleFilter} onChange={e => setRoleFilter(e.target.value as any)} className="glass-input text-xs w-full sm:w-36">
               <option value="">All Roles</option>
               <option value="student">From Students</option>
               <option value="faculty">From Faculty</option>
@@ -172,9 +172,9 @@ export const QueriesPage: React.FC = () => {
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="btn-primary text-xs py-2 px-4 flex items-center gap-2"
+            className="btn-primary text-xs py-2 px-4 flex items-center justify-center gap-2 w-full sm:w-auto"
           >
-            <PlusCircle className="w-4 h-4" />
+            <PlusCircle className="w-4 h-4 shrink-0" />
             <span>Raise New Query</span>
           </button>
         </div>
@@ -294,13 +294,13 @@ export const QueriesPage: React.FC = () => {
 
       {/* Create New Query Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs overflow-y-auto">
-          <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative my-8 animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-xs overflow-y-auto">
+          <div className="w-full max-w-lg glass-panel p-4 sm:p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)] mb-4">
-              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
-                <PlusCircle className="w-5 h-5 text-emerald-500" /> Raise Query / Grievance
+              <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+                <PlusCircle className="w-5 h-5 text-emerald-500 shrink-0" /> Raise Query / Grievance
               </h3>
-              <button onClick={() => setShowCreateModal(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+              <button onClick={() => setShowCreateModal(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -311,7 +311,7 @@ export const QueriesPage: React.FC = () => {
                 <label className="block text-xs font-bold text-[var(--text-primary)]">
                   Select Query Recipient *
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div
                     onClick={() => setTargetType('admin')}
                     className={`cursor-pointer p-3.5 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1.5 ${
@@ -391,7 +391,7 @@ export const QueriesPage: React.FC = () => {
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-1">
+                <div className="flex flex-wrap items-center justify-between gap-1 mb-1">
                   <label className="block text-xs font-semibold text-[var(--text-secondary)]">Detailed Description *</label>
                   <ImproveEnglishButton text={newDescription} onImproved={setNewDescription} context="Official grievance, query, or campus assistance request" />
                 </div>
@@ -405,18 +405,18 @@ export const QueriesPage: React.FC = () => {
                 />
               </div>
 
-              <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">
+              <div className="pt-4 border-t border-[var(--panel-border)] flex flex-col-reverse sm:flex-row justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="btn-secondary text-xs"
+                  className="btn-secondary text-xs w-full sm:w-auto"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="btn-primary text-xs flex items-center gap-2"
+                  className="btn-primary text-xs flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   <Send className="w-4 h-4" />
                   {submitting ? 'Submitting...' : 'Submit Query'}
@@ -429,20 +429,20 @@ export const QueriesPage: React.FC = () => {
 
       {/* Resolution Modal (Admin or Targeted Faculty) */}
       {selectedQuery && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
+          <div className="w-full max-w-lg glass-panel p-4 sm:p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)] mb-4">
-              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500" /> Resolve Ticket: {selectedQuery.subject}
+              <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" /> Resolve Ticket: {selectedQuery.subject}
               </h3>
-              <button onClick={() => setSelectedQuery(null)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+              <button onClick={() => setSelectedQuery(null)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCloseQuery} className="space-y-4">
               <div>
-                <div className="flex items-center justify-between mb-1">
+                <div className="flex flex-wrap items-center justify-between gap-1 mb-1">
                   <label className="block text-xs font-semibold text-[var(--text-secondary)]">Official Resolution Remarks *</label>
                   <ImproveEnglishButton text={adminRemarks} onImproved={setAdminRemarks} context="Official administrative resolution remarks and solution to student/faculty query" />
                 </div>
@@ -456,9 +456,9 @@ export const QueriesPage: React.FC = () => {
                 />
               </div>
 
-              <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">
-                <button type="button" onClick={() => setSelectedQuery(null)} className="btn-secondary text-xs">Cancel</button>
-                <button type="submit" className="btn-primary text-xs">Close Ticket</button>
+              <div className="pt-4 border-t border-[var(--panel-border)] flex flex-col-reverse sm:flex-row justify-end gap-2">
+                <button type="button" onClick={() => setSelectedQuery(null)} className="btn-secondary text-xs w-full sm:w-auto">Cancel</button>
+                <button type="submit" className="btn-primary text-xs w-full sm:w-auto">Close Ticket</button>
               </div>
             </form>
           </div>

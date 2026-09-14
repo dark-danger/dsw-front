@@ -79,8 +79,7 @@ export const FacultyPage: React.FC = () => {
       setName('');
       setEmail('');
       setPhone('');
-      setEmployeeId('');
-      fetchFaculty();
+      setFacultyList(prev => [...prev, newFac].sort((a, b) => a.name.localeCompare(b.name)));
     } catch (err: any) {
       alert(err.message || 'Failed to add faculty member');
     }
@@ -155,74 +154,77 @@ export const FacultyPage: React.FC = () => {
 
       {/* Faculty Table */}
       <div className="glass-panel overflow-hidden">
-        <table className="w-full text-left text-sm text-[var(--text-secondary)]">
-          <thead className="bg-[var(--card-bg-to)] text-xs uppercase font-bold text-[var(--text-primary)] border-b border-[var(--panel-border)]">
-            <tr>
-              <th className="p-4">Faculty Name</th>
-              <th className="p-4">Department & Designation</th>
-              <th className="p-4">Employee ID</th>
-              <th className="p-4">Email / Contact</th>
-              <th className="p-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--panel-border)]">
-            {loading ? (
-              <tr><td colSpan={5} className="p-8 text-center text-[var(--text-muted)]">Loading faculty members...</td></tr>
-            ) : facultyList.length === 0 ? (
-              <tr><td colSpan={5} className="p-8 text-center text-[var(--text-muted)]">No faculty members found.</td></tr>
-            ) : (
-              facultyList.map((f) => (
-                <tr key={f.id} className="hover:bg-emerald-500/5 transition-colors">
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 flex items-center justify-center font-bold text-sm">
-                        {f.name.charAt(0)}
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[700px] text-left text-sm text-[var(--text-secondary)]">
+            <thead className="bg-[var(--card-bg-to)] text-xs uppercase font-bold text-[var(--text-primary)] border-b border-[var(--panel-border)]">
+              <tr>
+                <th className="p-4">Faculty Name</th>
+                <th className="p-4">Department & Designation</th>
+                <th className="p-4">Employee ID</th>
+                <th className="p-4">Email / Contact</th>
+                <th className="p-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--panel-border)]">
+              {loading ? (
+                <tr><td colSpan={5} className="p-8 text-center text-[var(--text-muted)]">Loading faculty members...</td></tr>
+              ) : facultyList.length === 0 ? (
+                <tr><td colSpan={5} className="p-8 text-center text-[var(--text-muted)]">No faculty members found.</td></tr>
+              ) : (
+                facultyList.map((f) => (
+                  <tr key={f.id} className="hover:bg-emerald-500/5 transition-colors">
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 flex items-center justify-center font-bold text-sm shrink-0">
+                          {f.name.charAt(0)}
+                        </div>
+                        <div>
+                          <div className="font-semibold text-[var(--text-primary)]">{f.name}</div>
+                          <div className="text-xs text-[var(--text-muted)]">Role: Faculty</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-semibold text-[var(--text-primary)]">{f.name}</div>
-                        <div className="text-xs text-[var(--text-muted)]">Role: Faculty</div>
+                    </td>
+                    <td className="p-4">
+                      <div className="text-[var(--text-primary)] font-medium">{f.department || 'N/A'}</div>
+                      <div className="text-xs text-[var(--text-muted)]">{f.designation || 'Staff'}</div>
+                    </td>
+                    <td className="p-4 font-mono text-xs text-emerald-600 dark:text-emerald-400 font-bold">{f.employee_id || 'N/A'}</td>
+                    <td className="p-4 text-xs">
+                      <div className="text-[var(--text-secondary)]">{f.email}</div>
+                      <div className="text-[var(--text-muted)]">{f.phone || 'No phone'}</div>
+                    </td>
+                    <td className="p-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => handleViewStats(f.id)}
+                          className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-colors"
+                          title="View Duty Analytics"
+                        >
+                          <BarChart3 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteFaculty(f.id)}
+                          className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 transition-colors"
+                          title="Delete Faculty Member"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <div className="text-[var(--text-primary)] font-medium">{f.department || 'N/A'}</div>
-                    <div className="text-xs text-[var(--text-muted)]">{f.designation || 'Staff'}</div>
-                  </td>
-                  <td className="p-4 font-mono text-xs text-emerald-600 dark:text-emerald-400 font-bold">{f.employee_id || 'N/A'}</td>
-                  <td className="p-4">
-                    <div className="text-xs text-[var(--text-primary)] font-medium">{f.email}</div>
-                    <div className="text-xs text-[var(--text-muted)]">{f.phone || 'N/A'}</div>
-                  </td>
-                  <td className="p-4 text-right flex items-center justify-end gap-2">
-                    <button
-                      onClick={() => handleViewStats(f.id)}
-                      className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
-                    >
-                      <BarChart3 className="w-3.5 h-3.5" /> Analytics
-                    </button>
-                    <button
-                      onClick={() => handleDeleteFaculty(f.id)}
-                      className="p-1.5 rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500/20 transition-all"
-                      title="Delete Faculty"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Add Faculty Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
+          <div className="w-full max-w-lg glass-panel p-5 sm:p-6 shadow-2xl relative my-auto animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)] mb-4">
-              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-emerald-500" /> Register New Faculty Member
-              </h3>
+              <h3 className="text-lg font-bold text-[var(--text-primary)]">Register New Faculty Member</h3>
               <button onClick={() => setIsAddModalOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                 <X className="w-5 h-5" />
               </button>
@@ -231,13 +233,13 @@ export const FacultyPage: React.FC = () => {
             <form onSubmit={handleCreateFaculty} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Full Name</label>
-                <input required type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Prof. Jane Doe" className="glass-input" />
+                <input required type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Dr. Rajesh Sharma" className="glass-input" />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Email Address</label>
-                  <input required type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="jane@geeta.edu.in" className="glass-input" />
+                  <input required type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="rajesh.cse@geeta.edu.in" className="glass-input" />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Phone Number</label>
@@ -245,7 +247,7 @@ export const FacultyPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Department</label>
                   <input required type="text" value={department} onChange={e => setDepartment(e.target.value)} className="glass-input" />
@@ -256,7 +258,7 @@ export const FacultyPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Employee ID</label>
                   <input type="text" value={employeeId} onChange={e => setEmployeeId(e.target.value)} placeholder="GU-CSE-099" className="glass-input" />

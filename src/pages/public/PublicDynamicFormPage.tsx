@@ -183,7 +183,7 @@ export const PublicDynamicFormPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-slate-950 text-slate-300">
+      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-slate-950 text-slate-300 p-4">
         <div className="w-10 h-10 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin mb-3" />
         <p className="text-xs font-semibold">Loading official web form...</p>
       </div>
@@ -192,8 +192,8 @@ export const PublicDynamicFormPage: React.FC = () => {
 
   if (error || !form) {
     return (
-      <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-slate-950 px-4">
-        <div className="bg-slate-900 border border-slate-800 p-8 rounded-3xl max-w-md text-center shadow-2xl">
+      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-slate-950 px-4 py-8">
+        <div className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl max-w-md text-center shadow-2xl">
           <AlertCircle className="w-12 h-12 text-rose-500 mx-auto mb-3" />
           <h2 className="text-xl font-bold text-slate-100">Form Unavailable</h2>
           <p className="text-xs text-slate-400 mt-2">{error || 'This form does not exist or has been closed by DSW Administration.'}</p>
@@ -212,14 +212,14 @@ export const PublicDynamicFormPage: React.FC = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-slate-950 p-4">
-        <div className="bg-slate-900 border border-emerald-500/30 p-8 md:p-10 rounded-3xl max-w-lg text-center shadow-2xl space-y-5 animate-in fade-in zoom-in-95">
+      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-slate-950 p-3.5 sm:p-6">
+        <div className="bg-slate-900 border border-emerald-500/30 p-6 sm:p-8 md:p-10 rounded-3xl max-w-lg text-center shadow-2xl space-y-5 animate-in fade-in zoom-in-95 my-auto">
           <div className="w-16 h-16 rounded-3xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto ring-8 ring-emerald-500/10">
             <CheckCircle2 className="w-10 h-10" />
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-2xl font-black text-white">Submission Successful!</h2>
+            <h2 className="text-xl sm:text-2xl font-black text-white">Submission Successful!</h2>
             <p className="text-xs text-slate-300 leading-relaxed">
               Your response for <strong>{form.title}</strong> has been received and synchronized to the official Geeta University Google Sheet ledger.
             </p>
@@ -257,8 +257,9 @@ export const PublicDynamicFormPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen w-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 md:p-8 relative">
-      <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-10 shadow-2xl relative space-y-6">
+    <div className="min-h-screen w-full bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-3 sm:p-6 md:p-8 relative">
+      <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-10 shadow-2xl relative space-y-5 sm:space-y-6 my-4 sm:my-auto">
+
         
         {/* Form Brand Header */}
         <div className="border-b border-slate-800 pb-5 space-y-2">

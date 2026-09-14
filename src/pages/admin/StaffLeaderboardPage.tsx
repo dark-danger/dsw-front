@@ -73,54 +73,57 @@ export const StaffLeaderboardPage: React.FC = () => {
 
       {/* Staff Rankings Table */}
       <div className="glass-panel overflow-hidden">
-        <table className="w-full text-left text-sm text-[var(--text-secondary)]">
-          <thead className="bg-[var(--card-bg-to)] text-xs uppercase font-bold text-[var(--text-primary)] border-b border-[var(--panel-border)]">
-            <tr>
-              <th className="p-4">Rank</th>
-              <th className="p-4">Faculty Member</th>
-              <th className="p-4">Department & Designation</th>
-              <th className="p-4 text-center">Approved Duties</th>
-              <th className="p-4 text-center">Pending Duties</th>
-              <th className="p-4 text-center">Declined Duties</th>
-              <th className="p-4 text-right">Performance Score</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--panel-border)]">
-            {loading ? (
-              <tr><td colSpan={7} className="p-8 text-center text-[var(--text-muted)]">Loading staff performance ledger...</td></tr>
-            ) : rankings.length === 0 ? (
-              <tr><td colSpan={7} className="p-8 text-center text-[var(--text-muted)]">No staff members found.</td></tr>
-            ) : (
-              rankings.map(r => (
-                <tr key={r.faculty_id} className="hover:bg-emerald-500/5 transition-colors">
-                  <td className="p-4">
-                    <div className="flex items-center gap-2">
-                      {r.rank === 1 ? (
-                        <span className="w-7 h-7 rounded-full bg-emerald-600 text-white font-black flex items-center justify-center text-xs shadow-lg shadow-emerald-500/30">1</span>
-                      ) : r.rank === 2 ? (
-                        <span className="w-7 h-7 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-950 dark:text-white font-black flex items-center justify-center text-xs">2</span>
-                      ) : r.rank === 3 ? (
-                        <span className="w-7 h-7 rounded-full bg-amber-600 text-white font-black flex items-center justify-center text-xs">3</span>
-                      ) : (
-                        <span className="w-7 h-7 rounded-full bg-[var(--card-bg-to)] border border-[var(--panel-border)] text-[var(--text-secondary)] font-bold flex items-center justify-center text-xs">#{r.rank}</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="p-4 font-semibold text-[var(--text-primary)]">{r.name}</td>
-                  <td className="p-4 text-xs">
-                    <div className="text-[var(--text-primary)] font-medium">{r.department}</div>
-                    <div className="text-[var(--text-muted)]">{r.designation}</div>
-                  </td>
-                  <td className="p-4 text-center font-mono text-xs text-emerald-600 dark:text-emerald-400 font-semibold">{r.tasks_approved}</td>
-                  <td className="p-4 text-center font-mono text-xs text-amber-600 dark:text-amber-400 font-semibold">{r.tasks_pending}</td>
-                  <td className="p-4 text-center font-mono text-xs text-rose-600 dark:text-rose-400 font-semibold">{r.tasks_declined}</td>
-                  <td className="p-4 text-right font-black text-emerald-600 dark:text-emerald-400 text-base">{r.total_score} pts</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[700px] text-left text-sm text-[var(--text-secondary)]">
+            <thead className="bg-[var(--card-bg-to)] text-xs uppercase font-bold text-[var(--text-primary)] border-b border-[var(--panel-border)]">
+              <tr>
+                <th className="p-4">Rank</th>
+                <th className="p-4">Faculty Member</th>
+                <th className="p-4">Department & Designation</th>
+                <th className="p-4 text-center">Approved Duties</th>
+                <th className="p-4 text-center">Pending Duties</th>
+                <th className="p-4 text-center">Declined Duties</th>
+                <th className="p-4 text-right">Performance Score</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--panel-border)]">
+              {loading ? (
+                <tr><td colSpan={7} className="p-8 text-center text-[var(--text-muted)]">Loading staff performance ledger...</td></tr>
+              ) : rankings.length === 0 ? (
+                <tr><td colSpan={7} className="p-8 text-center text-[var(--text-muted)]">No staff members found.</td></tr>
+              ) : (
+                rankings.map(r => (
+                  <tr key={r.faculty_id} className="hover:bg-emerald-500/5 transition-colors">
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        {r.rank === 1 ? (
+                          <span className="w-7 h-7 rounded-full bg-emerald-600 text-white font-black flex items-center justify-center text-xs shadow-lg shadow-emerald-500/30">1</span>
+                        ) : r.rank === 2 ? (
+                          <span className="w-7 h-7 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-950 dark:text-white font-black flex items-center justify-center text-xs">2</span>
+                        ) : r.rank === 3 ? (
+                          <span className="w-7 h-7 rounded-full bg-amber-600 text-white font-black flex items-center justify-center text-xs">3</span>
+                        ) : (
+                          <span className="w-7 h-7 rounded-full bg-[var(--card-bg-to)] border border-[var(--panel-border)] text-[var(--text-secondary)] font-bold flex items-center justify-center text-xs">#{r.rank}</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="p-4 font-semibold text-[var(--text-primary)]">{r.name}</td>
+                    <td className="p-4 text-xs">
+                      <div className="text-[var(--text-primary)] font-medium">{r.department}</div>
+                      <div className="text-[var(--text-muted)]">{r.designation}</div>
+                    </td>
+                    <td className="p-4 text-center font-mono text-xs text-emerald-600 dark:text-emerald-400 font-semibold">{r.tasks_approved}</td>
+                    <td className="p-4 text-center font-mono text-xs text-amber-600 dark:text-amber-400 font-semibold">{r.tasks_pending}</td>
+                    <td className="p-4 text-center font-mono text-xs text-rose-600 dark:text-rose-400 font-semibold">{r.tasks_declined}</td>
+                    <td className="p-4 text-right font-black text-emerald-600 dark:text-emerald-400 text-base">{r.total_score} pts</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
+
     </div>
   );
 };

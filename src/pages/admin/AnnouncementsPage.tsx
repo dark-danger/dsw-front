@@ -136,12 +136,12 @@ export const AnnouncementsPage: React.FC = () => {
               <p className="text-sm text-[var(--text-secondary)] leading-relaxed whitespace-pre-wrap">{ann.body}</p>
 
               {/* Reaction Row */}
-              <div className="pt-3 border-t border-[var(--panel-border)] flex items-center justify-between text-xs">
+              <div className="pt-3 border-t border-[var(--panel-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                 <div className="text-[var(--text-muted)]">
                   Posted by: <strong className="text-[var(--text-primary)]">{ann.author?.name || 'DSW Office'}</strong>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   {['like', 'fire', 'heart', 'party'].map(type => {
                     const iconMap: any = {
                       like: <ThumbsUp className="w-3.5 h-3.5" />,
@@ -156,7 +156,7 @@ export const AnnouncementsPage: React.FC = () => {
                       <button
                         key={type}
                         onClick={() => handleReact(ann.id, type)}
-                        className={`px-2.5 py-1 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                        className={`px-2 sm:px-2.5 py-1 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all ${
                           isSelected ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-[var(--card-bg-to)] border-[var(--panel-border)] text-[var(--text-secondary)] hover:border-emerald-500/40'
                         }`}
                       >
@@ -173,13 +173,13 @@ export const AnnouncementsPage: React.FC = () => {
 
       {/* Composer Modal */}
       {isComposerOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-lg glass-panel p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
+          <div className="w-full max-w-lg glass-panel p-4 sm:p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)] mb-4">
-              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
-                <Megaphone className="w-5 h-5 text-emerald-500" /> Compose Broadcast Announcement
+              <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+                <Megaphone className="w-5 h-5 text-emerald-500 shrink-0" /> Compose Broadcast Announcement
               </h3>
-              <button onClick={() => setIsComposerOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+              <button onClick={() => setIsComposerOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -187,28 +187,28 @@ export const AnnouncementsPage: React.FC = () => {
             <form onSubmit={handleCreateAnnouncement} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Title</label>
-                <input required type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Upcoming Campus Event Notice" className="glass-input" />
+                <input required type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Upcoming Campus Event Notice" className="glass-input text-xs" />
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-1">
+                <div className="flex flex-wrap items-center justify-between gap-1 mb-1">
                   <label className="block text-xs font-semibold text-[var(--text-secondary)]">Announcement Body</label>
                   <ImproveEnglishButton text={body} onImproved={setBody} context="Campus announcement message for faculty and students" />
                 </div>
-                <textarea required rows={5} value={body} onChange={e => setBody(e.target.value)} placeholder="Type announcement details..." className="glass-input" />
+                <textarea required rows={5} value={body} onChange={e => setBody(e.target.value)} placeholder="Type announcement details..." className="glass-input text-xs" />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Target Audience</label>
-                  <select value={audience} onChange={e => setAudience(e.target.value as any)} className="glass-input">
+                  <select value={audience} onChange={e => setAudience(e.target.value as any)} className="glass-input text-xs">
                     <option value="both">All (Faculty & Students)</option>
                     <option value="faculty">Faculty Only</option>
                     <option value="students">Students Only</option>
                   </select>
                 </div>
 
-                <div className="flex items-center gap-2 pt-6">
+                <div className="flex items-center gap-2 pt-0 sm:pt-6">
                   <input
                     type="checkbox"
                     id="pinned"
@@ -222,9 +222,9 @@ export const AnnouncementsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">
-                <button type="button" onClick={() => setIsComposerOpen(false)} className="btn-secondary">Cancel</button>
-                <button type="submit" className="btn-primary">Publish Announcement</button>
+              <div className="pt-4 border-t border-[var(--panel-border)] flex flex-col-reverse sm:flex-row justify-end gap-2">
+                <button type="button" onClick={() => setIsComposerOpen(false)} className="btn-secondary text-xs w-full sm:w-auto">Cancel</button>
+                <button type="submit" className="btn-primary text-xs w-full sm:w-auto">Publish Announcement</button>
               </div>
             </form>
           </div>

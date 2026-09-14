@@ -39,24 +39,24 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen flex flex-col justify-center items-center bg-[#040806] px-4 relative overflow-hidden">
+    <div className="min-h-screen w-full flex flex-col justify-center items-center bg-[#040806] px-3.5 sm:px-4 py-16 sm:py-12 relative overflow-x-hidden">
       {/* Ambient Background Glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[450px] bg-gradient-to-tr from-[#0e8a6e]/25 via-emerald-600/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] max-w-[90vw] h-[450px] bg-gradient-to-tr from-[#0e8a6e]/25 via-emerald-600/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
 
       {/* Back to Home Button */}
       <button 
         onClick={() => navigate('/')}
-        className="absolute top-6 left-6 btn-secondary text-xs py-2 px-4 flex items-center gap-2 z-20"
+        className="absolute top-3.5 left-3.5 sm:top-6 sm:left-6 btn-secondary text-xs py-1.5 px-3 sm:py-2 sm:px-4 flex items-center gap-1.5 sm:gap-2 z-20 shadow-xs"
       >
-        <ArrowLeft className="w-4 h-4" /> Back to Home
+        <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> <span>Back to Home</span>
       </button>
 
       {/* Theme Toggle Button */}
-      <div className="absolute top-6 right-6 z-20">
+      <div className="absolute top-3.5 right-3.5 sm:top-6 sm:right-6 z-20">
         <ThemeToggle />
       </div>
 
-      <div className="w-full max-w-md glass-panel p-8 relative z-10 shadow-2xl border border-white/10 space-y-6">
+      <div className="w-full max-w-md glass-panel p-5 sm:p-8 relative z-10 shadow-2xl border border-white/10 space-y-5 sm:space-y-6 mt-6 sm:mt-0">
         
         {/* Portal Header */}
         <div className="text-center space-y-2">

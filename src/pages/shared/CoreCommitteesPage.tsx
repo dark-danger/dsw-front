@@ -513,8 +513,8 @@ export const CoreCommitteesPage: React.FC = () => {
               </p>
 
               {/* Appointed Students Table */}
-              <div className="overflow-hidden border border-slate-300 rounded-lg">
-                <table className="w-full text-left text-xs">
+              <div className="overflow-x-auto border border-slate-300 rounded-lg">
+                <table className="w-full min-w-[650px] text-left text-xs">
                   <thead className="bg-slate-200 font-bold text-slate-900 border-b border-slate-300 uppercase">
                     <tr>
                       <th className="p-2.5 border-r border-slate-300 text-center w-12">S.No</th>

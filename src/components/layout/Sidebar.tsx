@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard, Users, Calendar, CheckSquare, Megaphone,
   HelpCircle, FileText, MessageSquareHeart, Trophy, Medal,
-  GraduationCap, Sparkles, Shield, FileCheck, Award, Mail
+  GraduationCap, Sparkles, Shield, FileCheck, Award, Mail, X
 } from 'lucide-react';
 
 interface SidebarItem {
@@ -13,7 +13,12 @@ interface SidebarItem {
   icon: React.ReactNode;
 }
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => {
   const { user } = useAuth();
 
   const adminNav: SidebarItem[] = [
@@ -64,18 +69,34 @@ export const Sidebar: React.FC = () => {
   const navItems = user?.role === 'super_admin' ? adminNav : user?.role === 'faculty' ? facultyNav : studentNav;
 
   return (
-    <aside className="w-64 border-r border-[var(--panel-border)] bg-[var(--panel-bg)] backdrop-blur-2xl h-screen flex flex-col shrink-0 sticky top-0 z-30 shadow-xs transition-colors">
+    <aside
+      className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] border-r border-[var(--panel-border)] bg-[var(--panel-bg)] backdrop-blur-2xl h-screen flex flex-col shrink-0 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:w-64 shadow-2xl lg:shadow-xs ${
+        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      }`}
+    >
       {/* Brand Header */}
-      <div className="h-16 px-5 border-b border-[var(--panel-border)] flex items-center gap-3">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#0e8a6e] via-emerald-600 to-teal-400 flex items-center justify-center text-white font-black text-base shadow-lg shadow-emerald-500/30 border border-white/20">
-          GU
-        </div>
-        <div>
-          <div className="font-extrabold text-sm text-[var(--text-primary)] tracking-tight flex items-center gap-1.5">
-            GEETA UNIVERSITY
+      <div className="h-16 px-4 sm:px-5 border-b border-[var(--panel-border)] flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#0e8a6e] via-emerald-600 to-teal-400 flex items-center justify-center text-white font-black text-base shadow-lg shadow-emerald-500/30 border border-white/20">
+            GU
           </div>
-          <div className="text-[10px] text-emerald-500 font-bold tracking-wider uppercase">DSW PORTAL</div>
+          <div>
+            <div className="font-extrabold text-sm text-[var(--text-primary)] tracking-tight flex items-center gap-1.5">
+              GEETA UNIVERSITY
+            </div>
+            <div className="text-[10px] text-emerald-500 font-bold tracking-wider uppercase">DSW PORTAL</div>
+          </div>
         </div>
+
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-emerald-500/10 lg:hidden transition-colors"
+            title="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Nav List */}
@@ -84,6 +105,7 @@ export const Sidebar: React.FC = () => {
           <NavLink
             key={item.path}
             to={item.path}
+            onClick={() => onClose?.()}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-xs transition-all duration-200 ${
                 isActive
@@ -109,3 +131,4 @@ export const Sidebar: React.FC = () => {
     </aside>
   );
 };
+

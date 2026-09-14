@@ -105,22 +105,22 @@ export const EventsPage: React.FC = () => {
           <h2 className="text-xl font-bold text-[var(--text-primary)]">Events & Automated Reporting</h2>
           <p className="text-xs text-[var(--text-secondary)] mt-1">Create campus events, attach task work, and generate official 7-page Geeta University event reports.</p>
         </div>
-        <div className="flex items-center flex-wrap gap-2.5">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
           <button
             onClick={() => navigate('/admin/events/reports')}
-            className="btn-secondary text-xs py-2.5 px-4 flex items-center gap-2"
+            className="btn-secondary text-xs py-2.5 px-4 flex items-center justify-center gap-2"
           >
             <FileText className="w-4 h-4 text-amber-500" /> Official Reports Archive
           </button>
           <button
             onClick={() => navigate('/admin/events/reports/new')}
-            className="btn-secondary text-xs py-2.5 px-4 flex items-center gap-2 border-blue-500/30 text-blue-600 dark:text-blue-400"
+            className="btn-secondary text-xs py-2.5 px-4 flex items-center justify-center gap-2 border-blue-500/30 text-blue-600 dark:text-blue-400"
           >
             <FileCheck className="w-4 h-4 text-blue-500" /> New 7-Page Report
           </button>
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="btn-primary text-xs py-2.5 px-4 shrink-0"
+            className="btn-primary text-xs py-2.5 px-4 shrink-0 justify-center"
           >
             <Plus className="w-4 h-4" /> Create Campus Event
           </button>

@@ -137,24 +137,24 @@ export const TaskProofSubmitter: React.FC<TaskProofSubmitterProps> = ({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
         <label className="block text-xs font-bold text-[var(--text-primary)]">
           Proof Attachment (Direct Google Drive Upload)
         </label>
         <span className="text-[11px] text-[var(--text-muted)] flex items-center gap-1">
-          <FolderGit2 className="w-3 h-3 text-blue-500" />
+          <FolderGit2 className="w-3 h-3 text-blue-500 shrink-0" />
           Auto-saves to Drive: <span className="font-semibold text-blue-600 dark:text-blue-400">{facultyName}</span>
         </span>
       </div>
 
       {/* 1. UPLOADED FILE SUCCESS STATE */}
       {valueUrl && (
-        <div className="p-3.5 bg-gradient-to-r from-blue-500/10 via-emerald-500/10 to-blue-500/10 border border-blue-500/30 rounded-2xl flex items-center justify-between gap-3 animate-in fade-in duration-150">
-          <div className="flex items-center gap-3 overflow-hidden">
+        <div className="p-3.5 bg-gradient-to-r from-blue-500/10 via-emerald-500/10 to-blue-500/10 border border-blue-500/30 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in duration-150">
+          <div className="flex items-center gap-3 overflow-hidden min-w-0">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shrink-0 shadow-md font-bold text-xs">
               <FolderGit2 className="w-5 h-5" />
             </div>
-            <div className="overflow-hidden">
+            <div className="overflow-hidden min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="font-bold text-xs text-[var(--text-primary)] truncate">
                   {valueName || 'Uploaded Submission File'}
@@ -167,12 +167,12 @@ export const TaskProofSubmitter: React.FC<TaskProofSubmitterProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center justify-end gap-2 shrink-0 w-full sm:w-auto">
             <a
               href={valueUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-md transition-all active:scale-95"
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-md transition-all active:scale-95 flex-1 sm:flex-none"
             >
               <ExternalLink className="w-3.5 h-3.5" /> View Submission / Open File ↗
             </a>

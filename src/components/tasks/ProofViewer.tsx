@@ -33,12 +33,12 @@ export const ProofViewer: React.FC<ProofViewerProps> = ({
     <div className={`space-y-2 ${className}`}>
       {/* 1. Google Drive Proof Card */}
       {isGoogleDrive ? (
-        <div className="p-3 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-teal-500/10 border border-blue-400/30 dark:border-blue-700/40 rounded-2xl flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5 overflow-hidden">
+        <div className="p-3 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-teal-500/10 border border-blue-400/30 dark:border-blue-700/40 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 overflow-hidden min-w-0">
             <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shrink-0 shadow-md font-bold text-xs">
               <FolderGit2 className="w-4 h-4" />
             </div>
-            <div className="overflow-hidden">
+            <div className="overflow-hidden min-w-0">
               <span className="font-bold text-xs text-blue-700 dark:text-blue-300 block truncate">
                 {fileName || 'Google Drive Proof Document'}
               </span>
@@ -52,14 +52,14 @@ export const ProofViewer: React.FC<ProofViewerProps> = ({
             href={url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 transition-all shrink-0 active:scale-95"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 transition-all shrink-0 active:scale-95"
           >
             <ExternalLink className="w-3.5 h-3.5" /> Open Drive File ↗
           </a>
         </div>
       ) : isImage ? (
         /* 2. Direct Image Proof with Inline Thumbnail + Lightbox */
-        <div className="p-3 bg-slate-50 dark:bg-slate-900/60 border border-[var(--panel-border)] rounded-2xl space-y-2">
+        <div className="p-3 bg-[var(--card-bg-to)] border border-[var(--panel-border)] rounded-2xl space-y-2">
           <div className="flex items-center justify-between text-xs">
             <span className="font-bold text-[var(--text-primary)] flex items-center gap-1.5">
               <ImageIcon className="w-3.5 h-3.5 text-emerald-500" /> Image Proof Attached
@@ -104,10 +104,10 @@ export const ProofViewer: React.FC<ProofViewerProps> = ({
         </div>
       ) : (
         /* 3. PDF or Generic Document Card */
-        <div className="p-3 bg-slate-50 dark:bg-slate-900/60 border border-[var(--panel-border)] rounded-2xl flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5 overflow-hidden">
+        <div className="p-3 bg-[var(--card-bg-to)] border border-[var(--panel-border)] rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 overflow-hidden min-w-0">
             <FileText className="w-7 h-7 text-amber-500 shrink-0" />
-            <div className="overflow-hidden">
+            <div className="overflow-hidden min-w-0">
               <span className="font-bold text-xs text-[var(--text-primary)] block truncate">
                 {fileName || (isPdf ? 'PDF Proof Document' : 'Proof Document Attachment')}
               </span>
@@ -121,7 +121,7 @@ export const ProofViewer: React.FC<ProofViewerProps> = ({
             href={url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-md transition-all shrink-0 active:scale-95"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-md transition-all shrink-0 active:scale-95"
           >
             <ExternalLink className="w-3.5 h-3.5" /> View File ↗
           </a>
@@ -131,15 +131,15 @@ export const ProofViewer: React.FC<ProofViewerProps> = ({
       {/* Fullscreen Lightbox Modal */}
       {isLightboxOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150"
           onClick={() => setIsLightboxOpen(false)}
         >
           <div 
-            className="max-w-4xl max-h-[90vh] bg-slate-900 border border-slate-800 rounded-3xl p-4 shadow-2xl relative flex flex-col space-y-3 overflow-hidden"
+            className="w-full max-w-4xl max-h-[90vh] bg-slate-900 border border-slate-800 rounded-3xl p-3.5 sm:p-4 shadow-2xl relative flex flex-col space-y-3 overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-white text-xs">
-              <span className="font-bold truncate max-w-md">{fileName || 'Proof Image Preview'}</span>
+              <span className="font-bold truncate max-w-[180px] sm:max-w-md">{fileName || 'Proof Image Preview'}</span>
               <div className="flex items-center gap-2">
                 <a
                   href={url}

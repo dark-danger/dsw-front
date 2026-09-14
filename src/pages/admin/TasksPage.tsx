@@ -202,17 +202,17 @@ export const TasksPage: React.FC = () => {
     return (
       <div
         key={t.id}
-        className={`glass-card p-5 space-y-3 ${
-          isSubtask ? 'ml-6 border-l-2 border-l-emerald-500 bg-[var(--card-bg-to)]' : ''
+        className={`glass-card p-4 sm:p-5 space-y-3 ${
+          isSubtask ? 'ml-3 sm:ml-6 border-l-2 border-l-emerald-500 bg-[var(--card-bg-to)]' : ''
         }`}
       >
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             {isSubtask && <CornerDownRight className="w-4 h-4 text-emerald-500 shrink-0" />}
-            <h4 className="font-bold text-[var(--text-primary)] text-base">{t.title}</h4>
+            <h4 className="font-bold text-[var(--text-primary)] text-sm sm:text-base truncate">{t.title}</h4>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
             <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
               t.priority === 'high' ? 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30' :
               t.priority === 'medium' ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30' : 'bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30'

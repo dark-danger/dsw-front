@@ -415,7 +415,7 @@ export const EventReportFormPage: React.FC = () => {
       </div>
 
       {/* Progress Tabs matching the 5-page official document */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 bg-white dark:bg-slate-900 p-2 rounded-2xl border border-[var(--panel-border)] shadow-xs">
+      <div className="flex overflow-x-auto no-scrollbar gap-2 bg-white dark:bg-slate-900 p-2 rounded-2xl border border-[var(--panel-border)] shadow-xs">
         {[
           { num: 1, title: 'Page 1', sub: 'Identification & SDGs', icon: Info },
           { num: 2, title: 'Page 2', sub: 'Approvals & Guests', icon: Users },
@@ -429,13 +429,13 @@ export const EventReportFormPage: React.FC = () => {
             <button
               key={tab.num}
               onClick={() => setActiveTab(tab.num)}
-              className={`p-3 rounded-xl text-left transition-all duration-200 flex items-center gap-3 ${
+              className={`p-2.5 sm:p-3 rounded-xl text-left transition-all duration-200 flex items-center gap-2.5 sm:gap-3 shrink-0 min-w-[140px] md:min-w-0 md:flex-1 ${
                 isActive
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20 font-bold'
                   : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-[var(--text-secondary)]'
               }`}
             >
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm shrink-0 ${
+              <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center font-black text-xs sm:text-sm shrink-0 ${
                 isActive ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
               }`}>
                 {tab.num}
@@ -444,7 +444,7 @@ export const EventReportFormPage: React.FC = () => {
                 <div className={`text-xs uppercase tracking-wider font-bold ${isActive ? 'text-white' : 'text-[var(--text-primary)]'}`}>
                   {tab.title}
                 </div>
-                <div className={`text-[11px] truncate ${isActive ? 'text-blue-100' : 'text-[var(--text-secondary)]'}`}>
+                <div className={`text-[10px] sm:text-[11px] truncate ${isActive ? 'text-blue-100' : 'text-[var(--text-secondary)]'}`}>
                   {tab.sub}
                 </div>
               </div>
@@ -840,7 +840,7 @@ export const EventReportFormPage: React.FC = () => {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left">
+                <table className="w-full min-w-[500px] text-xs text-left">
                   <thead className="bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] uppercase">
                     <tr>
                       <th className="p-2.5 w-14 text-center">Sr. No.</th>
@@ -1173,7 +1173,7 @@ export const EventReportFormPage: React.FC = () => {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left">
+                <table className="w-full min-w-[650px] text-xs text-left">
                   <thead className="bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] uppercase">
                     <tr>
                       <th className="p-2 w-10 text-center">#</th>
@@ -1306,7 +1306,7 @@ export const EventReportFormPage: React.FC = () => {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left">
+                <table className="w-full min-w-[700px] text-xs text-left">
                   <thead className="bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] uppercase">
                     <tr>
                       <th className="p-2 w-10 text-center">#</th>

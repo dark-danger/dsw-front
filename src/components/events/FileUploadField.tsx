@@ -137,35 +137,35 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
       </div>
 
       {value ? (
-        <div className="relative group p-3 bg-slate-50 dark:bg-slate-900 border border-emerald-500/30 dark:border-emerald-500/20 rounded-2xl flex items-center justify-between gap-3 shadow-xs">
-          <div className="flex items-center gap-3 overflow-hidden">
+        <div className="relative group p-3 bg-[var(--card-bg-to)] border border-emerald-500/30 dark:border-emerald-500/20 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-3 overflow-hidden min-w-0">
             {value.startsWith('data:image') || isImage || value.match(/\.(jpeg|jpg|png|webp|gif)/i) ? (
               <img
                 src={value}
                 alt="Upload preview"
-                className="w-12 h-12 rounded-xl object-cover border border-slate-200 dark:border-slate-800 shrink-0 bg-white"
+                className="w-12 h-12 rounded-xl object-cover border border-[var(--panel-border)] shrink-0 bg-white"
               />
             ) : (
               <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                 <FileText className="w-6 h-6" />
               </div>
             )}
-            <div className="overflow-hidden">
+            <div className="overflow-hidden min-w-0">
               <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                <CheckCircle className="w-3.5 h-3.5" /> Attached Document
+                <CheckCircle className="w-3.5 h-3.5 shrink-0" /> Attached Document
               </div>
-              <p className="text-[11px] text-[var(--text-secondary)] truncate max-w-xs font-mono mt-0.5">
+              <p className="text-[11px] text-[var(--text-secondary)] truncate max-w-[200px] sm:max-w-xs font-mono mt-0.5">
                 {value.length > 50 ? `${value.substring(0, 45)}...` : value}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-end gap-2 shrink-0">
             <a
               href={value}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
+              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-[var(--text-secondary)] hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
               title="Preview in new tab"
             >
               <ExternalLink className="w-4 h-4" />

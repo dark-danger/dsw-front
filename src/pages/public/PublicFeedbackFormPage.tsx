@@ -74,13 +74,13 @@ export const PublicFeedbackFormPage: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="min-h-screen w-screen flex items-center justify-center bg-[#040806] text-slate-400">Loading survey...</div>;
+    return <div className="min-h-screen w-full flex items-center justify-center bg-[#040806] text-slate-400 p-4">Loading survey...</div>;
   }
 
   if (error || !form) {
     return (
-      <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#040806] px-4">
-        <div className="glass-panel p-8 max-w-md text-center">
+      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#040806] px-4 py-8">
+        <div className="glass-panel p-6 sm:p-8 max-w-md text-center">
           <AlertCircle className="w-12 h-12 text-rose-500 mx-auto mb-3" />
           <h2 className="text-xl font-bold text-white">Survey Unavailable</h2>
           <p className="text-xs text-slate-400 mt-2">{error || 'Feedback form inactive.'}</p>
@@ -91,8 +91,8 @@ export const PublicFeedbackFormPage: React.FC = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#040806] px-4">
-        <div className="glass-panel p-8 max-w-md text-center space-y-4">
+      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#040806] px-4 py-8">
+        <div className="glass-panel p-6 sm:p-8 max-w-md text-center space-y-4 my-auto">
           <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto animate-bounce" />
           <h2 className="text-2xl font-bold text-white">Thank You for Your Feedback!</h2>
           <p className="text-xs text-slate-300">Your valuable insights have been recorded for Dean of Student Welfare quality improvements.</p>
@@ -102,13 +102,13 @@ export const PublicFeedbackFormPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#040806] p-4 relative">
-      <div className="w-full max-w-xl glass-panel p-8 relative shadow-2xl space-y-6">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#040806] p-3.5 sm:p-6 md:p-8 relative overflow-x-hidden">
+      <div className="w-full max-w-xl glass-panel p-5 sm:p-8 relative shadow-2xl space-y-5 sm:space-y-6 my-4 sm:my-auto">
         <div className="border-b border-white/10 pb-4">
           <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
             Student Feedback Survey
           </span>
-          <h1 className="text-2xl font-bold text-white mt-2">{form.title}</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-white mt-2">{form.title}</h1>
           <p className="text-xs text-slate-300 mt-1">{form.description || 'Geeta University Dean of Student Welfare'}</p>
         </div>
 

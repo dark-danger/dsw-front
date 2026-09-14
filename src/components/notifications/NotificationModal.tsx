@@ -46,49 +46,49 @@ export const NotificationModal: React.FC<{ isOpen: boolean; onClose: () => void 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-end p-4 bg-black/50 backdrop-blur-xs">
-      <div className="w-full max-w-md bg-slate-900 border border-slate-700/60 rounded-xl shadow-2xl overflow-hidden mt-12 animate-in fade-in slide-in-from-top-4 duration-200">
-        <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/80">
+    <div className="fixed inset-0 z-50 flex items-start justify-center sm:justify-end p-3 sm:p-4 bg-black/50 backdrop-blur-xs">
+      <div className="w-full max-w-md bg-[var(--panel-bg)] border border-[var(--panel-border)] rounded-2xl shadow-2xl overflow-hidden mt-14 sm:mt-12 animate-in fade-in slide-in-from-top-4 duration-200">
+        <div className="flex items-center justify-between p-4 border-b border-[var(--panel-border)] bg-[var(--card-bg-to)]">
           <div className="flex items-center gap-2">
-            <Bell className="w-5 h-5 text-blue-400" />
-            <h3 className="font-semibold text-slate-100">Notifications</h3>
+            <Bell className="w-5 h-5 text-emerald-500" />
+            <h3 className="font-bold text-[var(--text-primary)]">Notifications</h3>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={markAllRead}
-              className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+              className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold hover:underline transition-colors"
             >
               Mark all read
             </button>
-            <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-200 rounded">
+            <button onClick={onClose} className="p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded">
               <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        <div className="max-h-[400px] overflow-y-auto divide-y divide-slate-800/60">
+        <div className="max-h-[70vh] sm:max-h-[400px] overflow-y-auto divide-y divide-[var(--panel-border)]">
           {loading ? (
-            <div className="p-8 text-center text-slate-400 text-sm">Loading notifications...</div>
+            <div className="p-8 text-center text-[var(--text-muted)] text-sm">Loading notifications...</div>
           ) : notifications.length === 0 ? (
-            <div className="p-8 text-center text-slate-500 text-sm">No notifications found</div>
+            <div className="p-8 text-center text-[var(--text-muted)] text-sm">No notifications found</div>
           ) : (
             notifications.map(n => (
               <div
                 key={n.id}
-                className={`p-4 transition-colors ${n.is_read ? 'bg-slate-900/40 opacity-75' : 'bg-blue-950/20 border-l-2 border-blue-500'}`}
+                className={`p-4 transition-colors ${n.is_read ? 'bg-transparent opacity-75' : 'bg-emerald-500/10 border-l-4 border-emerald-500'}`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-slate-800 text-blue-400 shrink-0 mt-0.5">
-                    {n.type === 'task_approved' ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> :
-                     n.type === 'task_declined' ? <AlertCircle className="w-4 h-4 text-rose-400" /> :
-                     n.type === 'points_awarded' ? <Award className="w-4 h-4 text-amber-400" /> :
-                     n.type === 'announcement' ? <Info className="w-4 h-4 text-sky-400" /> :
-                     <MessageSquare className="w-4 h-4 text-indigo-400" />}
+                  <div className="p-2 rounded-lg bg-[var(--card-bg-to)] text-emerald-500 shrink-0 mt-0.5 border border-[var(--panel-border)]">
+                    {n.type === 'task_approved' ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> :
+                     n.type === 'task_declined' ? <AlertCircle className="w-4 h-4 text-rose-500" /> :
+                     n.type === 'points_awarded' ? <Award className="w-4 h-4 text-amber-500" /> :
+                     n.type === 'announcement' ? <Info className="w-4 h-4 text-sky-500" /> :
+                     <MessageSquare className="w-4 h-4 text-indigo-500" />}
                   </div>
-                  <div className="flex-1">
-                    <h4 className="text-sm font-medium text-slate-100">{n.title}</h4>
-                    <p className="text-xs text-slate-300 mt-1 leading-relaxed">{n.body}</p>
-                    <span className="text-[10px] text-slate-500 mt-2 block">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-sm font-semibold text-[var(--text-primary)]">{n.title}</h4>
+                    <p className="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed break-words">{n.body}</p>
+                    <span className="text-[10px] text-[var(--text-muted)] mt-2 block">
                       {new Date(n.created_at).toLocaleString()}
                     </span>
                   </div>

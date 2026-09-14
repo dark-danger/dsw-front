@@ -462,6 +462,14 @@ export const MailPage: React.FC = () => {
             <RefreshCw className={`w-4 h-4 ${loadingMessages ? 'animate-spin text-emerald-500' : ''}`} />
           </button>
           <button
+            onClick={handleNewCompose}
+            className="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-xl btn-primary text-xs font-bold shadow-xs"
+            title="Compose Email"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span className="hidden xs:inline">Compose</span>
+          </button>
+          <button
             onClick={handleDisconnect}
             className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-500/30 text-rose-500 hover:bg-rose-500/10 text-xs font-semibold transition-colors"
             title="Disconnect Google Account"
@@ -473,8 +481,8 @@ export const MailPage: React.FC = () => {
 
       {/* ================= 2. MAIN 3-PANE WORKSPACE ================= */}
       <div className="flex-1 flex overflow-hidden">
-        {/* PANE A: FOLDERS & NAVIGATION (LEFT) */}
-        <div className="w-52 md:w-60 border-r border-[var(--panel-border)] bg-[var(--panel-bg)] flex flex-col shrink-0">
+        {/* PANE A: FOLDERS & NAVIGATION (LEFT) - Hidden on mobile in favor of horizontal pills */}
+        <div className="hidden md:flex w-52 md:w-60 border-r border-[var(--panel-border)] bg-[var(--panel-bg)] flex-col shrink-0">
           {/* Compose Button */}
           <div className="p-4">
             <button
@@ -529,9 +537,35 @@ export const MailPage: React.FC = () => {
             activeMessageId ? 'hidden lg:flex lg:max-w-md xl:max-w-lg' : 'flex'
           }`}
         >
+          {/* Mobile Folder Selector Pills (Visible only on < md) */}
+          <div className="md:hidden flex items-center gap-1.5 p-2.5 border-b border-[var(--panel-border)] bg-[var(--card-bg-to)] overflow-x-auto no-scrollbar shrink-0">
+            {foldersList.map(folder => {
+              const isActive = activeFolder === folder.key;
+              return (
+                <button
+                  key={folder.key}
+                  onClick={() => handleFolderSelect(folder.key)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
+                    isActive
+                      ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-bold shadow-xs'
+                      : 'bg-[var(--panel-bg)] text-[var(--text-secondary)] border border-[var(--panel-border)] hover:text-emerald-500'
+                  }`}
+                >
+                  {folder.icon}
+                  <span>{folder.label}</span>
+                  {folder.badge && folder.badge > 0 ? (
+                    <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-500 text-white">
+                      {folder.badge}
+                    </span>
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+
           {/* List Toolbar */}
-          <div className="h-12 px-4 border-b border-[var(--panel-border)] bg-[var(--card-bg-to)] flex items-center justify-between text-xs text-[var(--text-secondary)]">
-            <div className="flex items-center gap-3">
+          <div className="h-12 px-3 sm:px-4 border-b border-[var(--panel-border)] bg-[var(--card-bg-to)] flex items-center justify-between text-xs text-[var(--text-secondary)] gap-2">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <button
                 onClick={() => {
                   if (selectedIds.size === messages.length && messages.length > 0) {
@@ -540,7 +574,7 @@ export const MailPage: React.FC = () => {
                     setSelectedIds(new Set(messages.map(m => m.id)));
                   }
                 }}
-                className="text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                className="text-[var(--text-muted)] hover:text-[var(--text-primary)] shrink-0"
                 title="Select all"
               >
                 {selectedIds.size === messages.length && messages.length > 0 ? (
@@ -550,7 +584,7 @@ export const MailPage: React.FC = () => {
                 )}
               </button>
 
-              <span className="font-bold capitalize text-[var(--text-primary)]">
+              <span className="font-bold capitalize text-[var(--text-primary)] truncate text-xs">
                 {activeFolder} {searchQuery ? `("${searchQuery}")` : ''}
               </span>
             </div>

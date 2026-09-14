@@ -213,10 +213,10 @@ export const MailComposeModal: React.FC<MailComposeModalProps> = ({
     <div
       className={`fixed z-50 transition-all duration-200 shadow-2xl ${
         minimized
-          ? 'bottom-0 right-6 w-72 h-12 bg-slate-900 border border-slate-700 rounded-t-xl overflow-hidden'
+          ? 'bottom-0 right-3 sm:right-6 w-72 h-12 bg-slate-900 border border-slate-700 rounded-t-xl overflow-hidden'
           : maximized
-          ? 'inset-4 md:inset-8 bg-[var(--panel-bg)] backdrop-blur-2xl border border-[var(--panel-border)] rounded-2xl flex flex-col'
-          : 'bottom-0 right-4 md:right-8 w-full max-w-2xl h-[560px] bg-[var(--panel-bg)] backdrop-blur-2xl border border-[var(--panel-border)] rounded-t-2xl flex flex-col'
+          ? 'inset-0 sm:inset-4 md:inset-8 bg-[var(--panel-bg)] backdrop-blur-2xl border border-[var(--panel-border)] sm:rounded-2xl flex flex-col'
+          : 'inset-x-0 bottom-0 sm:inset-x-auto sm:right-4 md:right-8 sm:w-full sm:max-w-2xl h-[90vh] sm:h-[560px] bg-[var(--panel-bg)] backdrop-blur-2xl border border-[var(--panel-border)] rounded-t-2xl flex flex-col'
       }`}
     >
       {/* Header Bar */}
@@ -458,13 +458,13 @@ export const MailComposeModal: React.FC<MailComposeModalProps> = ({
           </div>
 
           {/* Bottom Toolbar & Actions */}
-          <div className="h-14 px-4 border-t border-[var(--panel-border)] bg-[var(--card-bg-to)] flex items-center justify-between">
-            <div className="flex items-center gap-3">
+          <div className="p-2 sm:px-4 sm:py-0 sm:h-14 border-t border-[var(--panel-border)] bg-[var(--card-bg-to)] flex flex-wrap sm:flex-nowrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2 sm:gap-3">
               {/* Send Button */}
               <button
                 type="submit"
                 disabled={sending}
-                className="btn-primary py-2 px-5 text-xs font-bold flex items-center gap-2 shadow-md cursor-pointer"
+                className="btn-primary py-1.5 sm:py-2 px-3.5 sm:px-5 text-xs font-bold flex items-center gap-1.5 sm:gap-2 shadow-md cursor-pointer"
               >
                 {sending ? (
                   <>
