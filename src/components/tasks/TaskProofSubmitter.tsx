@@ -16,6 +16,8 @@ import {
   Files
 } from 'lucide-react';
 
+import { apiRequest } from '../../lib/api';
+
 export interface UploadedFileItem {
   url: string;
   name: string;
@@ -34,6 +36,31 @@ interface TaskProofSubmitterProps {
 const DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvqiDv2QH_fdSZptr0-RFqm99Grwe4vVpYzCVPhd6qLWH8-qs4-GM0lRKZbp4wSpN6/exec";
 const DEFAULT_DRIVE_FOLDER_ID = "1cljBSpx8NlB24yN_7N0jH7kPBvYY6QHZ";
 const DEFAULT_DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1cljBSpx8NlB24yN_7N0jH7kPBvYY6QHZ";
+
+// MIME type detection helper for docx, doc, xlsx, pdf, zip, etc.
+const getMimeType = (file: File): string => {
+  if (file.type && file.type.trim()) return file.type;
+  const ext = file.name.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'docx': return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    case 'doc': return 'application/msword';
+    case 'xlsx': return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    case 'xls': return 'application/vnd.ms-excel';
+    case 'pptx': return 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+    case 'ppt': return 'application/vnd.ms-powerpoint';
+    case 'pdf': return 'application/pdf';
+    case 'zip': return 'application/zip';
+    case 'txt': return 'text/plain';
+    case 'csv': return 'text/csv';
+    case 'jpg':
+    case 'jpeg': return 'image/jpeg';
+    case 'png': return 'image/png';
+    case 'webp': return 'image/webp';
+    case 'gif': return 'image/gif';
+    case 'svg': return 'image/svg+xml';
+    default: return 'application/octet-stream';
+  }
+};
 
 export const parseUploadedFiles = (valueUrl?: string, valueName?: string): UploadedFileItem[] => {
   if (!valueUrl || !valueUrl.trim()) return [];
@@ -141,14 +168,32 @@ export const TaskProofSubmitter: React.FC<TaskProofSubmitterProps> = ({
     });
   };
 
+  // Fallback upload directly through DSW server backend
+  const uploadViaBackend = async (file: File): Promise<UploadedFileItem> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const data = await apiRequest<{ file_url: string; file_name: string; file_size?: number }>(
+      '/uploads',
+      'POST',
+      formData,
+      true
+    );
+    return {
+      url: data.file_url,
+      name: data.file_name || file.name,
+      size: data.file_size || file.size
+    };
+  };
+
   const uploadSingleFile = async (file: File): Promise<UploadedFileItem> => {
+    const mime = getMimeType(file);
     const base64Data = await fileToBase64(file);
 
     const payload = {
       facultyName: facultyName.trim() || 'Faculty Member',
       taskName: taskName.trim() || 'Assigned Duty',
       fileName: file.name,
-      mimeType: file.type || 'application/octet-stream',
+      mimeType: mime,
       fileData: base64Data,
       folderId: targetFolderId,
       driveFolderId: targetFolderId,
@@ -156,25 +201,39 @@ export const TaskProofSubmitter: React.FC<TaskProofSubmitterProps> = ({
       parentFolderId: targetFolderId
     };
 
-    const response = await fetch(appsScriptUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain;charset=utf-8'
-      },
-      body: JSON.stringify(payload)
-    });
+    // 1. Attempt Google Apps Script / Drive Upload
+    try {
+      const response = await fetch(appsScriptUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(payload)
+      });
 
-    const result = await response.json();
+      const responseText = await response.text();
+      let result: any = null;
+      try {
+        result = JSON.parse(responseText);
+      } catch {
+        // Non-JSON or HTML redirect response from Apps Script
+      }
 
-    if (!result.success) {
-      throw new Error(result.message || `Upload failed for ${file.name}`);
+      if (result && result.success && (result.fileUrl || result.url || result.link)) {
+        return {
+          url: result.fileUrl || result.url || result.link,
+          name: result.fileName || file.name,
+          size: file.size
+        };
+      }
+
+      // If Apps Script returned success=false or invalid response, transparently fallback to backend
+      console.warn('Apps Script returned non-success response, falling back to server upload:', result || responseText.slice(0, 100));
+      return await uploadViaBackend(file);
+    } catch (appsScriptErr) {
+      console.warn('Apps Script network error, seamlessly falling back to server upload:', appsScriptErr);
+      return await uploadViaBackend(file);
     }
-
-    return {
-      url: result.fileUrl || result.url || result.link,
-      name: result.fileName || file.name,
-      size: file.size
-    };
   };
 
   const handleMultipleFilesUpload = async (incomingFiles: FileList | File[]) => {
