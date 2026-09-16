@@ -12,6 +12,7 @@ const PublicFeedbackFormPage = React.lazy(() => import('./pages/public/PublicFee
 
 // Admin Pages (Lazy Loaded)
 const AdminDashboardPage = React.lazy(() => import('./pages/admin/DashboardPage').then(m => ({ default: m.AdminDashboardPage })));
+const AdminRequestsPage = React.lazy(() => import('./pages/admin/AdminRequestsPage').then(m => ({ default: m.AdminRequestsPage })));
 const FacultyPage = React.lazy(() => import('./pages/admin/FacultyPage').then(m => ({ default: m.FacultyPage })));
 const EventsPage = React.lazy(() => import('./pages/admin/EventsPage').then(m => ({ default: m.EventsPage })));
 const TasksPage = React.lazy(() => import('./pages/admin/TasksPage').then(m => ({ default: m.TasksPage })));
@@ -70,6 +71,7 @@ export const App: React.FC = () => {
               {/* DSW Admin Portal */}
               <Route path="/admin" element={<AppLayout allowedRoles={['super_admin']} pageTitle="DSW Administration Portal" />}>
                 <Route path="dashboard" element={<AdminDashboardPage />} />
+                <Route path="requests" element={<AdminRequestsPage />} />
                 <Route path="mail" element={<MailPage />} />
                 <Route path="faculty" element={<FacultyPage />} />
                 <Route path="clubs" element={<ClubsPage />} />

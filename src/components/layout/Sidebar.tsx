@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard, Users, Calendar, CheckSquare, Megaphone,
   HelpCircle, FileText, MessageSquareHeart, Trophy, Medal,
-  GraduationCap, Sparkles, Shield, FileCheck, Award, Mail, X
+  GraduationCap, Sparkles, Shield, FileCheck, Award, Mail, X, ClipboardCheck
 } from 'lucide-react';
 
 interface SidebarItem {
@@ -23,6 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
 
   const adminNav: SidebarItem[] = [
     { label: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { label: 'Requests', path: '/admin/requests', icon: <ClipboardCheck className="w-4 h-4 text-amber-400" /> },
     { label: 'University Mail', path: '/admin/mail', icon: <Mail className="w-4 h-4 text-emerald-400" /> },
     { label: 'Faculty Management', path: '/admin/faculty', icon: <Users className="w-4 h-4" /> },
     { label: 'Student Clubs', path: '/admin/clubs', icon: <Users className="w-4 h-4 text-blue-400" /> },
