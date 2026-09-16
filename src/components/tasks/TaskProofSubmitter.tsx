@@ -196,9 +196,14 @@ export const TaskProofSubmitter: React.FC<TaskProofSubmitterProps> = ({
       mimeType: mime,
       fileData: base64Data,
       folderId: targetFolderId,
+      folder_id: targetFolderId,
       driveFolderId: targetFolderId,
+      drive_folder_id: targetFolderId,
       targetFolderId: targetFolderId,
-      parentFolderId: targetFolderId
+      target_folder_id: targetFolderId,
+      parentFolderId: targetFolderId,
+      parent_folder_id: targetFolderId,
+      parentFolder: targetFolderId
     };
 
     // 1. Attempt Google Apps Script / Drive Upload
