@@ -3,7 +3,7 @@ import { apiRequest } from '../../lib/api';
 import {
   CheckSquare, Plus, FileText, CheckCircle2, XCircle, AlertCircle, Clock,
   Send, X, Sparkles, FolderGit2, Calendar, Award, Filter, RefreshCw,
-  CornerDownRight, ListTree, PlusCircle
+  CornerDownRight, ListTree, PlusCircle, Lock
 } from 'lucide-react';
 import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
 import { ProofViewer } from '../../components/tasks/ProofViewer';
@@ -42,12 +42,24 @@ interface TaskItem {
 interface EventItem {
   id: number;
   title: string;
+  venue?: string;
+}
+
+interface SelfCreateLimitInfo {
+  can_create: boolean;
+  seconds_remaining: number;
+  next_allowed_at: string | null;
+  time_remaining_str: string | null;
+  last_task_id?: number;
+  last_task_title?: string;
+  message: string;
 }
 
 export const MyTasksPage: React.FC = () => {
   const { user } = useAuth();
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [eventsList, setEventsList] = useState<EventItem[]>([]);
+  const [selfCreateLimit, setSelfCreateLimit] = useState<SelfCreateLimitInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [tabFilter, setTabFilter] = useState<'all' | 'assigned' | 'self_created' | 'pending' | 'approved'>('all');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -87,12 +99,14 @@ export const MyTasksPage: React.FC = () => {
   const fetchMyTasksData = async () => {
     setLoading(true);
     try {
-      const [tasksData, eventsData] = await Promise.all([
+      const [tasksData, eventsData, limitData] = await Promise.all([
         apiRequest<TaskItem[]>('/tasks/mine'),
-        apiRequest<EventItem[]>('/events').catch(() => [])
+        apiRequest<EventItem[]>('/events').catch(() => []),
+        apiRequest<SelfCreateLimitInfo>('/tasks/self-create-limit').catch(() => null)
       ]);
       setTasks(tasksData);
       setEventsList(eventsData);
+      if (limitData) setSelfCreateLimit(limitData);
     } catch (e) {
       console.error(e);
     } finally {
@@ -108,6 +122,9 @@ export const MyTasksPage: React.FC = () => {
   const handleCreateSelfTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle.trim()) return alert('Please enter a task title');
+    if (selfCreateLimit && !selfCreateLimit.can_create) {
+      return alert(`Daily Limit Policy: You can only propose 1 self-created task every 24 hours. Next proposal available in ${selfCreateLimit.time_remaining_str || 'a few hours'}.`);
+    }
     setCreating(true);
 
     try {
@@ -134,9 +151,11 @@ export const MyTasksPage: React.FC = () => {
       setNewPriority('medium');
 
       setTasks(prev => [created, ...prev]);
+      fetchMyTasksData();
       showToast('🎉 Your task has been submitted to DSW Admin for approval! (+10 pts upon approval)');
     } catch (err: any) {
       alert(err.message || 'Failed to create task');
+      fetchMyTasksData();
     } finally {
       setCreating(false);
     }
@@ -266,13 +285,24 @@ export const MyTasksPage: React.FC = () => {
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
 
-            <button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="btn-primary text-xs py-2.5 px-4 flex items-center gap-2 font-bold shadow-lg shadow-emerald-600/20 active:scale-95"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Create My Task / Propose Duty</span>
-            </button>
+            {selfCreateLimit && !selfCreateLimit.can_create ? (
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="p-2.5 sm:py-2.5 sm:px-4 rounded-xl bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 flex items-center gap-2 text-xs font-bold transition-all shadow-sm hover:bg-amber-500/20 active:scale-95"
+                title={`Daily Limit: 1 task proposal per 24 hours. Next available in ${selfCreateLimit.time_remaining_str}`}
+              >
+                <Clock className="w-4 h-4 text-amber-500 animate-pulse" />
+                <span>1 Task/24h Limit ({selfCreateLimit.time_remaining_str})</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="btn-primary text-xs py-2.5 px-4 flex items-center gap-2 font-bold shadow-lg shadow-emerald-600/20 active:scale-95"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Create My Task / Propose Duty</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -372,12 +402,18 @@ export const MyTasksPage: React.FC = () => {
                 : "You have no tasks matching this filter at the moment."}
             </p>
             {tabFilter === 'self_created' && (
-              <button
-                onClick={() => setIsCreateModalOpen(true)}
-                className="btn-primary text-xs py-2 px-4 inline-flex items-center gap-1.5 mt-2"
-              >
-                <Plus className="w-4 h-4" /> Create First Task
-              </button>
+              selfCreateLimit && !selfCreateLimit.can_create ? (
+                <div className="inline-flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-xl font-medium mt-2">
+                  <Clock className="w-3.5 h-3.5" /> Next self-created duty proposal available in {selfCreateLimit.time_remaining_str}
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="btn-primary text-xs py-2 px-4 inline-flex items-center gap-1.5 mt-2"
+                >
+                  <Plus className="w-4 h-4" /> Create First Task
+                </button>
+              )
             )}
           </div>
         ) : (
@@ -705,12 +741,28 @@ export const MyTasksPage: React.FC = () => {
               </button>
             </div>
 
-            <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-xs text-purple-700 dark:text-purple-300 mb-4 flex items-start gap-2">
-              <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
-              <span>
-                Self-created tasks are automatically submitted to DSW Admin for approval. Once approved, you earn <strong>+10 points</strong> on the staff leaderboard.
-              </span>
-            </div>
+            {selfCreateLimit && !selfCreateLimit.can_create ? (
+              <div className="p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-xs text-amber-800 dark:text-amber-300 mb-4 flex items-start gap-2.5 animate-in fade-in">
+                <Clock className="w-4 h-4 text-amber-500 shrink-0 mt-0.5 animate-pulse" />
+                <div>
+                  <div className="font-bold mb-0.5 flex items-center gap-1.5">
+                    <span>Daily Limit Active (1 Self-Created Task / 24 Hours)</span>
+                  </div>
+                  <p className="text-[11px] leading-relaxed opacity-90">
+                    You have already proposed a task in the last 24 hours ({selfCreateLimit.last_task_title ? `"${selfCreateLimit.last_task_title}"` : 'Recent Task'}). Next proposal will be available in <strong>{selfCreateLimit.time_remaining_str}</strong>.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-xs text-purple-700 dark:text-purple-300 mb-4 flex items-start gap-2">
+                <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
+                <div>
+                  <span>
+                    Self-created tasks are submitted to DSW Admin for review. Once approved, you earn <strong>+10 points</strong> on the staff leaderboard. <em>(Policy: Maximum 1 self-created task proposal per 24 hours)</em>.
+                  </span>
+                </div>
+              </div>
+            )}
 
             <form onSubmit={handleCreateSelfTask} className="space-y-4">
               {/* Title */}
@@ -843,11 +895,26 @@ export const MyTasksPage: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  disabled={creating}
-                  className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 font-bold shadow-md shadow-emerald-600/20"
+                  disabled={creating || (selfCreateLimit ? !selfCreateLimit.can_create : false)}
+                  className={`text-xs py-2 px-4 flex items-center gap-1.5 font-bold shadow-md transition-all ${
+                    selfCreateLimit && !selfCreateLimit.can_create
+                      ? 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed border border-slate-300 dark:border-slate-700'
+                      : 'btn-primary shadow-emerald-600/20 active:scale-95'
+                  }`}
                 >
-                  <Send className="w-3.5 h-3.5" />
-                  {creating ? 'Submitting Task...' : 'Submit for Admin Approval'}
+                  {creating ? (
+                    'Submitting Task...'
+                  ) : selfCreateLimit && !selfCreateLimit.can_create ? (
+                    <>
+                      <Lock className="w-3.5 h-3.5" />
+                      <span>24h Limit Active ({selfCreateLimit.time_remaining_str})</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-3.5 h-3.5" />
+                      <span>Submit for Admin Approval</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>
