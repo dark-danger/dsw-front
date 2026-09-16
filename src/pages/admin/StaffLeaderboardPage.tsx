@@ -43,17 +43,20 @@ export const StaffLeaderboardPage: React.FC = () => {
           <h2 className="text-xl font-bold text-[var(--text-primary)] flex items-center gap-2">
             <Medal className="w-6 h-6 text-emerald-500" /> Automatic Staff Performance Leaderboard
           </h2>
-          <p className="text-xs text-[var(--text-secondary)] mt-1">Calculated strictly as SUM of task performance ledger score deltas (+10 On-time Approval, +5 Late Approval, -3 Decline).</p>
+          <p className="text-xs text-[var(--text-secondary)] mt-1">
+            Calculated strictly as SUM of task performance ledger score deltas (+10 On-time Approval, +5 Late Approval, -3 Decline Penalty, +0 Subtask Bonus).
+          </p>
         </div>
       </div>
 
       {/* Rules Notice */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-card p-4 border-l-4 border-l-emerald-500">
           <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4" /> On-Time Task Approval
           </div>
           <p className="text-sm font-bold text-[var(--text-primary)] mt-1">+10 Points</p>
+          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Approved before deadline</p>
         </div>
 
         <div className="glass-card p-4 border-l-4 border-l-amber-500">
@@ -61,13 +64,23 @@ export const StaffLeaderboardPage: React.FC = () => {
             <Clock className="w-4 h-4" /> Late Task Approval
           </div>
           <p className="text-sm font-bold text-[var(--text-primary)] mt-1">+5 Points</p>
+          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Approved after deadline</p>
         </div>
 
         <div className="glass-card p-4 border-l-4 border-l-rose-500">
           <div className="text-xs font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
-            <XCircle className="w-4 h-4" /> Declined Task Submission
+            <XCircle className="w-4 h-4" /> Declined Task / Subtask
           </div>
-          <p className="text-sm font-bold text-[var(--text-primary)] mt-1">-3 Points</p>
+          <p className="text-sm font-bold text-rose-600 dark:text-rose-400 mt-1">-3 Points Penalty</p>
+          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Deducted from total points</p>
+        </div>
+
+        <div className="glass-card p-4 border-l-4 border-l-teal-500">
+          <div className="text-xs font-semibold text-teal-600 dark:text-teal-400 flex items-center gap-1.5">
+            <ShieldCheck className="w-4 h-4" /> Subtask Scopes
+          </div>
+          <p className="text-sm font-bold text-[var(--text-primary)] mt-1">+0 Extra Points</p>
+          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Locked to assignee; -3 if declined</p>
         </div>
       </div>
 

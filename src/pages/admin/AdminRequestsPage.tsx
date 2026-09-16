@@ -7,7 +7,7 @@ import {
   ClipboardCheck, CheckCircle2, XCircle, Clock, AlertCircle,
   FileText, User as UserIcon, Calendar, Search, Filter, Sparkles,
   RefreshCw, Check, X, ShieldAlert, Award, FileCheck, ArrowUpRight,
-  ChevronDown
+  ChevronDown, ListTree
 } from 'lucide-react';
 
 interface Submission {
@@ -94,7 +94,12 @@ export const AdminRequestsPage: React.FC = () => {
   }, []);
 
   const handleApprove = async (task: TaskItem) => {
-    if (!window.confirm(`Approve task "${task.title}" and award leaderboard points to ${task.assignee?.name || 'faculty'}?`)) {
+    const isSubtask = Boolean(task.parent_task_id || task.task_type === 'subtask');
+    const promptMsg = isSubtask
+      ? `Approve subtask "${task.title}" for ${task.assignee?.name || 'faculty'}? (Subtasks award +0 extra points)`
+      : `Approve task "${task.title}" and award leaderboard points to ${task.assignee?.name || 'faculty'}?`;
+
+    if (!window.confirm(promptMsg)) {
       return;
     }
 
@@ -102,7 +107,11 @@ export const AdminRequestsPage: React.FC = () => {
     try {
       const updated = await apiRequest<TaskItem>(`/tasks/${task.id}/approve`, 'POST');
       setRequests(prev => prev.map(t => t.id === task.id ? updated : t));
-      showToast(`🎉 Task "${task.title}" approved! +10 points awarded to ${task.assignee?.name || 'faculty'}.`);
+      if (isSubtask) {
+        showToast(`🎉 Subtask "${task.title}" approved (+0 extra points) for ${task.assignee?.name || 'faculty'}.`);
+      } else {
+        showToast(`🎉 Task "${task.title}" approved! +10 points awarded to ${task.assignee?.name || 'faculty'}.`);
+      }
     } catch (err: any) {
       alert(err.message || 'Failed to approve task');
     } finally {
@@ -121,7 +130,7 @@ export const AdminRequestsPage: React.FC = () => {
         review_remarks: declineRemarks.trim()
       });
       setRequests(prev => prev.map(t => t.id === selectedTaskForDecline.id ? updated : t));
-      showToast(`Task declined with feedback sent to ${selectedTaskForDecline.assignee?.name || 'faculty'}.`);
+      showToast(`Task declined. -3 points penalty deducted from ${selectedTaskForDecline.assignee?.name || 'faculty'}.`);
       setSelectedTaskForDecline(null);
       setDeclineRemarks('');
     } catch (err: any) {
@@ -524,7 +533,8 @@ export const AdminRequestsPage: React.FC = () => {
           </div>
         ) : (
           filteredRequests.map(t => {
-            const isSelfCreated = (t.assigned_by === t.assigned_to) || (t.task_type === 'self_created');
+            const isSubtask = Boolean(t.parent_task_id || t.task_type === 'subtask');
+            const isSelfCreated = !isSubtask && ((t.assigned_by === t.assigned_to) || (t.task_type === 'self_created'));
             const latestSub = t.submissions && t.submissions.length > 0 ? t.submissions[t.submissions.length - 1] : null;
             const isPending = t.status === 'submitted' || t.status === 'pending';
 
@@ -536,6 +546,8 @@ export const AdminRequestsPage: React.FC = () => {
                     ? 'border-l-emerald-500 bg-emerald-500/[0.02]'
                     : t.status === 'declined'
                     ? 'border-l-rose-500 bg-rose-500/[0.02]'
+                    : isSubtask
+                    ? 'border-l-teal-500 bg-teal-500/[0.02]'
                     : isSelfCreated
                     ? 'border-l-purple-500 bg-purple-500/[0.02]'
                     : 'border-l-amber-500 bg-amber-500/[0.02]'
@@ -553,7 +565,11 @@ export const AdminRequestsPage: React.FC = () => {
                         <h4 className="font-extrabold text-sm sm:text-base text-[var(--text-primary)]">
                           {t.assignee?.name || 'Faculty Member'}
                         </h4>
-                        {isSelfCreated ? (
+                        {isSubtask ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-teal-500/20 text-teal-700 dark:text-teal-300 border border-teal-500/30">
+                            <ListTree className="w-3 h-3" /> Subtask Review
+                          </span>
+                        ) : isSelfCreated ? (
                           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30">
                             <Sparkles className="w-3 h-3" /> Self-Created Task
                           </span>
@@ -592,9 +608,9 @@ export const AdminRequestsPage: React.FC = () => {
                       {t.status === 'declined' && <XCircle className="w-3.5 h-3.5" />}
                       {isPending && <Clock className="w-3.5 h-3.5 animate-spin" />}
                       {t.status === 'approved'
-                        ? 'Approved (+10 Pts)'
+                        ? isSubtask ? 'Approved (+0 Pts)' : 'Approved (+10 Pts)'
                         : t.status === 'declined'
-                        ? 'Declined'
+                        ? 'Declined (-3 Pts)'
                         : 'Awaiting Admin Approval'}
                     </span>
                   </div>
@@ -661,7 +677,7 @@ export const AdminRequestsPage: React.FC = () => {
                 {t.status === 'declined' && latestSub?.review_remarks && (
                   <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 rounded-xl text-xs space-y-1">
                     <div className="font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
-                      <AlertCircle className="w-4 h-4" /> Admin Decline Remarks:
+                      <AlertCircle className="w-4 h-4" /> Admin Decline Remarks (-3 pts penalty):
                     </div>
                     <p className="text-[var(--text-primary)]">{latestSub.review_remarks}</p>
                   </div>
@@ -671,7 +687,13 @@ export const AdminRequestsPage: React.FC = () => {
                 <div className="pt-3 border-t border-[var(--panel-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="text-xs text-[var(--text-muted)] flex items-center gap-1.5">
                     <Award className="w-4 h-4 text-amber-500" />
-                    <span>Reward: <strong>+10 Leaderboard Points</strong> upon approval</span>
+                    <span>
+                      {isSubtask ? (
+                        <>Subtask Reward: <strong>+0 Extra Points</strong> upon approval, <strong>-3 Points</strong> if declined</>
+                      ) : (
+                        <>Main Task Reward: <strong>+10 Points</strong> upon approval, <strong>-3 Points</strong> if declined</>
+                      )}
+                    </span>
                   </div>
 
                   <div className="flex items-center gap-2 self-end sm:self-auto">
@@ -685,7 +707,7 @@ export const AdminRequestsPage: React.FC = () => {
                         className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/30 text-xs font-bold transition-all active:scale-95"
                       >
                         <XCircle className="w-4 h-4" />
-                        Decline Task
+                        Decline (-3 pts)
                       </button>
                     )}
 
@@ -696,7 +718,11 @@ export const AdminRequestsPage: React.FC = () => {
                         className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 font-bold shadow-md shadow-emerald-600/20"
                       >
                         <CheckCircle2 className="w-4 h-4" />
-                        {actionLoading === t.id ? 'Approving...' : 'Approve & Award Points (+10)'}
+                        {actionLoading === t.id
+                          ? 'Approving...'
+                          : isSubtask
+                          ? 'Approve Subtask (+0 pts)'
+                          : 'Approve & Award Points (+10)'}
                       </button>
                     )}
                   </div>
@@ -714,7 +740,7 @@ export const AdminRequestsPage: React.FC = () => {
             <div className="flex items-center justify-between pb-3 border-b border-[var(--panel-border)] mb-4">
               <div className="flex items-center gap-2 text-rose-500 font-extrabold text-base sm:text-lg">
                 <XCircle className="w-5 h-5" />
-                <span>Decline Faculty Request</span>
+                <span>Decline Faculty Submission</span>
               </div>
               <button
                 onClick={() => setSelectedTaskForDecline(null)}
@@ -726,8 +752,16 @@ export const AdminRequestsPage: React.FC = () => {
 
             <form onSubmit={handleDeclineSubmit} className="space-y-4">
               <div className="p-3 rounded-xl bg-[var(--card-bg-to)] border border-[var(--panel-border)] text-xs space-y-1">
-                <p className="font-bold text-[var(--text-primary)]">Task: {selectedTaskForDecline.title}</p>
+                <p className="font-bold text-[var(--text-primary)]">
+                  {selectedTaskForDecline.parent_task_id ? 'Subtask: ' : 'Task: '}
+                  {selectedTaskForDecline.title}
+                </p>
                 <p className="text-[var(--text-muted)]">Faculty: {selectedTaskForDecline.assignee?.name} ({selectedTaskForDecline.assignee?.department})</p>
+              </div>
+
+              <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 shrink-0" />
+                <span><strong>Penalty Warning:</strong> Declining this submission will deduct <strong>-3 points</strong> from {selectedTaskForDecline.assignee?.name || 'the faculty member'}'s performance leaderboard score.</span>
               </div>
 
               <div>

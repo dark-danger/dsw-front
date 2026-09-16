@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/api';
 import {
   CheckSquare, Plus, FileText, CheckCircle2, XCircle, AlertCircle, Clock,
-  Send, X, Sparkles, FolderGit2, Calendar, Award, Filter, RefreshCw
+  Send, X, Sparkles, FolderGit2, Calendar, Award, Filter, RefreshCw,
+  CornerDownRight, ListTree, PlusCircle
 } from 'lucide-react';
 import { TaskProofSubmitter } from '../../components/tasks/TaskProofSubmitter';
 import { ProofViewer } from '../../components/tasks/ProofViewer';
@@ -26,6 +27,7 @@ interface TaskItem {
   task_type: string;
   event_id?: number;
   event_title?: string;
+  parent_task_id?: number;
   assigned_to: number;
   assigned_by: number;
   start_date?: string;
@@ -34,6 +36,7 @@ interface TaskItem {
   status: 'pending' | 'in_progress' | 'submitted' | 'approved' | 'declined';
   created_at: string;
   submissions: TaskSubmission[];
+  subtasks?: TaskItem[];
 }
 
 interface EventItem {
@@ -55,6 +58,14 @@ export const MyTasksPage: React.FC = () => {
   const [proofUrl, setProofUrl] = useState('');
   const [proofName, setProofName] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  // Create Subtask Modal
+  const [selectedParentTaskForSubtask, setSelectedParentTaskForSubtask] = useState<TaskItem | null>(null);
+  const [subtaskTitle, setSubtaskTitle] = useState('');
+  const [subtaskDescription, setSubtaskDescription] = useState('');
+  const [subtaskDueDate, setSubtaskDueDate] = useState('');
+  const [subtaskPriority, setSubtaskPriority] = useState<'low' | 'medium' | 'high'>('medium');
+  const [subtaskCreating, setSubtaskCreating] = useState(false);
 
   // Create Self-Task Modal
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -128,6 +139,38 @@ export const MyTasksPage: React.FC = () => {
       alert(err.message || 'Failed to create task');
     } finally {
       setCreating(false);
+    }
+  };
+
+  // Handle Faculty creating subtask under their task
+  const handleCreateSubtask = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedParentTaskForSubtask) return;
+    if (!subtaskTitle.trim()) return alert('Please enter a subtask title');
+    setSubtaskCreating(true);
+
+    try {
+      await apiRequest('/tasks', 'POST', {
+        title: subtaskTitle.trim(),
+        description: subtaskDescription.trim(),
+        parent_task_id: selectedParentTaskForSubtask.id,
+        task_type: 'subtask',
+        priority: subtaskPriority,
+        due_date: subtaskDueDate ? new Date(subtaskDueDate).toISOString() : null,
+      });
+
+      setSelectedParentTaskForSubtask(null);
+      setSubtaskTitle('');
+      setSubtaskDescription('');
+      setSubtaskDueDate('');
+      setSubtaskPriority('medium');
+
+      fetchMyTasksData();
+      showToast('Subtask added successfully! (+0 pts upon approval, -3 pts if declined)');
+    } catch (err: any) {
+      alert(err.message || 'Failed to create subtask');
+    } finally {
+      setSubtaskCreating(false);
     }
   };
 
@@ -454,31 +497,190 @@ export const MyTasksPage: React.FC = () => {
                   </div>
                 )}
 
+                {/* Subtasks Section */}
+                <div className="pt-2">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-1.5">
+                      <ListTree className="w-4 h-4 text-emerald-500" />
+                      Subtasks {t.subtasks && t.subtasks.length > 0 ? `(${t.subtasks.length})` : ''}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedParentTaskForSubtask(t);
+                        setSubtaskTitle('');
+                        setSubtaskDescription('');
+                        setSubtaskDueDate(t.due_date ? t.due_date.slice(0, 16) : '');
+                        setSubtaskPriority(t.priority || 'medium');
+                      }}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-[11px] font-bold transition-all active:scale-95"
+                    >
+                      <Plus className="w-3.5 h-3.5" /> Add Subtask
+                    </button>
+                  </div>
+
+                  {t.subtasks && t.subtasks.length > 0 && (
+                    <div className="space-y-2.5 pl-2 sm:pl-4 border-l-2 border-emerald-500/30 mt-2">
+                      <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-800 dark:text-amber-200">
+                        ⚡ <strong>Subtask Rule:</strong> Strictly assigned to you under this task. Earns <strong>+0 extra points</strong> on approval, but <strong>-3 points</strong> will be deducted if declined.
+                      </div>
+
+                      {t.subtasks.map(st => {
+                        const stLatestSub = st.submissions && st.submissions.length > 0 ? st.submissions[st.submissions.length - 1] : null;
+                        return (
+                          <div
+                            key={st.id}
+                            className={`p-3.5 rounded-2xl bg-[var(--card-bg-to)] border border-[var(--panel-border)] space-y-2 transition-all ${
+                              st.status === 'declined'
+                                ? 'border-rose-500/40 bg-rose-500/[0.03]'
+                                : st.status === 'approved'
+                                ? 'border-emerald-500/40 bg-emerald-500/[0.03]'
+                                : ''
+                            }`}
+                          >
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="flex items-center gap-2">
+                                <CornerDownRight className="w-4 h-4 text-emerald-500 shrink-0" />
+                                <h5 className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">{st.title}</h5>
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-slate-500/20 text-slate-700 dark:text-slate-300">
+                                  {st.priority}
+                                </span>
+                              </div>
+
+                              <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold flex items-center gap-1 ${
+                                st.status === 'approved'
+                                  ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'
+                                  : st.status === 'submitted'
+                                  ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300'
+                                  : st.status === 'declined'
+                                  ? 'bg-rose-500/20 text-rose-700 dark:text-rose-300'
+                                  : 'bg-slate-500/20 text-slate-700 dark:text-slate-300'
+                              }`}>
+                                {st.status === 'approved' && <CheckCircle2 className="w-3 h-3" />}
+                                {st.status === 'declined' && <XCircle className="w-3 h-3" />}
+                                {st.status === 'submitted' && <Clock className="w-3 h-3" />}
+                                {st.status === 'approved'
+                                  ? 'Approved (+0 pts)'
+                                  : st.status === 'submitted'
+                                  ? 'Awaiting Review'
+                                  : st.status === 'declined'
+                                  ? 'Declined (-3 pts)'
+                                  : 'In Progress'}
+                              </span>
+                            </div>
+
+                            {st.description && (
+                              <p className="text-xs text-[var(--text-secondary)] pl-6 whitespace-pre-line leading-relaxed">
+                                {st.description}
+                              </p>
+                            )}
+
+                            {/* Subtask Due Date */}
+                            {st.due_date && (
+                              <div className="text-[11px] text-[var(--text-muted)] pl-6 flex items-center gap-1">
+                                <Clock className="w-3 h-3 text-amber-500" />
+                                Due: {new Date(st.due_date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
+                              </div>
+                            )}
+
+                            {/* Subtask Proof Viewer */}
+                            {stLatestSub?.file_url && (
+                              <div className="ml-6 p-2.5 bg-[var(--card-bg-to)] border border-[var(--panel-border)] rounded-xl space-y-1.5">
+                                <div className="flex items-center justify-between text-[11px]">
+                                  <span className="font-bold text-[var(--text-primary)] flex items-center gap-1">
+                                    <FileText className="w-3.5 h-3.5 text-emerald-500" />
+                                    Subtask Proof
+                                  </span>
+                                  <span className="text-[10px] text-[var(--text-muted)] font-mono">
+                                    {stLatestSub.file_name || 'Proof Attached'}
+                                  </span>
+                                </div>
+                                <ProofViewer url={stLatestSub.file_url} fileName={stLatestSub.file_name} />
+                              </div>
+                            )}
+
+                            {/* Decline Remarks */}
+                            {st.status === 'declined' && stLatestSub?.review_remarks && (
+                              <div className="ml-6 p-2.5 bg-rose-500/10 border border-rose-500/25 rounded-xl text-xs space-y-0.5">
+                                <div className="font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                                  <AlertCircle className="w-3.5 h-3.5" /> Decline Remarks (-3 pts deducted):
+                                </div>
+                                <p className="text-[var(--text-primary)]">{stLatestSub.review_remarks}</p>
+                              </div>
+                            )}
+
+                            {/* Subtask Action Button */}
+                            {st.status !== 'approved' && (
+                              <div className="pl-6 pt-1 flex justify-end">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedTaskForSubmit(st);
+                                    setSubmitDescription(stLatestSub?.description || '');
+                                    setProofUrl(stLatestSub?.file_url || '');
+                                    setProofName(stLatestSub?.file_name || '');
+                                  }}
+                                  className="btn-primary text-[11px] py-1 px-3 flex items-center gap-1 font-bold shadow-xs active:scale-95"
+                                >
+                                  <Send className="w-3 h-3" />
+                                  {st.status === 'declined'
+                                    ? 'Resubmit Subtask'
+                                    : st.status === 'submitted'
+                                    ? 'Update Subtask Proof'
+                                    : 'Submit Subtask Completion'}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
                 {/* Footer Actions */}
                 <div className="pt-3 border-t border-[var(--panel-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="text-xs text-[var(--text-muted)] flex items-center gap-1.5">
                     <Award className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Reward: <strong>+10 Leaderboard Points</strong> upon approval</span>
+                    <span>Main Task Reward: <strong>+10 Leaderboard Points</strong> upon approval</span>
                   </div>
 
-                  {t.status !== 'approved' && (
+                  <div className="flex items-center gap-2">
                     <button
+                      type="button"
                       onClick={() => {
-                        setSelectedTaskForSubmit(t);
-                        setSubmitDescription(latestSub?.description || '');
-                        setProofUrl(latestSub?.file_url || '');
-                        setProofName(latestSub?.file_name || '');
+                        setSelectedParentTaskForSubtask(t);
+                        setSubtaskTitle('');
+                        setSubtaskDescription('');
+                        setSubtaskDueDate(t.due_date ? t.due_date.slice(0, 16) : '');
+                        setSubtaskPriority(t.priority || 'medium');
                       }}
-                      className="btn-primary text-xs py-2 px-3.5 self-start sm:self-auto flex items-center gap-1.5 font-bold shadow-md active:scale-95"
+                      className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-all active:scale-95"
                     >
-                      <Send className="w-3.5 h-3.5" />
-                      {t.status === 'declined'
-                        ? 'Resubmit Corrected Duty / Proof'
-                        : t.status === 'submitted'
-                        ? 'Update Duty Proof / Notes'
-                        : 'Submit Duty Completion'}
+                      <Plus className="w-3.5 h-3.5" />
+                      + Add Subtask
                     </button>
-                  )}
+
+                    {t.status !== 'approved' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedTaskForSubmit(t);
+                          setSubmitDescription(latestSub?.description || '');
+                          setProofUrl(latestSub?.file_url || '');
+                          setProofName(latestSub?.file_name || '');
+                        }}
+                        className="btn-primary text-xs py-2 px-3.5 flex items-center gap-1.5 font-bold shadow-md active:scale-95"
+                      >
+                        <Send className="w-3.5 h-3.5" />
+                        {t.status === 'declined'
+                          ? 'Resubmit Corrected Duty / Proof'
+                          : t.status === 'submitted'
+                          ? 'Update Duty Proof / Notes'
+                          : 'Submit Duty Completion'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -719,6 +921,127 @@ export const MyTasksPage: React.FC = () => {
                 >
                   <Send className="w-3.5 h-3.5" />
                   {submitting ? 'Submitting Duty...' : 'Submit to DSW Admin'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal 3: Add Subtask Modal */}
+      {selectedParentTaskForSubtask && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
+          <div className="w-full max-w-lg glass-panel p-5 sm:p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto animate-in zoom-in-95">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--panel-border)] mb-4">
+              <div className="flex items-center gap-2 text-[var(--text-primary)] font-extrabold text-base sm:text-lg">
+                <ListTree className="w-5 h-5 text-emerald-500" />
+                <span>Add Subtask</span>
+              </div>
+              <button
+                onClick={() => setSelectedParentTaskForSubtask(null)}
+                className="text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs text-emerald-800 dark:text-emerald-200 mb-4 space-y-1">
+              <p className="font-bold flex items-center gap-1.5">
+                <CornerDownRight className="w-4 h-4 text-emerald-500" />
+                Parent Task: {selectedParentTaskForSubtask.title}
+              </p>
+              <p className="text-[11px] text-[var(--text-secondary)]">
+                This subtask is locked to you. <strong>+0 points</strong> are awarded upon approval, and <strong>-3 points</strong> are penalized if declined.
+              </p>
+            </div>
+
+            <form onSubmit={handleCreateSubtask} className="space-y-4">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold text-[var(--text-primary)]">
+                    Subtask Title *
+                  </label>
+                  <ImproveEnglishButton
+                    text={subtaskTitle}
+                    onImproved={improved => setSubtaskTitle(improved)}
+                    context="Faculty Subtask Title"
+                  />
+                </div>
+                <input
+                  required
+                  type="text"
+                  value={subtaskTitle}
+                  onChange={e => setSubtaskTitle(e.target.value)}
+                  placeholder="e.g. Prepared venue sound system & tested microphones"
+                  className="glass-input text-xs w-full font-medium"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold text-[var(--text-primary)]">
+                    Subtask Details / Action Items *
+                  </label>
+                  <ImproveEnglishButton
+                    text={subtaskDescription}
+                    onImproved={improved => setSubtaskDescription(improved)}
+                    context="Faculty Subtask Description"
+                  />
+                </div>
+                <textarea
+                  required
+                  rows={3}
+                  value={subtaskDescription}
+                  onChange={e => setSubtaskDescription(e.target.value)}
+                  placeholder="Describe specific actionable items for this subtask..."
+                  className="glass-input text-xs w-full leading-relaxed"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Priority Level
+                  </label>
+                  <select
+                    value={subtaskPriority}
+                    onChange={e => setSubtaskPriority(e.target.value as any)}
+                    className="glass-input text-xs w-full"
+                  >
+                    <option value="low">Low Priority</option>
+                    <option value="medium">Medium Priority</option>
+                    <option value="high">High Priority</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Target Completion Date & Time
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={subtaskDueDate}
+                    onChange={e => setSubtaskDueDate(e.target.value)}
+                    className="glass-input text-xs w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-[var(--panel-border)] flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedParentTaskForSubtask(null)}
+                  className="btn-secondary text-xs"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={subtaskCreating}
+                  className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 font-bold shadow-md shadow-emerald-600/20"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  {subtaskCreating ? 'Creating Subtask...' : 'Add Subtask'}
                 </button>
               </div>
             </form>

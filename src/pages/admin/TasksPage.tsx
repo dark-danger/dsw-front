@@ -313,9 +313,11 @@ export const TasksPage: React.FC = () => {
               <button
                 onClick={() => {
                   setParentTaskIdForSubtask(t.id);
+                  setAssignedTo(t.assigned_to);
+                  setEventId(t.event_id || '');
                   setIsCreateModalOpen(true);
                 }}
-                className="text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 font-semibold"
+                className="text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 font-semibold flex items-center gap-1"
               >
                 + Add Subtask
               </button>
@@ -333,7 +335,7 @@ export const TasksPage: React.FC = () => {
                 onClick={() => handleApprove(t.id)}
                 className="btn-primary text-xs py-1 px-3 flex items-center gap-1.5"
               >
-                <CheckCircle2 className="w-3.5 h-3.5" /> Approve Task (+10 pts)
+                <CheckCircle2 className="w-3.5 h-3.5" /> {isSubtask ? 'Approve Subtask' : 'Approve Task (+10 pts)'}
               </button>
             ) : null}
           </div>
@@ -577,15 +579,33 @@ export const TasksPage: React.FC = () => {
                 <textarea rows={3} value={description} onChange={e => setDescription(e.target.value)} placeholder="Provide detailed steps..." className="glass-input" />
               </div>
 
+              {parentTaskIdForSubtask && (
+                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-800 dark:text-amber-200 flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                  <div>
+                    <strong>Subtask Policy:</strong> Subtasks are locked to the parent task assignee. Subtasks grant <strong>+0 extra points</strong> on approval, but <strong>-3 points</strong> will be deducted if declined.
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Assignee (Faculty)</label>
-                  <select required value={assignedTo} onChange={e => setAssignedTo(e.target.value ? Number(e.target.value) : '')} className="glass-input">
-                    <option value="">-- Select Faculty --</option>
-                    {facultyList.map(f => (
-                      <option key={f.id} value={f.id}>{f.name}</option>
-                    ))}
-                  </select>
+                  <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">
+                    Assignee (Faculty) {parentTaskIdForSubtask && <span className="text-emerald-500 font-normal">(Locked)</span>}
+                  </label>
+                  {parentTaskIdForSubtask ? (
+                    <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-bold text-emerald-700 dark:text-emerald-300 flex items-center gap-1.5 truncate">
+                      <UserIcon className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <span className="truncate">{facultyList.find(f => f.id === Number(assignedTo))?.name || tasks.find(t => t.id === parentTaskIdForSubtask)?.assignee?.name || 'Assigned Faculty'}</span>
+                    </div>
+                  ) : (
+                    <select required value={assignedTo} onChange={e => setAssignedTo(e.target.value ? Number(e.target.value) : '')} className="glass-input">
+                      <option value="">-- Select Faculty --</option>
+                      {facultyList.map(f => (
+                        <option key={f.id} value={f.id}>{f.name}</option>
+                      ))}
+                    </select>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Priority</label>

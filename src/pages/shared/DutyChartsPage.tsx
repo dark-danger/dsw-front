@@ -442,12 +442,12 @@ export const DutyChartsPage: React.FC = () => {
       {/* Official Duty Chart PDF / Printable View Modal */}
       {selectedChartForPrint && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xs overflow-y-auto">
-          <div className="w-full max-w-4xl bg-black text-white p-8 rounded-2xl shadow-2xl relative space-y-6 my-8 border border-white/10 print:m-0 print:p-0 print:border-none print:bg-white print:text-black">
+          <div className="w-full max-w-4xl glass-panel p-6 sm:p-8 rounded-2xl shadow-2xl relative space-y-6 my-8 border border-[var(--panel-border)] print:m-0 print:p-0 print:border-none print:bg-white print:text-black">
             
             {/* Modal Control Bar (Hidden when printing) */}
-            <div className="flex items-center justify-between pb-4 border-b border-white/10 print:hidden">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <Printer className="w-5 h-5 text-emerald-400" /> Printable Duty Chart Preview
+            <div className="flex items-center justify-between pb-4 border-b border-[var(--panel-border)] print:hidden">
+              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+                <Printer className="w-5 h-5 text-emerald-500" /> Printable Duty Chart Preview
               </h3>
               <div className="flex items-center gap-3">
                 <button

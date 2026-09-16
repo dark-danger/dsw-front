@@ -135,10 +135,10 @@ export const ProofViewer: React.FC<ProofViewerProps> = ({
           onClick={() => setIsLightboxOpen(false)}
         >
           <div 
-            className="w-full max-w-4xl max-h-[90vh] bg-slate-900 border border-slate-800 rounded-3xl p-3.5 sm:p-4 shadow-2xl relative flex flex-col space-y-3 overflow-hidden"
+            className="w-full max-w-4xl max-h-[90vh] glass-panel border border-[var(--panel-border)] rounded-3xl p-3.5 sm:p-4 shadow-2xl relative flex flex-col space-y-3 overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-white text-xs">
+            <div className="flex items-center justify-between pb-2 border-b border-[var(--panel-border)] text-[var(--text-primary)] text-xs">
               <span className="font-bold truncate max-w-[180px] sm:max-w-md">{fileName || 'Proof Image Preview'}</span>
               <div className="flex items-center gap-2">
                 <a
@@ -152,7 +152,7 @@ export const ProofViewer: React.FC<ProofViewerProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsLightboxOpen(false)}
-                  className="p-1 text-slate-400 hover:text-white rounded-lg"
+                  className="p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded-lg"
                 >
                   <X className="w-5 h-5" />
                 </button>

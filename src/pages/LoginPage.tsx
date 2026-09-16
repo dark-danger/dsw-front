@@ -39,7 +39,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col justify-center items-center bg-[#040806] px-3.5 sm:px-4 py-16 sm:py-12 relative overflow-x-hidden">
+    <div className="min-h-screen w-full flex flex-col justify-center items-center bg-[var(--bg-primary)] px-3.5 sm:px-4 py-16 sm:py-12 relative overflow-x-hidden">
       {/* Ambient Background Glow */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] max-w-[90vw] h-[450px] bg-gradient-to-tr from-[#0e8a6e]/25 via-emerald-600/15 to-transparent rounded-full blur-[140px] pointer-events-none" />
 
@@ -56,31 +56,31 @@ export const LoginPage: React.FC = () => {
         <ThemeToggle />
       </div>
 
-      <div className="w-full max-w-md glass-panel p-5 sm:p-8 relative z-10 shadow-2xl border border-white/10 space-y-5 sm:space-y-6 mt-6 sm:mt-0">
+      <div className="w-full max-w-md glass-panel p-5 sm:p-8 relative z-10 shadow-2xl border border-[var(--panel-border)] space-y-5 sm:space-y-6 mt-6 sm:mt-0">
         
         {/* Portal Header */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-2xl bg-black/80 border border-emerald-500/30 mx-auto flex items-center justify-center shadow-lg mb-1">
-            <LogIn className="w-7 h-7 text-emerald-400" />
+          <div className="w-14 h-14 rounded-2xl bg-[var(--card-bg-to)] border border-emerald-500/30 mx-auto flex items-center justify-center shadow-lg mb-1">
+            <LogIn className="w-7 h-7 text-emerald-500" />
           </div>
-          <span className="inline-block px-3 py-0.5 text-[10px] uppercase font-bold tracking-widest rounded-full border bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
+          <span className="inline-block px-3 py-0.5 text-[10px] uppercase font-bold tracking-widest rounded-full border bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
             Geeta University DSW Portal
           </span>
-          <h2 className="text-2xl font-extrabold text-white tracking-tight font-display">Login Here</h2>
-          <p className="text-xs text-slate-300 font-medium">Enter your credentials to access your DSW workstation</p>
+          <h2 className="text-2xl font-extrabold text-[var(--text-primary)] tracking-tight font-display">Login Here</h2>
+          <p className="text-xs text-[var(--text-secondary)] font-medium">Enter your credentials to access your DSW workstation</p>
         </div>
 
         {error && (
-          <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 text-xs font-medium text-center">
+          <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-600 dark:text-rose-400 text-xs font-medium text-center">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Email Address</label>
+            <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1.5">Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+              <Mail className="w-4 h-4 text-[var(--text-muted)] absolute left-3 top-3" />
               <input
                 type="email"
                 required
@@ -93,9 +93,9 @@ export const LoginPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Password</label>
+            <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1.5">Password</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+              <Lock className="w-4 h-4 text-[var(--text-muted)] absolute left-3 top-3" />
               <input
                 type="password"
                 required
@@ -118,9 +118,9 @@ export const LoginPage: React.FC = () => {
         </form>
 
         {/* Footer info */}
-        <div className="pt-4 border-t border-white/10 text-center space-y-1">
-          <div className="text-[11px] text-slate-400 flex items-center justify-center gap-1.5 font-medium">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Geeta University — Dean of Student Welfare
+        <div className="pt-4 border-t border-[var(--panel-border)] text-center space-y-1">
+          <div className="text-[11px] text-[var(--text-muted)] flex items-center justify-center gap-1.5 font-medium">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Geeta University — Dean of Student Welfare
           </div>
         </div>
       </div>

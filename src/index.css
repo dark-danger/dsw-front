@@ -282,38 +282,47 @@
 .btn-crimson,
 .btn-crimson *,
 .badge-white-text,
-.badge-white-text * {
+.badge-white-text *,
+[data-theme="light"] [class*="bg-emerald-6"],
+[data-theme="light"] [class*="bg-emerald-6"] *,
+[data-theme="light"] [class*="bg-emerald-7"],
+[data-theme="light"] [class*="bg-emerald-7"] *,
+[data-theme="light"] [class*="bg-blue-6"],
+[data-theme="light"] [class*="bg-blue-6"] *,
+[data-theme="light"] [class*="bg-blue-7"],
+[data-theme="light"] [class*="bg-blue-7"] *,
+[data-theme="light"] [class*="bg-purple-6"],
+[data-theme="light"] [class*="bg-purple-6"] *,
+[data-theme="light"] [class*="bg-purple-7"],
+[data-theme="light"] [class*="bg-purple-7"] *,
+[data-theme="light"] [class*="bg-rose-6"],
+[data-theme="light"] [class*="bg-rose-6"] *,
+[data-theme="light"] [class*="bg-rose-7"],
+[data-theme="light"] [class*="bg-rose-7"] *,
+[data-theme="light"] [class*="bg-amber-6"],
+[data-theme="light"] [class*="bg-amber-6"] * {
   color: #ffffff !important;
 }
 
-:root.light .text-white:not(.btn-primary):not(.btn-crimson):not(.btn-primary *):not(.btn-crimson *):not(.text-white-keep),
-[data-theme="light"] .text-white:not(.btn-primary):not(.btn-crimson):not(.btn-primary *):not(.btn-crimson *):not(.text-white-keep) {
+:root.light .text-white:not(.btn-primary):not(.btn-crimson):not(.btn-primary *):not(.btn-crimson *):not(.text-white-keep):not([class*="bg-emerald-6"]):not([class*="bg-emerald-6"] *):not([class*="bg-blue-6"]):not([class*="bg-blue-6"] *):not([class*="bg-purple-6"]):not([class*="bg-purple-6"] *):not([class*="bg-rose-6"]):not([class*="bg-rose-6"] *):not([class*="bg-amber-6"]):not([class*="bg-amber-6"] *),
+[data-theme="light"] .text-white:not(.btn-primary):not(.btn-crimson):not(.btn-primary *):not(.btn-crimson *):not(.text-white-keep):not([class*="bg-emerald-6"]):not([class*="bg-emerald-6"] *):not([class*="bg-blue-6"]):not([class*="bg-blue-6"] *):not([class*="bg-purple-6"]):not([class*="bg-purple-6"] *):not([class*="bg-rose-6"]):not([class*="bg-rose-6"] *):not([class*="bg-amber-6"]):not([class*="bg-amber-6"] *) {
   color: #0a1410 !important;
 }
 
 :root.light .text-slate-100,
-[data-theme="light"] .text-slate-100 {
-  color: #0f172a !important;
-}
-
 :root.light .text-slate-200,
-[data-theme="light"] .text-slate-200 {
+:root.light .text-slate-300,
+[data-theme="light"] .text-slate-100,
+[data-theme="light"] .text-slate-200,
+[data-theme="light"] .text-slate-300 {
   color: #1e293b !important;
 }
 
-:root.light .text-slate-300,
-[data-theme="light"] .text-slate-300 {
-  color: #334155 !important;
-}
-
 :root.light .text-slate-400,
-[data-theme="light"] .text-slate-400 {
-  color: #475569 !important;
-}
-
 :root.light .text-slate-500,
+[data-theme="light"] .text-slate-400,
 [data-theme="light"] .text-slate-500 {
-  color: #64748b !important;
+  color: #475569 !important;
 }
 
 /* Table styling in Light Mode */
@@ -344,41 +353,40 @@
   background-color: rgba(14, 138, 110, 0.05) !important;
 }
 
-/* Backgrounds & Panels in Light Mode */
-:root.light .bg-black:not(.fixed),
-[data-theme="light"] .bg-black:not(.fixed) {
-  background-color: #ffffff !important;
-}
-
-:root.light .bg-slate-900,
-:root.light .bg-slate-800,
-:root.light .bg-slate-950,
-[data-theme="light"] .bg-slate-900,
-[data-theme="light"] .bg-slate-800,
-[data-theme="light"] .bg-slate-950 {
-  background-color: #f1f8f5 !important;
-}
-
-:root.light .bg-black\/80:not(.fixed),
-:root.light .bg-black\/90:not(.fixed),
-:root.light .bg-black\/95:not(.fixed),
-[data-theme="light"] .bg-black\/80:not(.fixed),
-[data-theme="light"] .bg-black\/90:not(.fixed),
-[data-theme="light"] .bg-black\/95:not(.fixed) {
-  background-color: #ffffff !important;
-}
-
-:root.light .bg-black\/40:not(.fixed),
-:root.light .bg-black\/60:not(.fixed),
-[data-theme="light"] .bg-black\/40:not(.fixed),
-[data-theme="light"] .bg-black\/60:not(.fixed) {
-  background-color: #f1f8f5 !important;
-}
-
-/* Semi-transparent modal backdrops */
+/* Semi-transparent modal and drawer backdrops remain dark translucent */
 :root.light .fixed.inset-0,
-[data-theme="light"] .fixed.inset-0 {
-  background-color: rgba(15, 23, 42, 0.6) !important;
+:root.light div[class*="fixed"][class*="inset-0"],
+[data-theme="light"] .fixed.inset-0,
+[data-theme="light"] div[class*="fixed"][class*="inset-0"] {
+  background-color: rgba(15, 23, 42, 0.65) !important;
+}
+
+/* Backgrounds & Panels in Light Mode (Covering all slate, black, zinc, hex variants) */
+:root.light [class*="bg-slate-950"]:not(.fixed):not([class*="fixed"]),
+[data-theme="light"] [class*="bg-slate-950"]:not(.fixed):not([class*="fixed"]) {
+  background-color: #f8fafc !important;
+}
+
+:root.light [class*="bg-slate-900"]:not(.fixed):not([class*="fixed"]),
+[data-theme="light"] [class*="bg-slate-900"]:not(.fixed):not([class*="fixed"]) {
+  background-color: #ffffff !important;
+}
+
+:root.light [class*="bg-slate-800"]:not(.fixed):not([class*="fixed"]),
+[data-theme="light"] [class*="bg-slate-800"]:not(.fixed):not([class*="fixed"]) {
+  background-color: #f1f8f5 !important;
+}
+
+:root.light [class*="bg-black"]:not(.fixed):not([class*="fixed"]),
+[data-theme="light"] [class*="bg-black"]:not(.fixed):not([class*="fixed"]) {
+  background-color: #ffffff !important;
+}
+
+:root.light [class*="bg-zinc-9"]:not(.fixed):not([class*="fixed"]),
+[data-theme="light"] [class*="bg-zinc-9"]:not(.fixed):not([class*="fixed"]),
+:root.light [class*="bg-gray-9"]:not(.fixed):not([class*="fixed"]),
+[data-theme="light"] [class*="bg-gray-9"]:not(.fixed):not([class*="fixed"]) {
+  background-color: #ffffff !important;
 }
 
 :root.light .bg-\[\#040806\],
@@ -389,7 +397,7 @@
 [data-theme="light"] .bg-\[\#040806\]\/85,
 [data-theme="light"] .bg-\[\#040806\]\/90,
 [data-theme="light"] .bg-\[\#040806\]\/95 {
-  background-color: #ffffff !important;
+  background-color: #f6faf8 !important;
 }
 
 :root.light .glass-panel,
@@ -418,27 +426,19 @@
   color: #94a3b8 !important;
 }
 
-:root.light .border-white\/10,
-:root.light .border-white\/20,
-:root.light .border-white\/5,
-:root.light .border-slate-800,
-:root.light .border-slate-700,
-[data-theme="light"] .border-white\/10,
-[data-theme="light"] .border-white\/20,
-[data-theme="light"] .border-white\/5,
-[data-theme="light"] .border-slate-800,
-[data-theme="light"] .border-slate-700 {
+:root.light [class*="border-white"],
+[data-theme="light"] [class*="border-white"],
+:root.light [class*="border-slate-8"],
+[data-theme="light"] [class*="border-slate-8"],
+:root.light [class*="border-slate-7"],
+[data-theme="light"] [class*="border-slate-7"] {
   border-color: rgba(14, 138, 110, 0.18) !important;
 }
 
-:root.light .divide-white\/5,
-:root.light .divide-white\/10,
-:root.light .divide-slate-800,
-:root.light .divide-slate-800\/60,
-[data-theme="light"] .divide-white\/5,
-[data-theme="light"] .divide-white\/10,
-[data-theme="light"] .divide-slate-800,
-[data-theme="light"] .divide-slate-800\/60 {
+:root.light [class*="divide-white"],
+[data-theme="light"] [class*="divide-white"],
+:root.light [class*="divide-slate-8"],
+[data-theme="light"] [class*="divide-slate-8"] {
   border-color: rgba(14, 138, 110, 0.12) !important;
 }
 
