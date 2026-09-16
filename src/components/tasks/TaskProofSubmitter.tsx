@@ -1,15 +1,26 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   UploadCloud, 
   ExternalLink, 
   CheckCircle2, 
   AlertCircle, 
   FileText, 
+  Image as ImageIcon,
   X, 
   Loader2, 
   FolderGit2,
-  Paperclip
+  Paperclip,
+  Plus,
+  Trash2,
+  FileSpreadsheet,
+  Files
 } from 'lucide-react';
+
+export interface UploadedFileItem {
+  url: string;
+  name: string;
+  size?: number;
+}
 
 interface TaskProofSubmitterProps {
   valueUrl: string;
@@ -21,6 +32,52 @@ interface TaskProofSubmitterProps {
 }
 
 const DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvqiDv2QH_fdSZptr0-RFqm99Grwe4vVpYzCVPhd6qLWH8-qs4-GM0lRKZbp4wSpN6/exec";
+const DEFAULT_DRIVE_FOLDER_ID = "1cljBSpx8NlB24yN_7N0jH7kPBvYY6QHZ";
+const DEFAULT_DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1cljBSpx8NlB24yN_7N0jH7kPBvYY6QHZ";
+
+export const parseUploadedFiles = (valueUrl?: string, valueName?: string): UploadedFileItem[] => {
+  if (!valueUrl || !valueUrl.trim()) return [];
+  const trimmed = valueUrl.trim();
+
+  // 1. JSON Array format
+  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) {
+        return parsed
+          .filter(item => item && (item.url || typeof item === 'string'))
+          .map((item, idx) => {
+            if (typeof item === 'string') {
+              return { url: item, name: `Attachment ${idx + 1}` };
+            }
+            return {
+              url: item.url || '',
+              name: item.name || item.fileName || `Attachment ${idx + 1}`,
+              size: item.size
+            };
+          });
+      }
+    } catch {
+      // fallback to delimiter parsing
+    }
+  }
+
+  // 2. Comma or newline delimited URLs
+  if (trimmed.includes(',') || trimmed.includes('\n')) {
+    const urls = trimmed.split(/[,\n]+/).map(u => u.trim()).filter(Boolean);
+    const names = valueName ? valueName.split(/[,\n]+/).map(n => n.trim()).filter(Boolean) : [];
+    return urls.map((url, idx) => ({
+      url,
+      name: names[idx] || `Attachment ${idx + 1}`
+    }));
+  }
+
+  // 3. Single URL
+  return [{
+    url: trimmed,
+    name: valueName?.trim() || 'Uploaded Submission File'
+  }];
+};
 
 export const TaskProofSubmitter: React.FC<TaskProofSubmitterProps> = ({
   valueUrl,
@@ -30,6 +87,7 @@ export const TaskProofSubmitter: React.FC<TaskProofSubmitterProps> = ({
   taskName = 'Assigned Duty',
   disabled = false
 }) => {
+  const [files, setFiles] = useState<UploadedFileItem[]>(() => parseUploadedFiles(valueUrl, valueName));
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState('');
@@ -40,6 +98,34 @@ export const TaskProofSubmitter: React.FC<TaskProofSubmitterProps> = ({
   const appsScriptUrl = 
     (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL as string) || 
     DEFAULT_APPS_SCRIPT_URL;
+
+  const targetFolderId = 
+    (import.meta.env.VITE_GOOGLE_DRIVE_FOLDER_ID as string) || 
+    DEFAULT_DRIVE_FOLDER_ID;
+
+  const targetFolderUrl = 
+    (import.meta.env.VITE_GOOGLE_DRIVE_FOLDER_URL as string) || 
+    DEFAULT_DRIVE_FOLDER_URL;
+
+  // Keep internal files in sync with incoming props
+  useEffect(() => {
+    const parsed = parseUploadedFiles(valueUrl, valueName);
+    setFiles(parsed);
+  }, [valueUrl, valueName]);
+
+  const notifyChange = (updatedFiles: UploadedFileItem[]) => {
+    setFiles(updatedFiles);
+    if (updatedFiles.length === 0) {
+      onChange('', '');
+    } else if (updatedFiles.length === 1) {
+      onChange(updatedFiles[0].url, updatedFiles[0].name);
+    } else {
+      onChange(
+        JSON.stringify(updatedFiles.map(f => ({ url: f.url, name: f.name, size: f.size }))),
+        updatedFiles.map(f => f.name).join(', ')
+      );
+    }
+  };
 
   // Convert File to base64 string without data prefix
   const fileToBase64 = (file: File): Promise<string> => {
@@ -55,68 +141,92 @@ export const TaskProofSubmitter: React.FC<TaskProofSubmitterProps> = ({
     });
   };
 
-  const handleFileUpload = async (file: File) => {
-    if (!file || disabled || uploading) return;
+  const uploadSingleFile = async (file: File): Promise<UploadedFileItem> => {
+    const base64Data = await fileToBase64(file);
+
+    const payload = {
+      facultyName: facultyName.trim() || 'Faculty Member',
+      taskName: taskName.trim() || 'Assigned Duty',
+      fileName: file.name,
+      mimeType: file.type || 'application/octet-stream',
+      fileData: base64Data,
+      folderId: targetFolderId,
+      driveFolderId: targetFolderId,
+      targetFolderId: targetFolderId,
+      parentFolderId: targetFolderId
+    };
+
+    const response = await fetch(appsScriptUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.message || `Upload failed for ${file.name}`);
+    }
+
+    return {
+      url: result.fileUrl || result.url || result.link,
+      name: result.fileName || file.name,
+      size: file.size
+    };
+  };
+
+  const handleMultipleFilesUpload = async (incomingFiles: FileList | File[]) => {
+    const fileList = Array.from(incomingFiles);
+    if (fileList.length === 0 || disabled || uploading) return;
 
     setUploading(true);
     setErrorMessage('');
-    setUploadStatus('Reading file...');
-    setUploadProgress(20);
+    setUploadProgress(10);
+    setUploadStatus(`Preparing ${fileList.length} file${fileList.length > 1 ? 's' : ''}...`);
+
+    const successfullyUploaded: UploadedFileItem[] = [];
+    const errors: string[] = [];
 
     try {
-      const base64Data = await fileToBase64(file);
+      for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i];
+        const stepProgress = Math.round(15 + ((i / fileList.length) * 80));
+        setUploadProgress(stepProgress);
+        setUploadStatus(`Uploading (${i + 1}/${fileList.length}): ${file.name}...`);
 
-      setUploadProgress(45);
-      setUploadStatus(`Uploading to Google Drive (${facultyName} / ${taskName})...`);
-
-      const payload = {
-        facultyName: facultyName.trim() || 'Faculty Member',
-        taskName: taskName.trim() || 'Assigned Duty',
-        fileName: file.name,
-        mimeType: file.type || 'application/octet-stream',
-        fileData: base64Data
-      };
-
-      // Progress animation ticker
-      const timer = setInterval(() => {
-        setUploadProgress(prev => (prev < 90 ? prev + 10 : prev));
-      }, 300);
-
-      // Send to Google Apps Script Web App (using text/plain to bypass CORS preflight)
-      const response = await fetch(appsScriptUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      clearInterval(timer);
-      setUploadProgress(95);
-      setUploadStatus('Processing Drive response...');
-
-      const result = await response.json();
-
-      if (!result.success) {
-        throw new Error(result.message || 'Google Drive upload returned unsuccessful status');
+        try {
+          const item = await uploadSingleFile(file);
+          successfullyUploaded.push(item);
+        } catch (fileErr: any) {
+          console.error(`Error uploading ${file.name}:`, fileErr);
+          errors.push(`${file.name}: ${fileErr.message || 'Upload failed'}`);
+        }
       }
 
       setUploadProgress(100);
-      setUploadStatus('Uploaded successfully!');
+      setUploadStatus('Upload finished!');
 
+      if (successfullyUploaded.length > 0) {
+        const nextFiles = [...files, ...successfullyUploaded];
+        notifyChange(nextFiles);
+      }
+
+      if (errors.length > 0) {
+        setErrorMessage(`Some files failed: ${errors.join('; ')}`);
+      }
+
+    } catch (err: any) {
+      console.error('Batch Upload Error:', err);
+      setErrorMessage(err.message || 'Failed to upload files to Google Drive.');
+    } finally {
       setTimeout(() => {
-        onChange(result.fileUrl, result.fileName || file.name);
         setUploading(false);
         setUploadProgress(0);
         setUploadStatus('');
-      }, 300);
-
-    } catch (err: any) {
-      console.error('Google Drive Upload Failed:', err);
-      setErrorMessage(err.message || 'Failed to upload file to Google Drive. Please try again.');
-      setUploading(false);
-      setUploadProgress(0);
-      setUploadStatus('');
+        if (fileInputRef.current) fileInputRef.current.value = '';
+      }, 400);
     }
   };
 
@@ -124,138 +234,175 @@ export const TaskProofSubmitter: React.FC<TaskProofSubmitterProps> = ({
     e.preventDefault();
     setDragActive(false);
     if (disabled || uploading) return;
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFileUpload(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleMultipleFilesUpload(e.dataTransfer.files);
     }
   };
 
-  const handleRemove = () => {
-    onChange('', '');
-    setErrorMessage('');
-    if (fileInputRef.current) fileInputRef.current.value = '';
+  const handleRemoveFile = (indexToRemove: number) => {
+    if (disabled || uploading) return;
+    const nextFiles = files.filter((_, idx) => idx !== indexToRemove);
+    notifyChange(nextFiles);
+  };
+
+  const getFileIcon = (fileName: string, url: string) => {
+    const isImg = /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(fileName) || url.includes('photo');
+    const isSheet = /\.(xls|xlsx|csv)$/i.test(fileName);
+    if (isImg) return <ImageIcon className="w-4 h-4 text-emerald-500 shrink-0" />;
+    if (isSheet) return <FileSpreadsheet className="w-4 h-4 text-teal-500 shrink-0" />;
+    return <FileText className="w-4 h-4 text-blue-500 shrink-0" />;
   };
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-        <label className="block text-xs font-bold text-[var(--text-primary)]">
-          Proof Attachment (Direct Google Drive Upload)
+      {/* Header Info Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+        <label className="block text-xs font-bold text-[var(--text-primary)] flex items-center gap-1.5">
+          <Files className="w-4 h-4 text-blue-500" />
+          Proof Attachments (Multi-File Google Drive Upload)
         </label>
-        <span className="text-[11px] text-[var(--text-muted)] flex items-center gap-1">
-          <FolderGit2 className="w-3 h-3 text-blue-500 shrink-0" />
-          Auto-saves to Drive: <span className="font-semibold text-blue-600 dark:text-blue-400">{facultyName}</span>
-        </span>
+        <a
+          href={targetFolderUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="text-[11px] text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 font-medium truncate"
+          title={`Upload folder: ${targetFolderId}`}
+        >
+          <FolderGit2 className="w-3.5 h-3.5 shrink-0" />
+          <span>Drive Folder: <strong>DSW Tasks Upload</strong></span>
+          <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+        </a>
       </div>
 
-      {/* 1. UPLOADED FILE SUCCESS STATE */}
-      {valueUrl && (
-        <div className="p-3.5 bg-gradient-to-r from-blue-500/10 via-emerald-500/10 to-blue-500/10 border border-blue-500/30 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in duration-150">
-          <div className="flex items-center gap-3 overflow-hidden min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shrink-0 shadow-md font-bold text-xs">
-              <FolderGit2 className="w-5 h-5" />
-            </div>
-            <div className="overflow-hidden min-w-0">
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-xs text-[var(--text-primary)] truncate">
-                  {valueName || 'Uploaded Submission File'}
-                </span>
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-              </div>
-              <p className="text-[10px] text-[var(--text-muted)] truncate">
-                Saved in Google Drive: <span className="font-mono text-blue-600 dark:text-blue-400">Faculty Submissions / {facultyName} / {taskName}</span>
-              </p>
-            </div>
+      {/* 1. LIST OF ATTACHED FILES */}
+      {files.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-[11px] font-bold text-[var(--text-secondary)] px-1">
+            <span>Uploaded Files ({files.length}):</span>
+            <span className="text-[10px] text-[var(--text-muted)] font-mono">
+              Auto-saved to Google Drive
+            </span>
           </div>
 
-          <div className="flex items-center justify-end gap-2 shrink-0 w-full sm:w-auto">
-            <a
-              href={valueUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-md transition-all active:scale-95 flex-1 sm:flex-none"
-            >
-              <ExternalLink className="w-3.5 h-3.5" /> View Submission / Open File ↗
-            </a>
-            <button
-              type="button"
-              onClick={handleRemove}
-              disabled={disabled}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-all"
-              title="Replace / Remove file"
-            >
-              <X className="w-4 h-4" />
-            </button>
+          <div className="grid grid-cols-1 gap-2">
+            {files.map((file, idx) => (
+              <div
+                key={idx}
+                className="p-3 bg-gradient-to-r from-blue-500/10 via-emerald-500/10 to-blue-500/10 border border-blue-500/30 rounded-2xl flex items-center justify-between gap-3 animate-in fade-in duration-150"
+              >
+                <div className="flex items-center gap-2.5 overflow-hidden min-w-0">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                    {getFileIcon(file.name, file.url)}
+                  </div>
+                  <div className="overflow-hidden min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-xs text-[var(--text-primary)] truncate">
+                        {file.name}
+                      </span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    </div>
+                    <p className="text-[10px] text-[var(--text-muted)] truncate font-mono">
+                      {file.url}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <a
+                    href={file.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-[11px] font-bold shadow-xs transition-all active:scale-95"
+                  >
+                    <ExternalLink className="w-3 h-3" /> View ↗
+                  </a>
+                  {!disabled && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveFile(idx)}
+                      disabled={uploading}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-all"
+                      title={`Remove ${file.name}`}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
 
-      {/* 2. FILE UPLOAD DROPZONE / BUTTON */}
-      {!valueUrl && (
-        <div
-          onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
-          onDragLeave={() => setDragActive(false)}
-          onDrop={handleDrop}
-          onClick={() => !uploading && !disabled && fileInputRef.current?.click()}
-          className={`p-6 border-2 border-dashed rounded-2xl text-center transition-all ${
-            disabled ? 'opacity-60 cursor-not-allowed border-slate-300' :
-            dragActive
-              ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-950/30 cursor-pointer'
-              : 'border-[var(--panel-border)] bg-[var(--card-bg-to)] hover:border-blue-400 cursor-pointer'
-          }`}
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            disabled={disabled || uploading}
-            onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0])}
-            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.txt"
-            className="hidden"
-          />
+      {/* 2. MULTI-FILE DROPZONE / UPLOADER BUTTON */}
+      <div
+        onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+        onDragLeave={() => setDragActive(false)}
+        onDrop={handleDrop}
+        onClick={() => !uploading && !disabled && fileInputRef.current?.click()}
+        className={`border-2 border-dashed rounded-2xl text-center transition-all ${
+          files.length > 0 ? 'p-4' : 'p-6'
+        } ${
+          disabled ? 'opacity-60 cursor-not-allowed border-slate-300' :
+          dragActive
+            ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-950/30 cursor-pointer'
+            : 'border-[var(--panel-border)] bg-[var(--card-bg-to)] hover:border-blue-400 cursor-pointer'
+        }`}
+      >
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          disabled={disabled || uploading}
+          onChange={(e) => e.target.files && handleMultipleFilesUpload(e.target.files)}
+          accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.txt"
+          className="hidden"
+        />
 
-          {uploading ? (
-            <div className="space-y-3 py-2">
-              <div className="flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400 font-bold text-xs">
-                <Loader2 className="w-5 h-5 animate-spin" />
-                <span>{uploadStatus || 'Uploading to Google Drive...'} ({uploadProgress}%)</span>
-              </div>
-              
-              {/* Progress bar */}
-              <div className="w-full max-w-xs mx-auto bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-blue-600 rounded-full transition-all duration-200"
-                  style={{ width: `${uploadProgress}%` }}
-                />
-              </div>
-              <p className="text-[10px] text-[var(--text-muted)]">
-                Creating folder structure & uploading to your Google Drive...
+        {uploading ? (
+          <div className="space-y-3 py-2">
+            <div className="flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400 font-bold text-xs">
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>{uploadStatus || 'Uploading files to Google Drive...'} ({uploadProgress}%)</span>
+            </div>
+            
+            {/* Progress bar */}
+            <div className="w-full max-w-xs mx-auto bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-blue-600 rounded-full transition-all duration-200"
+                style={{ width: `${uploadProgress}%` }}
+              />
+            </div>
+            <p className="text-[10px] text-[var(--text-muted)]">
+              Uploading to Google Drive folder: <span className="font-mono">{targetFolderId}</span>
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <div className="w-10 h-10 mx-auto rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-inner">
+              {files.length > 0 ? <Plus className="w-5 h-5" /> : <UploadCloud className="w-5 h-5" />}
+            </div>
+            <div>
+              <p className="text-xs font-bold text-[var(--text-primary)]">
+                {files.length > 0 ? '+ Add More Proof Files' : 'Upload Proof Files (Multiple Files Allowed)'}
+              </p>
+              <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
+                Drag & drop or select multiple PDFs, Images, Word documents, Excel, PPT or ZIPs
               </p>
             </div>
-          ) : (
-            <div className="space-y-2.5">
-              <div className="w-11 h-11 mx-auto rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-inner">
-                <UploadCloud className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-[var(--text-primary)]">
-                  Choose File or Drag & Drop to Upload
-                </p>
-                <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-                  PDF, Images, Word Documents, Excel, PPT or ZIP
-                </p>
-              </div>
-              <div className="pt-1">
-                <button
-                  type="button"
-                  disabled={disabled}
-                  className="btn-secondary text-xs py-1.5 px-3.5 inline-flex items-center gap-1.5 font-bold pointer-events-none"
-                >
-                  <Paperclip className="w-3.5 h-3.5" /> Choose File
-                </button>
-              </div>
+            <div className="pt-1">
+              <button
+                type="button"
+                disabled={disabled}
+                className="btn-secondary text-xs py-1.5 px-3.5 inline-flex items-center gap-1.5 font-bold pointer-events-none"
+              >
+                <Paperclip className="w-3.5 h-3.5" />
+                {files.length > 0 ? 'Select More Files' : 'Choose Files (Multiple)'}
+              </button>
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
 
       {/* Error Alert */}
       {errorMessage && (
