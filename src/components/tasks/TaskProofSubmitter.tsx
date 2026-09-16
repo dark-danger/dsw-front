@@ -122,9 +122,12 @@ export const TaskProofSubmitter: React.FC<TaskProofSubmitterProps> = ({
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const appsScriptUrl = 
-    (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL as string) || 
-    DEFAULT_APPS_SCRIPT_URL;
+  const OLD_APPS_SCRIPT_PREFIX = "AKfycbxvqiDv2QH";
+
+  const rawEnvUrl = (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL as string) || '';
+  const appsScriptUrl = (!rawEnvUrl || rawEnvUrl.includes(OLD_APPS_SCRIPT_PREFIX))
+    ? DEFAULT_APPS_SCRIPT_URL
+    : rawEnvUrl;
 
   const targetFolderId = 
     (import.meta.env.VITE_GOOGLE_DRIVE_FOLDER_ID as string) || 
