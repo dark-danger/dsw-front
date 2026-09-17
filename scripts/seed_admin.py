@@ -21,7 +21,7 @@ async def seed_database():
     async with AsyncSessionLocal() as session:
         # 1. Super Admin
         admin = User(
-            name="Dr. Rajesh Sharma (Dean)",
+            name="Dr. Rekha Narang (Dean)",
             email="admin@geeta.edu.in",
             phone="+91 98765 43210",
             role=UserRole.super_admin,
