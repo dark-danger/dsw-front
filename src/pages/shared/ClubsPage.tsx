@@ -7,20 +7,22 @@ import { ImproveEnglishButton } from '../../components/common/ImproveEnglishButt
 import {
   Users, Plus, Trash2, CheckCircle2, Clock, XCircle, Search,
   Award, Eye, FileText, Download, Printer, Shield, ChevronRight,
-  Send, UserPlus, Sparkles, FolderPlus, Tag, Phone, Mail, GraduationCap
+  Send, UserPlus, Sparkles, FolderPlus, Tag, Phone, Mail, GraduationCap,
+  Key, Lock, Star, Info
 } from 'lucide-react';
 
 interface ClubMember {
   id?: string;
   student_id?: number;
   name: string;
-  email: string;
+  email?: string;
   roll_number?: string;
   branch?: string;
   semester?: string;
   phone?: string;
   role: string;
   is_core?: boolean;
+  has_portal_account?: boolean;
 }
 
 interface ClubItem {
@@ -102,13 +104,14 @@ export const ClubsPage: React.FC = () => {
   const [newRoleInput, setNewRoleInput] = useState("");
 
   // Add Member Form State
+  const [memberFormMode, setMemberFormMode] = useState<'president' | 'member'>('president');
   const [memberName, setMemberName] = useState("");
   const [memberEmail, setMemberEmail] = useState("");
   const [memberRoll, setMemberRoll] = useState("");
   const [memberBranch, setMemberBranch] = useState("Computer Science & Engineering");
   const [memberSemester, setMemberSemester] = useState("5th Sem");
   const [memberPhone, setMemberPhone] = useState("");
-  const [memberRole, setMemberRole] = useState("President");
+  const [memberRole, setMemberRole] = useState("Vice President");
   const [memberPassword, setMemberPassword] = useState("President@123");
 
   // Create Task Form State
@@ -213,17 +216,25 @@ export const ClubsPage: React.FC = () => {
     e.preventDefault();
     if (!selectedClubForMembers) return;
 
+    const isPresident = memberFormMode === 'president';
+    const assignedRole = isPresident ? 'President' : memberRole;
+
+    if (isPresident) {
+      if (!memberEmail.trim()) return alert("President email address is required for portal login!");
+      if (!memberPassword.trim()) return alert("Please set a portal login password for the President!");
+    }
+
     try {
       const updated = await apiRequest<ClubItem>(`/clubs/${selectedClubForMembers.id}/members`, 'POST', {
-        name: memberName,
-        email: memberEmail,
-        roll_number: memberRoll,
-        branch: memberBranch,
-        semester: memberSemester,
-        phone: memberPhone,
-        role: memberRole,
-        is_core: memberRole !== "General Member",
-        password: memberPassword || "President@123"
+        name: memberName.trim(),
+        email: memberEmail.trim(),
+        roll_number: memberRoll.trim(),
+        branch: memberBranch.trim(),
+        semester: memberSemester.trim(),
+        phone: memberPhone.trim(),
+        role: assignedRole,
+        is_core: assignedRole !== "General Member",
+        password: isPresident ? (memberPassword.trim() || "President@123") : null
       });
 
       setSelectedClubForMembers(updated);
@@ -233,7 +244,12 @@ export const ClubsPage: React.FC = () => {
       setMemberRoll("");
       setMemberPhone("");
       setMemberPassword("President@123");
-      alert(`Student "${memberName}" added to club! Login credentials created: Email: ${memberEmail} / Password: ${memberPassword || "President@123"}`);
+
+      if (isPresident) {
+        alert(`👑 President "${memberName}" appointed successfully!\nPortal Login Account created:\n• Email: ${memberEmail}\n• Password: ${memberPassword || "President@123"}`);
+      } else {
+        alert(`📝 Student "${memberName}" registered as "${assignedRole}" in ${selectedClubForMembers.name} roster!\n(No portal login account was created for this role)`);
+      }
     } catch (err: any) {
       alert(err.message || "Failed to add student member");
     }
@@ -657,121 +673,203 @@ export const ClubsPage: React.FC = () => {
               </button>
             </div>
 
-            {/* Add Student Member Form (Faculty or Admin) */}
+            {/* Add Student Member / Appoint President Form (Faculty or Admin) */}
             {(isAdmin || (isFaculty && selectedClubForMembers.faculty_id === user?.id)) && (
-              <form onSubmit={handleAddMember} className="p-4 bg-[var(--card-bg-to)] rounded-2xl border border-[var(--panel-border)] space-y-3">
-                <div className="font-bold text-xs text-[var(--text-primary)] flex items-center gap-1.5">
-                  <UserPlus className="w-4 h-4 text-emerald-500" /> Add Student to Club
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  <div>
-                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Student Name *</label>
-                    <input
-                      required
-                      type="text"
-                      value={memberName}
-                      onChange={e => setMemberName(e.target.value)}
-                      placeholder="e.g. Rahul Verma"
-                      className="glass-input text-xs"
-                    />
+              <div className="p-4 bg-[var(--card-bg-to)] rounded-2xl border border-[var(--panel-border)] space-y-4">
+                {/* Form Mode Selector */}
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--panel-border)] pb-3">
+                  <div className="font-bold text-xs text-[var(--text-primary)] flex items-center gap-1.5">
+                    <UserPlus className="w-4 h-4 text-emerald-500" /> Appoint Leadership & Register Members
                   </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Roll Number *</label>
-                    <input
-                      required
-                      type="text"
-                      value={memberRoll}
-                      onChange={e => setMemberRoll(e.target.value)}
-                      placeholder="GU2026102"
-                      className="glass-input text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Email Address *</label>
-                    <input
-                      required
-                      type="email"
-                      value={memberEmail}
-                      onChange={e => setMemberEmail(e.target.value)}
-                      placeholder="rahul@geeta.edu.in"
-                      className="glass-input text-xs"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  <div>
-                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Department / Branch</label>
-                    <input
-                      type="text"
-                      value={memberBranch}
-                      onChange={e => setMemberBranch(e.target.value)}
-                      placeholder="B.Tech CSE"
-                      className="glass-input text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Semester</label>
-                    <input
-                      type="text"
-                      value={memberSemester}
-                      onChange={e => setMemberSemester(e.target.value)}
-                      placeholder="5th Sem"
-                      className="glass-input text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Contact Phone</label>
-                    <input
-                      type="tel"
-                      value={memberPhone}
-                      onChange={e => setMemberPhone(e.target.value)}
-                      placeholder="+91 98765 43210"
-                      className="glass-input text-xs"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                  <div>
-                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Assigned Role *</label>
-                    <select
-                      value={memberRole}
-                      onChange={e => setMemberRole(e.target.value)}
-                      className="glass-input text-xs"
+                  <div className="flex items-center gap-1.5 p-1 bg-[var(--panel-bg)] rounded-xl border border-[var(--panel-border)]">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMemberFormMode('president');
+                        setMemberRole('President');
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                        memberFormMode === 'president'
+                          ? 'bg-amber-500 text-slate-950 shadow-xs'
+                          : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                      }`}
                     >
-                      {selectedClubForMembers.roles_schema && selectedClubForMembers.roles_schema.map(r => (
-                        <option key={r} value={r}>{r}</option>
-                      ))}
-                      <option value="General Member">General Member</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
-                      Portal Login Password (Auto-Provisioned)
-                    </label>
-                    <input
-                      type="text"
-                      value={memberPassword}
-                      onChange={e => setMemberPassword(e.target.value)}
-                      placeholder="President@123"
-                      className="glass-input text-xs font-mono"
-                    />
+                      <Star className="w-3.5 h-3.5 fill-current" /> Appoint President (Portal Login)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMemberFormMode('member');
+                        setMemberRole('Vice President');
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                        memberFormMode === 'member'
+                          ? 'bg-emerald-600 text-white shadow-xs'
+                          : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                      }`}
+                    >
+                      <GraduationCap className="w-3.5 h-3.5" /> Register Student (No Login Account)
+                    </button>
                   </div>
                 </div>
 
-                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between gap-3 text-[11px] text-emerald-700 dark:text-emerald-300">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-emerald-500 shrink-0" />
-                    <span>A Student Portal account will be automatically created with this email and password.</span>
+                <form onSubmit={handleAddMember} className="space-y-3">
+                  {/* President Mode Notice */}
+                  {memberFormMode === 'president' ? (
+                    <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-700 dark:text-amber-300 flex items-center gap-2">
+                      <Key className="w-4 h-4 text-amber-500 shrink-0" />
+                      <span><strong>President Portal Account:</strong> A secure Student Portal login account will be provisioned with this email and password for the President.</span>
+                    </div>
+                  ) : (
+                    <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-800 dark:text-emerald-200 flex items-center gap-2">
+                      <Info className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <span><strong>Roster Registration Only:</strong> Academic details will be saved to the club roster without generating a user login account or password.</span>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                        {memberFormMode === 'president' ? 'President Name *' : 'Student Full Name *'}
+                      </label>
+                      <input
+                        required
+                        type="text"
+                        value={memberName}
+                        onChange={e => setMemberName(e.target.value)}
+                        placeholder="e.g. Rahul Verma"
+                        className="glass-input text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Roll Number *</label>
+                      <input
+                        required
+                        type="text"
+                        value={memberRoll}
+                        onChange={e => setMemberRoll(e.target.value)}
+                        placeholder="GU2026102"
+                        className="glass-input text-xs font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">
+                        {memberFormMode === 'president' ? 'Portal Login Email *' : 'Email Address *'}
+                      </label>
+                      <input
+                        required
+                        type="email"
+                        value={memberEmail}
+                        onChange={e => setMemberEmail(e.target.value)}
+                        placeholder="rahul@geeta.edu.in"
+                        className="glass-input text-xs font-mono"
+                      />
+                    </div>
                   </div>
-                  <button type="submit" className="btn-primary text-xs py-1.5 px-4 shrink-0 font-bold">
-                    <UserPlus className="w-3.5 h-3.5" /> Save Student & Provision Login
-                  </button>
-                </div>
-              </form>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Department / Branch</label>
+                      <input
+                        type="text"
+                        value={memberBranch}
+                        onChange={e => setMemberBranch(e.target.value)}
+                        placeholder="B.Tech CSE"
+                        className="glass-input text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Semester</label>
+                      <input
+                        type="text"
+                        value={memberSemester}
+                        onChange={e => setMemberSemester(e.target.value)}
+                        placeholder="5th Sem"
+                        className="glass-input text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Contact Phone</label>
+                      <input
+                        type="tel"
+                        value={memberPhone}
+                        onChange={e => setMemberPhone(e.target.value)}
+                        placeholder="+91 98765 43210"
+                        className="glass-input text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  {memberFormMode === 'president' ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                      <div>
+                        <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Assigned Role</label>
+                        <input
+                          type="text"
+                          disabled
+                          value="President"
+                          className="glass-input text-xs font-bold text-amber-700 dark:text-amber-300 opacity-90 cursor-not-allowed bg-amber-500/5"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-semibold text-amber-700 dark:text-amber-300 mb-1 flex items-center gap-1">
+                          <Lock className="w-3 h-3" /> Portal Login Password *
+                        </label>
+                        <input
+                          required
+                          type="text"
+                          value={memberPassword}
+                          onChange={e => setMemberPassword(e.target.value)}
+                          placeholder="President@123"
+                          className="glass-input text-xs font-mono border-amber-500/40"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="pt-1">
+                      <label className="block text-[11px] font-semibold text-[var(--text-secondary)] mb-1">Assigned Committee Role *</label>
+                      <select
+                        value={memberRole}
+                        onChange={e => setMemberRole(e.target.value)}
+                        className="glass-input text-xs font-semibold"
+                      >
+                        {selectedClubForMembers.roles_schema && selectedClubForMembers.roles_schema
+                          .filter(r => r !== 'President')
+                          .map(r => (
+                            <option key={r} value={r}>{r}</option>
+                          ))}
+                        <option value="Vice President">Vice President</option>
+                        <option value="General Secretary">General Secretary</option>
+                        <option value="Technical Lead">Technical Lead</option>
+                        <option value="Events Lead">Events Lead</option>
+                        <option value="PR & Outreach Head">PR & Outreach Head</option>
+                        <option value="General Member">General Member</option>
+                      </select>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-end pt-2">
+                    <button
+                      type="submit"
+                      className={`btn-primary text-xs py-2 px-5 shrink-0 font-bold flex items-center gap-1.5 ${
+                        memberFormMode === 'president'
+                          ? 'bg-amber-600 hover:bg-amber-500 text-slate-950'
+                          : 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                      }`}
+                    >
+                      {memberFormMode === 'president' ? (
+                        <>
+                          <Key className="w-3.5 h-3.5" /> Appoint President & Provision Login
+                        </>
+                      ) : (
+                        <>
+                          <UserPlus className="w-3.5 h-3.5" /> Register Student in Roster
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
             )}
 
             {/* Current Members Table */}
@@ -783,6 +881,7 @@ export const ClubsPage: React.FC = () => {
                     <th className="p-3">Roll No & Branch</th>
                     <th className="p-3">Contact</th>
                     <th className="p-3">Assigned Role</th>
+                    <th className="p-3">Portal Account</th>
                     {(isAdmin || (isFaculty && selectedClubForMembers.faculty_id === user?.id)) && (
                       <th className="p-3 text-right">Action</th>
                     )}
@@ -791,47 +890,65 @@ export const ClubsPage: React.FC = () => {
                 <tbody className="divide-y divide-[var(--panel-border)]">
                   {(!selectedClubForMembers.student_members || selectedClubForMembers.student_members.length === 0) ? (
                     <tr>
-                      <td colSpan={5} className="p-6 text-center text-[var(--text-muted)]">
-                        No students enrolled yet. Add students using the form above.
+                      <td colSpan={6} className="p-6 text-center text-[var(--text-muted)]">
+                        No students enrolled yet. Use the form above to appoint a President or register students.
                       </td>
                     </tr>
                   ) : (
-                    selectedClubForMembers.student_members.map((mem, idx) => (
-                      <tr key={mem.id || idx} className="hover:bg-emerald-500/5 transition-colors">
-                        <td className="p-3 font-semibold text-[var(--text-primary)]">
-                          {mem.name}
-                        </td>
-                        <td className="p-3">
-                          <div className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">{mem.roll_number || 'N/A'}</div>
-                          <div className="text-[11px] text-[var(--text-muted)]">{mem.branch || 'DSW'} • {mem.semester || 'Current'}</div>
-                        </td>
-                        <td className="p-3">
-                          <div>{mem.email}</div>
-                          <div className="text-[11px] text-[var(--text-muted)]">{mem.phone || 'N/A'}</div>
-                        </td>
-                        <td className="p-3">
-                          <span className={`px-2 py-0.5 rounded-md font-semibold text-[11px] ${
-                            mem.role === 'President' ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold border border-amber-500/30' :
-                            mem.role === 'Vice President' ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300 font-bold border border-blue-500/30' :
-                            mem.role === 'General Secretary' ? 'bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30' :
-                            'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
-                          }`}>
-                            {mem.role}
-                          </span>
-                        </td>
-                        {(isAdmin || (isFaculty && selectedClubForMembers.faculty_id === user?.id)) && (
-                          <td className="p-3 text-right">
-                            <button
-                              onClick={() => handleRemoveMember(mem.id || String(idx))}
-                              className="p-1 rounded text-rose-500 hover:bg-rose-500/10"
-                              title="Remove Student"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                    selectedClubForMembers.student_members.map((mem, idx) => {
+                      const isPres = mem.role === 'President';
+                      const hasAcc = isPres || mem.has_portal_account || Boolean(mem.student_id);
+                      return (
+                        <tr key={mem.id || idx} className={`transition-colors ${isPres ? 'bg-amber-500/5 hover:bg-amber-500/10' : 'hover:bg-emerald-500/5'}`}>
+                          <td className="p-3 font-semibold text-[var(--text-primary)]">
+                            <div className="flex items-center gap-1.5">
+                              {isPres && <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0" />}
+                              <span>{mem.name}</span>
+                            </div>
                           </td>
-                        )}
-                      </tr>
-                    ))
+                          <td className="p-3">
+                            <div className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">{mem.roll_number || 'N/A'}</div>
+                            <div className="text-[11px] text-[var(--text-muted)]">{mem.branch || 'DSW'} • {mem.semester || 'Current'}</div>
+                          </td>
+                          <td className="p-3">
+                            <div>{mem.email || 'N/A'}</div>
+                            <div className="text-[11px] text-[var(--text-muted)]">{mem.phone || 'N/A'}</div>
+                          </td>
+                          <td className="p-3">
+                            <span className={`px-2 py-0.5 rounded-md font-semibold text-[11px] ${
+                              mem.role === 'President' ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold border border-amber-500/30' :
+                              mem.role === 'Vice President' ? 'bg-blue-500/20 text-blue-700 dark:text-blue-300 font-bold border border-blue-500/30' :
+                              mem.role === 'General Secretary' ? 'bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30' :
+                              'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
+                            }`}>
+                              {mem.role}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            {hasAcc ? (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 flex items-center gap-1 w-fit">
+                                <Key className="w-2.5 h-2.5" /> Portal Login Active
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-500/10 text-[var(--text-muted)] border border-[var(--panel-border)] flex items-center gap-1 w-fit">
+                                📝 Registered Member
+                              </span>
+                            )}
+                          </td>
+                          {(isAdmin || (isFaculty && selectedClubForMembers.faculty_id === user?.id)) && (
+                            <td className="p-3 text-right">
+                              <button
+                                onClick={() => handleRemoveMember(mem.id || String(idx))}
+                                className="p-1 rounded text-rose-500 hover:bg-rose-500/10"
+                                title="Remove Student"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </td>
+                          )}
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
