@@ -3,6 +3,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Sidebar } from './Sidebar';
 import { Navbar } from './Navbar';
+import { DPRReminderModal } from '../dpr/DPRReminderModal';
 
 export const AppLayout: React.FC<{ allowedRoles: string[]; pageTitle: string }> = ({
   allowedRoles,
@@ -32,6 +33,9 @@ export const AppLayout: React.FC<{ allowedRoles: string[]; pageTitle: string }> 
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-[var(--bg-primary)] relative">
+      {/* Automatic Daily Progress Report (DPR) Reminder Popup */}
+      <DPRReminderModal />
+
       {/* Mobile Drawer Backdrop */}
       {isMobileSidebarOpen && (
         <div
@@ -57,4 +61,5 @@ export const AppLayout: React.FC<{ allowedRoles: string[]; pageTitle: string }> 
     </div>
   );
 };
+
 

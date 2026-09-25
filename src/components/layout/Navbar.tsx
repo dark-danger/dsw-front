@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Bell, LogOut, Shield, GraduationCap, Briefcase, Menu } from 'lucide-react';
 import { NotificationModal } from '../notifications/NotificationModal';
 import { ThemeToggle } from '../common/ThemeToggle';
+import { DPRFloatingBadge } from '../dpr/DPRFloatingBadge';
 
 interface NavbarProps {
   title: string;
@@ -56,7 +57,11 @@ export const Navbar: React.FC<NavbarProps> = ({ title, onToggleSidebar }) => {
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          {/* DPR Pending or Submitted Floating Badge */}
+          <DPRFloatingBadge />
+
           <ThemeToggle />
+
 
           <button
             onClick={() => setIsNotifOpen(true)}

@@ -12,6 +12,7 @@ const PublicFeedbackFormPage = React.lazy(() => import('./pages/public/PublicFee
 
 // Admin Pages (Lazy Loaded)
 const AdminDashboardPage = React.lazy(() => import('./pages/admin/DashboardPage').then(m => ({ default: m.AdminDashboardPage })));
+const AdminDPRPage = React.lazy(() => import('./pages/admin/AdminDPRPage').then(m => ({ default: m.AdminDPRPage })));
 const AdminRequestsPage = React.lazy(() => import('./pages/admin/AdminRequestsPage').then(m => ({ default: m.AdminRequestsPage })));
 const FacultyPage = React.lazy(() => import('./pages/admin/FacultyPage').then(m => ({ default: m.FacultyPage })));
 const EventsPage = React.lazy(() => import('./pages/admin/EventsPage').then(m => ({ default: m.EventsPage })));
@@ -25,6 +26,7 @@ const StaffLeaderboardPage = React.lazy(() => import('./pages/admin/StaffLeaderb
 
 // Faculty Pages (Lazy Loaded)
 const FacultyDashboardPage = React.lazy(() => import('./pages/faculty/FacultyDashboardPage').then(m => ({ default: m.FacultyDashboardPage })));
+const DPRPage = React.lazy(() => import('./pages/faculty/DPRPage').then(m => ({ default: m.DPRPage })));
 const MyTasksPage = React.lazy(() => import('./pages/faculty/MyTasksPage').then(m => ({ default: m.MyTasksPage })));
 
 // Student Pages (Lazy Loaded)
@@ -71,6 +73,7 @@ export const App: React.FC = () => {
               {/* DSW Admin Portal */}
               <Route path="/admin" element={<AppLayout allowedRoles={['super_admin']} pageTitle="DSW Administration Portal" />}>
                 <Route path="dashboard" element={<AdminDashboardPage />} />
+                <Route path="dpr" element={<AdminDPRPage />} />
                 <Route path="requests" element={<AdminRequestsPage />} />
                 <Route path="mail" element={<MailPage />} />
                 <Route path="faculty" element={<FacultyPage />} />
@@ -95,6 +98,7 @@ export const App: React.FC = () => {
               {/* Faculty Portal */}
               <Route path="/faculty" element={<AppLayout allowedRoles={['faculty']} pageTitle="Faculty Workstation Portal" />}>
                 <Route path="dashboard" element={<FacultyDashboardPage />} />
+                <Route path="dpr" element={<DPRPage />} />
                 <Route path="mail" element={<MailPage />} />
                 <Route path="clubs" element={<ClubsPage />} />
                 <Route path="club-leaderboard" element={<ClubLeaderboardPage />} />
@@ -109,6 +113,7 @@ export const App: React.FC = () => {
                 <Route path="leaderboard" element={<StaffLeaderboardPage />} />
                 <Route path="*" element={<Navigate to="dashboard" replace />} />
               </Route>
+
 
               {/* Student Portal */}
               <Route path="/student" element={<AppLayout allowedRoles={['student']} pageTitle="Student Welfare Portal" />}>

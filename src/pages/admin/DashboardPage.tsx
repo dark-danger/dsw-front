@@ -100,6 +100,13 @@ export const AdminDashboardPage: React.FC = () => {
           <p className="text-xs text-[var(--text-secondary)] mt-1">Live administration status, active tasks, student engagement metrics and grievance feeds.</p>
         </div>
         <div className="flex items-center gap-3">
+          <a
+            href="/admin/dpr"
+            className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-500 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 hover:bg-emerald-500/25 transition-all shadow-xs"
+          >
+            <Clock className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
+            <span>DPR Monitoring Center</span>
+          </a>
           <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live Telemetry
           </span>
@@ -108,6 +115,7 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* Top KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
         <div className="glass-card p-5 border-l-4 border-l-[#0e8a6e]">
           <div className="flex items-center justify-between">
             <div>

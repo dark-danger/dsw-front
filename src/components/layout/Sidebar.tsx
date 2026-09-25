@@ -23,6 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
 
   const adminNav: SidebarItem[] = [
     { label: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { label: 'DPR Monitoring', path: '/admin/dpr', icon: <ClipboardCheck className="w-4 h-4 text-emerald-400" /> },
     { label: 'Requests', path: '/admin/requests', icon: <ClipboardCheck className="w-4 h-4 text-amber-400" /> },
     { label: 'University Mail', path: '/admin/mail', icon: <Mail className="w-4 h-4 text-emerald-400" /> },
     { label: 'Faculty Management', path: '/admin/faculty', icon: <Users className="w-4 h-4" /> },
@@ -43,6 +44,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
 
   const facultyNav: SidebarItem[] = [
     { label: 'My Dashboard', path: '/faculty/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { label: 'Daily DPR Report', path: '/faculty/dpr', icon: <ClipboardCheck className="w-4 h-4 text-emerald-400" /> },
     { label: 'University Mail', path: '/faculty/mail', icon: <Mail className="w-4 h-4 text-emerald-400" /> },
     { label: 'Student Clubs', path: '/faculty/clubs', icon: <Users className="w-4 h-4 text-blue-400" /> },
     { label: 'Club Leaderboard', path: '/faculty/club-leaderboard', icon: <Trophy className="w-4 h-4 text-purple-400" /> },
@@ -54,6 +56,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
     { label: 'Raise Query', path: '/faculty/queries', icon: <HelpCircle className="w-4 h-4" /> },
     { label: 'Staff Leaderboard', path: '/faculty/leaderboard', icon: <Medal className="w-4 h-4 text-emerald-400" /> },
   ];
+
 
   const studentNav: SidebarItem[] = [
     { label: 'Student Portal', path: '/student/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },

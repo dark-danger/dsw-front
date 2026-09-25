@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { apiRequest } from '../../lib/api';
-import { CheckSquare, Medal, Clock, CheckCircle2, Megaphone, HelpCircle, FileText, ArrowRight, FileCheck, Award } from 'lucide-react';
+import { CheckSquare, Medal, Clock, CheckCircle2, Megaphone, HelpCircle, FileText, ArrowRight, FileCheck, Award, ClipboardCheck } from 'lucide-react';
+
 
 interface FacultyStats {
   faculty_id: number;
@@ -110,7 +111,17 @@ export const FacultyDashboardPage: React.FC = () => {
       </div>
 
       {/* Faculty Action Hub */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Link to="/faculty/dpr" className="glass-card p-5 space-y-2 group hover:border-emerald-500/50 border-2 border-emerald-500/30 bg-emerald-500/5">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+              <ClipboardCheck className="w-4 h-4 text-emerald-500" /> Daily DPR Report
+            </span>
+            <ArrowRight className="w-4 h-4 text-emerald-500 group-hover:translate-x-1 transition-transform" />
+          </div>
+          <p className="text-xs text-[var(--text-secondary)]">Log your daily progress report, task updates & working hours.</p>
+        </Link>
+
         <Link to="/faculty/tasks" className="glass-card p-5 space-y-2 group hover:border-emerald-500/50">
           <div className="flex items-center justify-between">
             <span className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
@@ -141,6 +152,7 @@ export const FacultyDashboardPage: React.FC = () => {
           <p className="text-xs text-[var(--text-secondary)]">Oversee student convenors and event core organizing teams.</p>
         </Link>
       </div>
+
     </div>
   );
 };
